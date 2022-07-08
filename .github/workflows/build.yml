@@ -18,8 +18,3 @@ jobs:
       - run: yarn typescript
       - run: yarn test
       - run: yarn build
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: bundled file
-          path: dist/
