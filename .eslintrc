@@ -3,7 +3,6 @@
   "extends": ["ts-react-important-stuff", "plugin:prettier/recommended", "plugin:jsx-a11y/strict"],
   "rules": {
     "no-console": "off",
-
     // meh...
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/sort-type-union-intersection-members": "off",

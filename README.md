@@ -2,9 +2,8 @@
 
 ## Overview
 
-```
-UI microfronted for voice assistant and this can be inegrated with any frontend module.
-```
+Bahmni voice assistant UI
+
 ---
 
 ### Built With
