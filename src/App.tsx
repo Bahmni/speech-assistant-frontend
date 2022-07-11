@@ -1,7 +1,11 @@
 import React from 'react'
+import SocketConnectionButton from './socket-connection-button'
 
 const App = () => {
-  return <div>Hello World !!</div>
+  return (
+    <div>
+      <SocketConnectionButton />
+    </div>
+  )
 }
-
 export default App
