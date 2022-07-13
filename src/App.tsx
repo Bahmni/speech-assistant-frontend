@@ -1,7 +1,8 @@
 import React from 'react'
+import {ConsultationPad} from './components/consultation-pad/consultation-modal'
 
 const App = () => {
-  return <div>Hello World !!</div>
+  return <ConsultationPad />
 }
 
 export default App
