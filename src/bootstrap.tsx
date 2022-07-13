@@ -1,22 +1,22 @@
 import React from 'react'
 import {render} from 'react-dom'
-import App from './App'
+import App from './app/App'
 
 //TODO make the container configurable mf-container
 
-function getSttMfContainer(bodyContainer) {
-  return bodyContainer.querySelector("div[mf-container='stt']")
+function getSAMfContainer(bodyContainer) {
+  return bodyContainer.querySelector("div[mf-container='sa']")
 }
 
 function renderApp() {
-  const mfContainer = getSttMfContainer(bodyContainer)
+  const mfContainer = getSAMfContainer(bodyContainer)
   render(<App />, mfContainer)
 }
 
 const bodyContainer = document.getElementsByTagName('body')[0]
-if (!getSttMfContainer(bodyContainer)) {
+if (!getSAMfContainer(bodyContainer)) {
   const divContainer = document.createElement('div')
-  divContainer.setAttribute('mf-container', 'stt')
+  divContainer.setAttribute('mf-container', 'sa')
   bodyContainer.appendChild(divContainer)
 }
 renderApp()
