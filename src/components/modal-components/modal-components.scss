@@ -1,0 +1,38 @@
+.saveButton{
+    background-color: #669999;
+    float: right;
+    align-items: center;
+    font-size: large;
+    padding-left: 25px;
+    width: 90px;
+}
+.stopButton{
+    padding: 0rem 0rem 0rem 0rem;
+    left: 50%;
+}
+.pauseButton{
+    padding: 0rem 0rem 0rem 0rem;
+    left: 31%;
+}
+.microphoneButton{
+    left: 42%;
+}
+.textarea{
+    border:none;
+    // background: none;
+    background-color: none;
+}
+
+.button:hover {
+    background: none;
+    // :hover{background: none;}
+}
+.button{
+    background:none;
+    border: none; 
+}
+.saveButton:hover {
+    background-color:#669999;
+    // :hover{background: none;}
+}
+

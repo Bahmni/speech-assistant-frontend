@@ -1,43 +1,20 @@
-import {Button, Modal, TextArea} from 'carbon-components-react'
-import React, {useState} from 'react'
-import {MicrophoneFilled, StopFilled, PauseOutline} from '@carbon/icons-react'
-
-export const ConsultationPad = () => {
-  const [showModal, setShowModal] = useState(false)
-  const [startRecord, setStartRecord] = useState(false)
-  const StartRecording = () => {
-    setStartRecord(true)
-  }
+import React from 'react'
+import './consultation-modal.scss'
+import {ModalComponents} from '../modal-components/modal-component'
+import {Modal} from 'carbon-components-react'
+export const ConsultationPad = ({showModal, setShowModal}) => {
   return (
     <>
-      <Button
-        onClick={() => {
-          setShowModal(true)
-        }}
-      >
-        Consultation
-      </Button>
       {showModal && (
-        <div>
+        <div role="consultationModal">
           <Modal
             modalHeading="Consultation Notes"
             open={showModal}
             onRequestClose={() => setShowModal(false)}
+            passiveModal={true}
+            className="modal"
           >
-            <TextArea labelText={''}>Consultation Notes</TextArea>
-
-            {!startRecord ? (
-              <div className="alignment">
-                <Button onClick={StartRecording}>
-                  <MicrophoneFilled className="icon" />
-                </Button>
-              </div>
-            ) : (
-              <div>
-                <PauseOutline className="icon" />
-                <StopFilled className="icon" />
-              </div>
-            )}
+            <ModalComponents />
           </Modal>
         </div>
       )}

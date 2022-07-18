@@ -1,8 +1,8 @@
 import React from 'react'
-import {ConsultationPad} from './components/consultation-pad/consultation-modal'
+import {ConsultationButton} from './components/consultation-button/consultation-button'
 
 const App = () => {
-  return <ConsultationPad />
+  return <ConsultationButton />
 }
 
 export default App
