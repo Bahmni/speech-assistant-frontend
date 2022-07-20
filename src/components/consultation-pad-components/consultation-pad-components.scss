@@ -1,0 +1,47 @@
+ @import '@carbon/react';
+.saveButton{
+    background-color: #669999;
+    // float: right;
+    // align-items: center;
+    font-size: large;
+    padding-left: 25px;
+    // width: 90px;
+    width: 1px;
+    height: 10px;
+    left: 18rem;
+}
+.textarea{
+    border:none;
+     background: none;
+    // background-color: none;
+}
+
+
+.iconButton{
+    background:none;
+    border: none; 
+    // left: 42%;
+    left: 13rem
+}
+.iconButton:hover {
+    background: none;
+    // :hover{background: none;}
+}
+.saveButton:hover {
+    background-color:#669999;
+    // :hover{background: none;}
+}
+
+.icon {
+    fill: rgb(240, 18, 18);
+    align-items:center;
+    height: 55px;
+    width: 50px;
+  }
+
+  .test{
+    display: flex;
+    padding: 1rem 0rem 0rem 0rem;
+    align-items: center;
+  }
+

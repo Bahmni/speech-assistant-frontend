@@ -2,6 +2,24 @@ var webpack = require('webpack')
 var path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const cssLoader = {
+  loader: 'css-loader',
+  options: {
+    modules: {
+      // localIdentName: `[name]__[local]__[hash:base64:5]`,
+      getLocalIdent: (loaderContext, localIdentName, localName) => {
+        const fileName = path.basename(loaderContext.resourcePath)
+        if (fileName == 'index.scss') {
+          return localName
+        } else {
+          const name = fileName
+          return `${name}__${localName}`
+        }
+        //return localName
+      },
+    },
+  },
+}
 const config = {
   mode: 'development',
   entry: './src/index.tsx',
@@ -20,15 +38,14 @@ const config = {
         exclude: /node_modules/,
       },
       {
-        test: /\.s[ac]ss$/i,
-        use: [
-          // Creates `style` nodes from JS strings
-          'style-loader',
-          // Translates CSS into CommonJS
-          'css-loader',
-          // Compiles Sass to CSS
-          'sass-loader',
-        ],
+        test: /\.css$/,
+        //use: ['style-loader', 'css-loader'],
+        use: ['style-loader', cssLoader],
+      },
+      {
+        test: /\.s[ac]ss$/,
+        //use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: ['style-loader', cssLoader, 'sass-loader'],
       },
     ],
   },
@@ -41,7 +58,7 @@ const config = {
     }),
   ],
   resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss'],
+    extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.css'],
   },
 }
 

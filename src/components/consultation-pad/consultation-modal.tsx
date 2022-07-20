@@ -1,20 +1,19 @@
 import React from 'react'
-import './consultation-modal.scss'
-import {ModalComponents} from '../modal-components/modal-component'
-import {Modal} from 'carbon-components-react'
-export const ConsultationPad = ({showModal, setShowModal}) => {
+import {ConsultationPadComponents} from '../consultation-pad-components/consultation-pad-components'
+import {Modal} from '@carbon/react'
+export const ConsultationPad = ({modalIsOpen, setModalIsOpen}) => {
   return (
     <>
-      {showModal && (
+      {modalIsOpen && (
         <div role="consultationModal">
           <Modal
             modalHeading="Consultation Notes"
-            open={showModal}
-            onRequestClose={() => setShowModal(false)}
+            open={modalIsOpen}
+            onRequestClose={() => setModalIsOpen(false)}
             passiveModal={true}
-            className="modal"
+            title="ConsultationPad"
           >
-            <ModalComponents />
+            <ConsultationPadComponents />
           </Modal>
         </div>
       )}
