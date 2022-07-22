@@ -1,13 +1,25 @@
 //  @import '@carbon/react';
-.saveButton{
-    left: 38%
+.saveButton:enabled{
+  left: 30%
+  
 }
 
-.icon {
-    fill: rgb(240, 18, 18);
-    height: 55px;
-    width: 50px;
-  }
+.saveButton:disabled{
+  left:30%
+}
+
+
+.microphoneIcon {
+  fill: rgb(240, 18, 18);
+  height: 55px;
+  width: 50px;
+}
+
+.stopIcon {
+  fill: rgb(240, 18, 18);
+  height: 55px;
+  width: 75px;
+}
 
 .test{
     display: flex;
@@ -16,11 +28,4 @@
     justify-content: center;
   }
 
-button.close{
-    fill:rgb(240, 18, 18);
-}
-
-.header{
-  background-color: #669999;
-}
 

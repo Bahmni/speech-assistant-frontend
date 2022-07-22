@@ -1,14 +1,17 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-components.scss'
 
 export const ConsultationPadComponents = () => {
-  const [showMicroPhoneButton, setShowMicroPhoneButton] = useState(true)
+  const input1 = useRef(null)
+  const [showMicroPhoneIcon, setShowMicroPhoneIcon] = useState(true)
   const [disableSaveButton, setDisableSaveButton] = useState(true) //disablesavebutton,enable
   const startRecording = () => {
-    setShowMicroPhoneButton(!showMicroPhoneButton)
+    setShowMicroPhoneIcon(!showMicroPhoneIcon)
+    showMicroPhoneIcon ? input1.current.focus() : input1.current.unfocus()
   }
+
   return (
     <>
       <TextArea
@@ -19,12 +22,27 @@ export const ConsultationPadComponents = () => {
         }}
         labelText={''}
         role="textArea"
+        ref={input1}
       ></TextArea>
       <div className={styles.test}>
-        {showMicroPhoneButton ? (
-          <MicrophoneFilled className={styles.icon} onClick={startRecording} title="microPhoneIcon" />
+        {showMicroPhoneIcon ? (
+          <>
+            <MicrophoneFilled
+              className={styles.microphoneIcon}
+              onClick={startRecording}
+              title="microPhoneIcon"
+            />
+            <h6>Start recording</h6>
+          </>
         ) : (
-          <StopFilled className={styles.icon} onClick={startRecording} title="stopIcon" />
+          <>
+            <StopFilled
+              className={styles.stopIcon}
+              onClick={startRecording}
+              title="stopIcon"
+            />
+            <h6> Listening...</h6>
+          </>
         )}
         {disableSaveButton ? (
           <Button
@@ -47,3 +65,25 @@ export const ConsultationPadComponents = () => {
     </>
   )
 }
+
+// import {useRef} from 'react';
+
+// const App = () => {
+//   const ref = useRef(null);
+
+//   const handleClick = () => {
+//     ref.current.focus();
+//   };
+
+//   return (
+//     <div>
+//       <input ref={ref} id="message" name="message" />
+
+//       <hr />
+
+//       <button onClick={handleClick}>Focus input</button>
+//     </div>
+//   );
+// };
+
+// export default App;
