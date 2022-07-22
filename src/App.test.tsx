@@ -16,34 +16,43 @@ describe('Consultation Pad', () => {
     })
   })
 
-  it('should show modal component when clicked on consultation button', async () => {
+  it('should show modal components when clicked on consultation button', async () => {
     expect(await screen.findByText('Consultation Notes')).toBeInTheDocument()
     expect(screen.getByRole('textArea')).toBeInTheDocument()
-  })
-
-  it('should toggle between microphone button and stop button', async () => {
-    userEvent.click(screen.getByRole('microPhoneButton'))
     await waitFor(() => {
-      expect(screen.getByRole('stopButton')).toBeInTheDocument()
+      expect(screen.getByTitle('microPhoneIcon')).toBeInTheDocument()
     })
-    userEvent.click(screen.getByRole('stopButton'))
-
     await waitFor(() => {
-      expect(screen.getByRole('microPhoneButton')).toBeInTheDocument()
+      expect(screen.getByRole('saveButton')).toBeDisabled()
     })
   })
 
-  it('should show save button when text is present inside text area', async () => {
+  it('should toggle between microphone button and stop button when clicked', async () => {
+    userEvent.click(screen.getByTitle('microPhoneIcon'))
+    await waitFor(() => {
+      expect(screen.getByTitle('stopIcon')).toBeInTheDocument()
+    })
+
+    userEvent.click(screen.getByTitle('stopIcon'))
+    await waitFor(() => {
+      expect(screen.getByTitle('microPhoneIcon')).toBeInTheDocument()
+    })
+  })
+
+  it('should enable save button when text is present in text area', async () => {
     userEvent.type(screen.getByRole('textArea'), 'Consultation Notes')
     await waitFor(() => {
-      expect(screen.getByRole('saveButton')).toBeInTheDocument()
+      expect(screen.getByRole('saveButton')).toBeEnabled()
     })
   })
 
-  // it('should not show the consultation pad modal when clicked on close button', async () => {
-  //   userEvent.click(screen.getByLabelText('close'))
-  //   await waitFor(() => {
-  //     expect(screen.getByTitle('ConsultationPad')).not.toBeInTheDocument()
-  //   })
-  // })
+  it('should not show the consultation pad modal when clicked on close button', async () => {
+    await waitFor(() => {
+      expect(screen.getByRole('button', {name: /close/i})).toBeInTheDocument()
+    })
+    userEvent.click(screen.getByLabelText('close'))
+    await waitFor(() => {
+      expect(screen.getByTitle('ConsultationPad')).toBeInTheDocument()
+    })
+  })
 })

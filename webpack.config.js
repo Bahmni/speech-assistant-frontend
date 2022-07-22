@@ -15,7 +15,7 @@ const cssLoader = {
           const name = fileName
           return `${name}__${localName}`
         }
-        //return localName
+        // return localName
       },
     },
   },

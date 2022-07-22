@@ -1,6 +1,6 @@
 import {Button} from '@carbon/react'
 import React, {useState} from 'react'
-import {ConsultationPad} from '../consultation-pad/consultation-modal'
+import {ConsultationPad} from '../consultation-pad/consultation-pad'
 
 export const ConsultationButton = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false)

@@ -5,47 +5,41 @@ import styles from './consultation-pad-components.scss'
 
 export const ConsultationPadComponents = () => {
   const [showMicroPhoneButton, setShowMicroPhoneButton] = useState(true)
-  const [showSaveButton, setShowSaveButton] = useState(false)
+  const [disableSaveButton, setDisableSaveButton] = useState(true) //disablesavebutton,enable
   const startRecording = () => {
     setShowMicroPhoneButton(!showMicroPhoneButton)
   }
   return (
     <>
       <TextArea
-        className={styles.textarea}
         onChange={e => {
           e.target.value.length > 0
-            ? setShowSaveButton(true)
-            : setShowSaveButton(false)
+            ? setDisableSaveButton(false)
+            : setDisableSaveButton(true)
         }}
         labelText={''}
         role="textArea"
       ></TextArea>
-
       <div className={styles.test}>
         {showMicroPhoneButton ? (
-          <div>
-            <Button
-              onClick={startRecording}
-              className={styles.iconButton}
-              role="microPhoneButton"
-            >
-              <MicrophoneFilled className={styles.icon} />
-            </Button>
-          </div>
+          <MicrophoneFilled className={styles.icon} onClick={startRecording} title="microPhoneIcon" />
         ) : (
-          <div>
-            <Button
-              onClick={startRecording}
-              className={styles.iconButton}
-              role="stopButton"
-            >
-              <StopFilled className={styles.icon} />
-            </Button>
-          </div>
+          <StopFilled className={styles.icon} onClick={startRecording} title="stopIcon" />
         )}
-        {showSaveButton && (
-          <Button className={styles.saveButton} role="saveButton">
+        {disableSaveButton ? (
+          <Button
+            className={styles.saveButton}
+            role="saveButton"
+            disabled={disableSaveButton}
+          >
+            Save
+          </Button>
+        ) : (
+          <Button
+            className={styles.saveButton}
+            role="saveButton"
+            enabled={disableSaveButton.toString()}
+          >
             Save
           </Button>
         )}
