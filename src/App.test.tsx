@@ -39,6 +39,17 @@ describe('Consultation Pad', () => {
     })
   })
 
+  it('should focus the textarea when microphone and stop icons are clicked', async () => {
+    userEvent.click(screen.getByTitle('microPhoneIcon'))
+    await waitFor(() => {
+      expect(screen.getByRole('textArea')).toHaveFocus()
+    })
+    userEvent.click(screen.getByTitle('stopIcon'))
+    await waitFor(() => {
+      expect(screen.getByRole('textArea')).toHaveFocus()
+    })
+  })
+
   it('should enable save button when text is present in text area', async () => {
     userEvent.type(screen.getByRole('textArea'), 'Consultation Notes')
     await waitFor(() => {
@@ -52,7 +63,9 @@ describe('Consultation Pad', () => {
     })
     userEvent.click(screen.getByLabelText('close'))
     await waitFor(() => {
-      expect(screen.getByTitle('ConsultationPad')).toBeInTheDocument()
+      screen.getByRole('button', {
+        name: /Consultation/i,
+      })
     })
   })
 })

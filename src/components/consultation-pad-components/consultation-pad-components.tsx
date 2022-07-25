@@ -4,12 +4,12 @@ import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-components.scss'
 
 export const ConsultationPadComponents = () => {
-  const input1 = useRef(null)
+  const textAreaRef = useRef(null)
   const [showMicroPhoneIcon, setShowMicroPhoneIcon] = useState(true)
-  const [disableSaveButton, setDisableSaveButton] = useState(true) //disablesavebutton,enable
+  const [disableSaveButton, setDisableSaveButton] = useState(true)
   const startRecording = () => {
     setShowMicroPhoneIcon(!showMicroPhoneIcon)
-    showMicroPhoneIcon ? input1.current.focus() : input1.current.unfocus()
+    textAreaRef.current.focus()
   }
 
   return (
@@ -22,7 +22,7 @@ export const ConsultationPadComponents = () => {
         }}
         labelText={''}
         role="textArea"
-        ref={input1}
+        ref={textAreaRef}
       ></TextArea>
       <div className={styles.test}>
         {showMicroPhoneIcon ? (
@@ -65,25 +65,3 @@ export const ConsultationPadComponents = () => {
     </>
   )
 }
-
-// import {useRef} from 'react';
-
-// const App = () => {
-//   const ref = useRef(null);
-
-//   const handleClick = () => {
-//     ref.current.focus();
-//   };
-
-//   return (
-//     <div>
-//       <input ref={ref} id="message" name="message" />
-
-//       <hr />
-
-//       <button onClick={handleClick}>Focus input</button>
-//     </div>
-//   );
-// };
-
-// export default App;
