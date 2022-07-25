@@ -9,6 +9,7 @@
     "jsx-a11y/media-has-caption": "off",
     "jsx-a11y/label-has-associated-control": "off",
     "jsx-a11y/alt-text": "off", // it"s not smart enough...
+    "jsx-a11y/aria-role": [0,{ "ignoreNonDOM": true}],
     "@babel/new-cap": "off",
     "react/jsx-filename-extension": "off",
     "@typescript-eslint/no-namespace": "off",
@@ -19,5 +20,6 @@
 
     // for CatchBoundaries
     "@typescript-eslint/no-throw-literal": "off"
+
   }
 }
