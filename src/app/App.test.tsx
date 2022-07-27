@@ -1,4 +1,5 @@
-import {fireEvent, render, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import React from 'react'
 import App from './App'
 
@@ -8,33 +9,37 @@ describe('Speech Assistant App', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'Consultation Notes',
+        name: /Consultation Notes/i,
       }),
     ).toBeInTheDocument()
   })
 
-  it('should show Consultation Pad when Consultation Notes button is clicked', () => {
+  it('should show Consultation Pad when Consultation Notes button is clicked', async () => {
+    const user = userEvent.setup()
     render(<App />)
     const consultationNotesButtonName = {
-      name: 'Consultation Notes',
+      name: /Consultation Notes/i,
     }
 
-    fireEvent.click(screen.getByRole('button', consultationNotesButtonName))
+    await user.click(screen.getByRole('button', consultationNotesButtonName))
 
     expect(screen.getByText('Hello This is a div')).toBeInTheDocument()
-    expect(screen.queryByRole('button', consultationNotesButtonName)).toBeNull()
+    expect(
+      screen.queryByRole('button', consultationNotesButtonName),
+    ).not.toBeInTheDocument()
   })
 
-  it('should show Consultation Notes button when Consultation pad is closed', () => {
+  it('should show Consultation Notes button when Consultation pad is closed', async () => {
+    const user = userEvent.setup()
     render(<App />)
     const consultationNotesButtonName = {
-      name: 'Consultation Notes',
+      name: /Consultation Notes/i,
     }
-    fireEvent.click(screen.getByRole('button', consultationNotesButtonName))
+    await user.click(screen.getByRole('button', consultationNotesButtonName))
 
-    fireEvent.click(screen.getByRole('button', {name: 'close'}))
+    await user.click(screen.getByRole('button', {name: /close/i}))
 
-    expect(screen.queryByText('Hello This is a div')).toBeNull()
+    expect(screen.queryByText('Hello This is a div')).not.toBeInTheDocument()
     expect(
       screen.getByRole('button', consultationNotesButtonName),
     ).toBeInTheDocument()
