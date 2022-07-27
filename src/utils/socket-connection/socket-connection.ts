@@ -2,12 +2,10 @@ import {
   SocketStatus,
   StreamingClient,
 } from '@project-sunbird/open-speech-streaming-client'
-
+import {language} from '../../constants'
 class SocketConnection {
   streamingURL: string
   streamingclient: any
-  text: string
-  setText: any
   onIncomingMessage: (message: string) => void
   onSocketConnectionChange: (toggle: boolean) => void
 
@@ -17,7 +15,11 @@ class SocketConnection {
     this.onIncomingMessage = onIncomingMessage
     this.onSocketConnectionChange = onSocketConnectionChange
   }
-  onErrorMessage = 'Error occurred while making streaming connection'
+
+  onErrorMessage = () => {
+    return 'Error occurred while making streaming connection'
+  }
+
   onConnect = action => {
     const _this = this
 
@@ -33,8 +35,6 @@ class SocketConnection {
   }
 
   handleStart = () => {
-    const language = 'en'
-
     this.streamingclient.connect(this.streamingURL, language, this.onConnect)
   }
 

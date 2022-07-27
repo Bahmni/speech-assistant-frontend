@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import SocketConnection from './utils/socket-connection'
+import SocketConnection from './utils/socket-connection/socket-connection'
 import {streamingURL} from './constants'
 
 const SocketConnectionButton = () => {
