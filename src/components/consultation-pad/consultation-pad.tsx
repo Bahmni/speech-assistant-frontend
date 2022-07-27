@@ -1,22 +1,17 @@
 import React from 'react'
-import {ConsultationPadComponents} from '../consultation-pad-components/consultation-pad-components'
+import {ConsultationPadContainer} from '../consultation-pad-container/consultation-pad-container'
 import {Modal} from '@carbon/react'
-export const ConsultationPad = ({modalIsOpen, setModalIsOpen}) => {
+export const ConsultationPad = ({setPadIsOpen}) => {
   return (
     <>
-      {modalIsOpen && (
-        <div role="consultationModal">
-          <Modal
-            modalHeading="Consultation Notes"
-            open={modalIsOpen}
-            onRequestClose={() => setModalIsOpen(false)}
-            passiveModal={true}
-            title="ConsultationPad"
-          >
-            <ConsultationPadComponents />
-          </Modal>
-        </div>
-      )}
+      <Modal
+        modalHeading="Consultation Notes"
+        open={true}
+        onRequestClose={() => setPadIsOpen(false)}
+        passiveModal={true}
+      >
+        <ConsultationPadContainer />
+      </Modal>
     </>
   )
 }

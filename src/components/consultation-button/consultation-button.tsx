@@ -3,21 +3,17 @@ import React, {useState} from 'react'
 import {ConsultationPad} from '../consultation-pad/consultation-pad'
 
 export const ConsultationButton = () => {
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const [padIsOpen, setPadIsOpen] = useState(false)
   return (
     <>
       <Button
-        role="button"
         onClick={() => {
-          setModalIsOpen(true)
+          setPadIsOpen(true)
         }}
       >
         Consultation
       </Button>
-      <ConsultationPad
-        modalIsOpen={modalIsOpen}
-        setModalIsOpen={setModalIsOpen}
-      />
+      {padIsOpen && <ConsultationPad setPadIsOpen={setPadIsOpen} />}
     </>
   )
 }

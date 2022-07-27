@@ -12,48 +12,56 @@ describe('Consultation Pad', () => {
       }),
     )
     await waitFor(() => {
-      expect(screen.getByTitle('ConsultationPad')).toBeInTheDocument()
+      expect(screen.getByText('Consultation Notes')).toBeInTheDocument()
     })
   })
 
   it('should show modal components when clicked on consultation button', async () => {
     expect(await screen.findByText('Consultation Notes')).toBeInTheDocument()
-    expect(screen.getByRole('textArea')).toBeInTheDocument()
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
     await waitFor(() => {
-      expect(screen.getByTitle('microPhoneIcon')).toBeInTheDocument()
+      expect(screen.getByLabelText('microPhoneIcon')).toBeInTheDocument()
     })
     await waitFor(() => {
-      expect(screen.getByRole('saveButton')).toBeDisabled()
+      expect(
+        screen.getByRole('button', {
+          name: /Save/i,
+        }),
+      ).toBeDisabled()
     })
   })
 
   it('should toggle between microphone button and stop button when clicked', async () => {
-    userEvent.click(screen.getByTitle('microPhoneIcon'))
+    userEvent.click(screen.getByLabelText('microPhoneIcon'))
     await waitFor(() => {
-      expect(screen.getByTitle('stopIcon')).toBeInTheDocument()
+      expect(screen.getByLabelText('stopIcon')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByTitle('stopIcon'))
+    userEvent.click(screen.getByLabelText('stopIcon'))
     await waitFor(() => {
-      expect(screen.getByTitle('microPhoneIcon')).toBeInTheDocument()
+      expect(screen.getByLabelText('microPhoneIcon')).toBeInTheDocument()
     })
   })
 
   it('should focus the textarea when microphone and stop icons are clicked', async () => {
-    userEvent.click(screen.getByTitle('microPhoneIcon'))
+    userEvent.click(screen.getByLabelText('microPhoneIcon'))
     await waitFor(() => {
-      expect(screen.getByRole('textArea')).toHaveFocus()
+      expect(screen.getByRole('textbox')).toHaveFocus()
     })
-    userEvent.click(screen.getByTitle('stopIcon'))
+    userEvent.click(screen.getByLabelText('stopIcon'))
     await waitFor(() => {
-      expect(screen.getByRole('textArea')).toHaveFocus()
+      expect(screen.getByRole('textbox')).toHaveFocus()
     })
   })
 
   it('should enable save button when text is present in text area', async () => {
-    userEvent.type(screen.getByRole('textArea'), 'Consultation Notes')
+    userEvent.type(screen.getByRole('textbox'), 'Consultation Notes')
     await waitFor(() => {
-      expect(screen.getByRole('saveButton')).toBeEnabled()
+      expect(
+        screen.getByRole('button', {
+          name: /Save/i,
+        }),
+      ).toBeEnabled()
     })
   })
 
