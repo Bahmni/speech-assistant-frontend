@@ -17,7 +17,7 @@ export const ConsultationPadContainer = () => {
         <StopFilled
           className={styles.stopIcon}
           onClick={startRecording}
-          aria-label="stopIcon"
+          aria-label="Stop Mic"
         />
         <h6> Listening...</h6>
       </>
@@ -30,7 +30,7 @@ export const ConsultationPadContainer = () => {
         <MicrophoneFilled
           className={styles.microphoneIcon}
           onClick={startRecording}
-          aria-label="microPhoneIcon"
+          aria-label="Start Mic"
         />
         <h6>Start recording</h6>
       </>

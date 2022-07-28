@@ -20,7 +20,7 @@ describe('Consultation Pad', () => {
     expect(await screen.findByText('Consultation Notes')).toBeInTheDocument()
     expect(screen.getByRole('textbox')).toBeInTheDocument()
     await waitFor(() => {
-      expect(screen.getByLabelText('microPhoneIcon')).toBeInTheDocument()
+      expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
     })
     await waitFor(() => {
       expect(
@@ -32,23 +32,23 @@ describe('Consultation Pad', () => {
   })
 
   it('should toggle between microphone button and stop button when clicked', async () => {
-    userEvent.click(screen.getByLabelText('microPhoneIcon'))
+    userEvent.click(screen.getByLabelText('Start Mic'))
     await waitFor(() => {
-      expect(screen.getByLabelText('stopIcon')).toBeInTheDocument()
+      expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
     })
 
-    userEvent.click(screen.getByLabelText('stopIcon'))
+    userEvent.click(screen.getByLabelText('Stop Mic'))
     await waitFor(() => {
-      expect(screen.getByLabelText('microPhoneIcon')).toBeInTheDocument()
+      expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
     })
   })
 
   it('should focus the textarea when microphone and stop icons are clicked', async () => {
-    userEvent.click(screen.getByLabelText('microPhoneIcon'))
+    userEvent.click(screen.getByLabelText('Start Mic'))
     await waitFor(() => {
       expect(screen.getByRole('textbox')).toHaveFocus()
     })
-    userEvent.click(screen.getByLabelText('stopIcon'))
+    userEvent.click(screen.getByLabelText('Stop Mic'))
     await waitFor(() => {
       expect(screen.getByRole('textbox')).toHaveFocus()
     })

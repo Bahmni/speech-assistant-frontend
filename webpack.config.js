@@ -6,7 +6,6 @@ const cssLoader = {
   loader: 'css-loader',
   options: {
     modules: {
-      // localIdentName: `[name]__[local]__[hash:base64:5]`,
       getLocalIdent: (loaderContext, localIdentName, localName) => {
         const fileName = path.basename(loaderContext.resourcePath)
         if (fileName == 'index.scss') {
@@ -15,7 +14,6 @@ const cssLoader = {
           const name = fileName
           return `${name}__${localName}`
         }
-        // return localName
       },
     },
   },
@@ -39,12 +37,10 @@ const config = {
       },
       {
         test: /\.css$/,
-        //use: ['style-loader', 'css-loader'],
         use: ['style-loader', cssLoader],
       },
       {
         test: /\.s[ac]ss$/,
-        //use: ['style-loader', 'css-loader', 'sass-loader'],
         use: ['style-loader', cssLoader, 'sass-loader'],
       },
     ],
