@@ -1,22 +1,17 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {useRef, useState} from 'react'
+import React, {useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-container.scss'
 
 export const ConsultationPadContainer = () => {
-  const textAreaRef = useRef(null)
-  const [showMicroPhoneIcon, setShowMicroPhoneIcon] = useState(true)
+  const [isRecording, setIsRecording] = useState(false)
   const [disableSaveButton, setDisableSaveButton] = useState(true)
-  const startRecording = () => {
-    setShowMicroPhoneIcon(!showMicroPhoneIcon)
-    textAreaRef.current.focus()
-  }
-  const stopMic = () => {
+  const renderStopMic = () => {
     return (
       <>
         <StopFilled
           className={styles.stopIcon}
-          onClick={startRecording}
+          onClick={() => setIsRecording(false)}
           aria-label="Stop Mic"
         />
         <h6> Listening...</h6>
@@ -24,12 +19,12 @@ export const ConsultationPadContainer = () => {
     )
   }
 
-  const startMic = () => {
+  const renderStartMic = () => {
     return (
       <>
         <MicrophoneFilled
           className={styles.microphoneIcon}
-          onClick={startRecording}
+          onClick={() => setIsRecording(true)}
           aria-label="Start Mic"
         />
         <h6>Start recording</h6>
@@ -37,7 +32,7 @@ export const ConsultationPadContainer = () => {
     )
   }
 
-  const consultationNotesTextArea = () => {
+  const renderTextArea = () => {
     return (
       <TextArea
         onChange={e => {
@@ -46,15 +41,15 @@ export const ConsultationPadContainer = () => {
             : setDisableSaveButton(true)
         }}
         labelText=""
-        ref={textAreaRef}
+        ref={input => input && input.focus()}
       ></TextArea>
     )
   }
   return (
     <>
-      {consultationNotesTextArea()}
-      <div className={styles.footer}>
-        {showMicroPhoneIcon ? startMic() : stopMic()}
+      {renderTextArea()}
+      <div className={styles.padBottomArea}>
+        {isRecording ? renderStopMic() : renderStartMic()}
         <Button className={styles.saveButton} disabled={disableSaveButton}>
           Save
         </Button>
