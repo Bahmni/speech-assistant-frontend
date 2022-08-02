@@ -1,7 +1,13 @@
 import React from 'react'
 import {ConsultationButton} from './components/consultation-button/consultation-button'
-const App = () => {
-  return <ConsultationButton />
-}
+import SocketConnectionButton from './socket-connection-button'
 
+const App = () => {
+  return (
+    <div>
+      <ConsultationButton />
+      <SocketConnectionButton />
+    </div>
+  )
+}
 export default App
