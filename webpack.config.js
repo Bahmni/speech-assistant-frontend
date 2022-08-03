@@ -22,6 +22,22 @@ const cssLoader = {
   },
 }
 
+const cssLoader = {
+  loader: 'css-loader',
+  options: {
+    modules: {
+      getLocalIdent: (loaderContext, localIdentName, localName) => {
+        const fileName = path.basename(loaderContext.resourcePath)
+        if (fileName == 'index.scss') {
+          return localName
+        } else {
+          const name = fileName
+          return `${name}__${localName}`
+        }
+      },
+    },
+  },
+}
 const config = {
   mode: 'development',
   entry: './src/index.tsx',

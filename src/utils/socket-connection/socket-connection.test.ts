@@ -1,4 +1,3 @@
-import './socket-connection.ts'
 import SocketConnection from './socket-connection'
 import {
   SocketStatus,
@@ -8,17 +7,18 @@ import {
 jest.mock('@project-sunbird/open-speech-streaming-client')
 
 describe('Socket Connections Testing', () => {
-  const mockStreamingclient = {
-    startStreaming: jest.fn(),
-    connect: jest.fn((url, language, onConnect) => {
-      onConnect: jest.fn()
-    }),
-    stopStreaming: jest.fn(),
-  }
+  
 
   afterEach(() => jest.clearAllMocks())
 
   it('should check for startstreaming and connect functions of streamingClient when handledStart is called', () => {
+    const mockStreamingclient = {
+      startStreaming: jest.fn(),
+      connect: jest.fn((url, language, onConnect) => {
+        jest.fn()
+      }),
+      stopStreaming: jest.fn(),
+    }
     StreamingClient.mockImplementation(() => mockStreamingclient)
 
     let url = 'http://localhost:9009'
@@ -52,6 +52,14 @@ describe('Socket Connections Testing', () => {
   })
 
   it('should check for socketStatus when connection is terminated', () => {
+    const mockStreamingclient = {
+      startStreaming: jest.fn(),
+      connect: jest.fn((url, language, onConnect) => {
+        jest.fn()
+      }),
+      stopStreaming: jest.fn(),
+    }
+    StreamingClient.mockImplementation(() => mockStreamingclient)
     let url = 'http://localhost:9009'
     let message = () => {}
     let onSocketConnection: boolean
@@ -73,6 +81,14 @@ describe('Socket Connections Testing', () => {
   })
 
   it('should check for stopstreaming function when handledStop is called', () => {
+    const mockStreamingclient = {
+      startStreaming: jest.fn(),
+      connect: jest.fn((url, language, onConnect) => {
+        jest.fn()
+      }),
+      stopStreaming: jest.fn(),
+    }
+    StreamingClient.mockImplementation(() => mockStreamingclient)
     let url = 'http://localhost:9009'
     let message = () => {}
 

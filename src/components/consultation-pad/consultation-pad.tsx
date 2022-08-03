@@ -1,16 +1,16 @@
 import React from 'react'
-import {ConsultationPadContainer} from '../consultation-pad-container/consultation-pad-container'
+import {ConsultationPadContents} from '../consultation-pad-contents/consultation-pad-contents'
 import {Modal} from '@carbon/react'
-export const ConsultationPad = ({setPadIsOpen}) => {
+export const ConsultationPad = ({isConsultationPadClosed}) => {
   return (
     <>
       <Modal
         modalHeading="Consultation Notes"
         open={true}
-        onRequestClose={() => setPadIsOpen(false)}
+        onRequestClose={() => isConsultationPadClosed(true)}
         passiveModal={true}
       >
-        <ConsultationPadContainer />
+        <ConsultationPadContents />
       </Modal>
     </>
   )

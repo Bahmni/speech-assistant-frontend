@@ -3,9 +3,9 @@ import styles from './floating-consultation-button.scss'
 import {Button} from '@carbon/react'
 import {Headset} from '@carbon/icons-react'
 
-export const FloatingConsultationButton = ({buttonVisibility}) => {
+export const FloatingConsultationButton = ({setShowConsultationPad}) => {
   const launchConsultationPad = () => {
-    buttonVisibility(false)
+    setShowConsultationPad(true)
   }
 
   return (
