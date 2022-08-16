@@ -2,7 +2,7 @@ import {
   SocketStatus,
   StreamingClient,
 } from '@project-sunbird/open-speech-streaming-client'
-import {language} from '../../constants'
+import {language} from '../constants'
 class SocketConnection {
   streamingURL: string
   streamingclient: any

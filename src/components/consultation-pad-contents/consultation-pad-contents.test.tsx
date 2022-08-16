@@ -6,7 +6,6 @@ import {ConsultationPadContents} from './consultation-pad-contents'
 jest.mock('../../utils/socket-connection/socket-connection')
 
 describe('Consultation Pad Contents', () => {
-
   afterEach(() => jest.clearAllMocks())
 
   it('should show the contents inside the consultation pad', async () => {
@@ -86,14 +85,15 @@ describe('Consultation Pad Contents', () => {
       () => mockSocketConnection,
     )
     render(<ConsultationPadContents />)
-    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock.calls[0][1]
+    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
+      .calls[0][1]
 
     expect(
       screen.getByRole('button', {
         name: /Save/i,
       }),
     ).toBeDisabled()
-    
+
     waitFor(() => {
       mockOnIncomingMessage('hello')
       expect(

@@ -1,5 +1,5 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'

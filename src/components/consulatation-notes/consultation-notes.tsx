@@ -1,6 +1,6 @@
 import {ConsultationPad} from '../consultation-pad/consultation-pad'
-import {FloatingConsultationButton} from '../floating-consultation-button/floating-consultation-button'
 import React, {useState} from 'react'
+import {FloatingConsultationButton} from '../floating-consultation-button/floating-consultation-button'
 
 const ConsultationNotes = () => {
   const [showFloatingButton, setShowFloatingButton] = useState(true)

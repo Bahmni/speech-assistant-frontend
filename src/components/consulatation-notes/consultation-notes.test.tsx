@@ -4,10 +4,9 @@ import React from 'react'
 import ConsultationNotes from './consultation-notes'
 
 describe('Floating Button and Consultation Pad', () => {
- 
   it('should show Consultation Notes button when Consultation Notes component is rendered', () => {
     render(<ConsultationNotes />)
-    
+
     expect(
       screen.getByRole('button', {
         name: /Consultation Notes/i,
@@ -21,7 +20,9 @@ describe('Floating Button and Consultation Pad', () => {
       name: /Consultation Notes/i,
     }
 
-    await userEvent.click(screen.getByRole('button', consultationNotesButtonName))
+    await userEvent.click(
+      screen.getByRole('button', consultationNotesButtonName),
+    )
 
     await waitFor(() => {
       expect(screen.getByText('Consultation Notes')).toBeInTheDocument()
@@ -36,8 +37,10 @@ describe('Floating Button and Consultation Pad', () => {
     const consultationNotesButtonName = {
       name: /Consultation Notes/i,
     }
-   
-    await userEvent.click(screen.getByRole('button', consultationNotesButtonName))
+
+    await userEvent.click(
+      screen.getByRole('button', consultationNotesButtonName),
+    )
     await userEvent.click(screen.getByRole('button', {name: /close/i}))
 
     await waitFor(() => {

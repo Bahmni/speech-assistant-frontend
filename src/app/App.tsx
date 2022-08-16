@@ -4,5 +4,4 @@ import ConsultationNotes from '../components/consulatation-notes/consultation-no
 const App = () => {
   return <ConsultationNotes />
 }
-
 export default App

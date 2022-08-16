@@ -7,8 +7,6 @@ import {
 jest.mock('@project-sunbird/open-speech-streaming-client')
 
 describe('Socket Connections Testing', () => {
-  
-
   afterEach(() => jest.clearAllMocks())
 
   it('should check for startstreaming and connect functions of streamingClient when handledStart is called', () => {
