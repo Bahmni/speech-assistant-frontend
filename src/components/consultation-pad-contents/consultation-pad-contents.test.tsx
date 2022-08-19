@@ -8,7 +8,7 @@ jest.mock('../../utils/socket-connection/socket-connection')
 describe('Consultation Pad Contents', () => {
   afterEach(() => jest.clearAllMocks())
 
-  it('should show the contents inside the consultation pad', async () => {
+  it('should show the textbox, start mic and save button when consultation pad contents component is rendered', async () => {
     render(<ConsultationPadContents />)
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
@@ -20,7 +20,7 @@ describe('Consultation Pad Contents', () => {
     ).toBeDisabled()
   })
 
-  it('should toggle between start mic and stop mic when clicked', async () => {
+  it('should show the stop mic and focus on text area when start mic is clicked', async () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
       handleStop: jest.fn(),
@@ -38,19 +38,11 @@ describe('Consultation Pad Contents', () => {
     await waitFor(() => {
       mockOnRecording(true)
       expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
-    })
-
-    await userEvent.click(screen.getByLabelText('Stop Mic'))
-
-    expect(mockSocketConnection.handleStop).toHaveBeenCalled()
-    waitFor(() => {
-      mockOnRecording(false)
-      expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
+      expect(screen.getByRole('textbox')).toHaveFocus()
     })
   })
 
-  it('should focus on the textarea when start mic and stop mic are clicked', async () => {
-    const user = userEvent.setup()
+  it('should show the start mic and focus on text area when stop mic is clicked', async () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
       handleStop: jest.fn(),
@@ -61,17 +53,17 @@ describe('Consultation Pad Contents', () => {
     render(<ConsultationPadContents />)
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
-    await user.click(screen.getByLabelText('Start Mic'))
-
+    await userEvent.click(screen.getByLabelText('Start Mic'))
     await waitFor(() => {
       mockOnRecording(true)
-      expect(screen.getByRole('textbox')).toHaveFocus()
+      expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
     })
+    await userEvent.click(screen.getByLabelText('Stop Mic'))
 
-    await user.click(screen.getByLabelText('Stop Mic'))
-
+    expect(mockSocketConnection.handleStop).toHaveBeenCalled()
     waitFor(() => {
       mockOnRecording(false)
+      expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
       expect(screen.getByRole('textbox')).toHaveFocus()
     })
   })

@@ -3,7 +3,7 @@ import React from 'react'
 import App from './App'
 
 describe('Speech Assistant App', () => {
-  it('should show Consultation Notes button when App is initialized', () => {
+  it('should show consultation notes button when App is initialized', () => {
     render(<App />)
 
     expect(
