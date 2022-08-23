@@ -55,6 +55,7 @@ typings/
 .next
 
 dist/
+index.html
 
 # Intellij integration
 *.iml

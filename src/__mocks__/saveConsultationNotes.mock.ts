@@ -71,6 +71,7 @@ export const mockObsResponse = {
   ],
   resourceVersion: '1.11',
 }
+<<<<<<< HEAD
 
 export const mockConceptResponse = {
   results: [
@@ -331,3 +332,5 @@ export const mockActiveactiveVisit = {
     },
   ],
 }
+=======
+>>>>>>> 224f6f5 (Add. code for save consultation notes and its test cases)
