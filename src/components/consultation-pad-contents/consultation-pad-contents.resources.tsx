@@ -1,5 +1,5 @@
-import {postApiCall} from '../../utils/api-utils'
-import {saveNotesUrl} from '../../utils/constants'
+import {postApiCall, getApiCall} from '../../utils/api-utils'
+import {saveNotesUrl, conceptUrl} from '../../utils/constants'
 
 interface ObsType {
   person: string
@@ -29,13 +29,19 @@ const requestbody = (
 }
 
 export const saveConsultationNotes = async consultationText => {
+  const conceptResponse = await getApiCall(conceptUrl).then(response =>
+    response.json(),
+  )
+  const conceptUuid = conceptResponse.results[0].uuid
+  const obsDatetime = new Date().toISOString()
+
   const body = requestbody(
-    [patient],
-    [concept],
-    [obsDatetime],
+    'dc9444c6-ad55-4200-b6e9-407e025eb948',
+    conceptUuid,
+    obsDatetime,
     consultationText,
-    [location],
-    [encounter],
+    'c5854fd7-3f12-11e4-adec-0800271c1b75',
+    'cd012444-b58b-4041-8d57-c271db9bd2a7',
   )
 
   postApiCall(saveNotesUrl, body)
