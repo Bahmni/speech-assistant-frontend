@@ -4,6 +4,7 @@ import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {streamingURL} from '../../utils/constants'
+import {saveConsultationNotes} from './consultation-pad-contents.resources'
 
 export const ConsultationPadContents = () => {
   const [isRecording, setIsRecording] = useState(false)
@@ -64,7 +65,13 @@ export const ConsultationPadContents = () => {
       {renderTextArea()}
       <div className={styles.padBottomArea}>
         {isRecording ? renderStopMic() : renderStartMic()}
-        <Button className={styles.saveButton} disabled={consultationText == ''}>
+        <Button
+          className={styles.saveButton}
+          disabled={consultationText == ''}
+          onClick={() => {
+            saveConsultationNotes(consultationText)
+          }}
+        >
           Save
         </Button>
       </div>
