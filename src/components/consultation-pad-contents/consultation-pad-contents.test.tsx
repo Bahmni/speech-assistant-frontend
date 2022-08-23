@@ -2,14 +2,9 @@ import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
-<<<<<<< HEAD
-
-import {ConsultationPadContents} from './consultation-pad-contents'
-=======
 import {mockObsResponse} from '../../__mocks__/saveConsultationNotes.mock'
 import {ConsultationPadContents} from './consultation-pad-contents'
 import {saveConsultationNotes} from './consultation-pad-contents.resources'
->>>>>>> 224f6f5 (Add. code for save consultation notes and its test cases)
 
 jest.mock('../../utils/socket-connection/socket-connection')
 
