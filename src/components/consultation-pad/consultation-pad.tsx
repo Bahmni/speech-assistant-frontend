@@ -1,17 +1,16 @@
 import React from 'react'
 import {ConsultationPadContents} from '../consultation-pad-contents/consultation-pad-contents'
-import {Modal} from '@carbon/react'
-export const ConsultationPad = ({setConsultationPadToClosed}) => {
+import {DraggableBox} from '../draggable-box/draggable-box'
+
+export const ConsultationPad = ({setShowConsultationPad}) => {
+  function closeClick() {
+    setShowConsultationPad(false)
+  }
   return (
     <>
-      <Modal
-        modalHeading="Consultation Notes"
-        open={true}
-        onRequestClose={() => setConsultationPadToClosed(false)}
-        passiveModal={true}
-      >
+      <DraggableBox heading="Consultation Notes" handleClose={closeClick}>
         <ConsultationPadContents />
-      </Modal>
+      </DraggableBox>
     </>
   )
 }

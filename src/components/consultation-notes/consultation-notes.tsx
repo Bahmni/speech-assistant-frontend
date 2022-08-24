@@ -9,7 +9,7 @@ const ConsultationNotes = () => {
   return (
     <>
       {showConsultationPad ? (
-        <ConsultationPad setConsultationPadToClosed={setShowConsultationPad} />
+        <ConsultationPad setShowConsultationPad={setShowConsultationPad} />
       ) : (
         <Button
           kind="secondary"

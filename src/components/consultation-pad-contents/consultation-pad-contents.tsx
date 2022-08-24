@@ -44,7 +44,7 @@ export const ConsultationPadContents = () => {
           onClick={() => socketConnection.handleStart()}
           aria-label="Start Mic"
         />
-        <h6>Start Recording</h6>
+        <h6 className="styles.heading">Start Recording</h6>
       </>
     )
   }
@@ -56,6 +56,7 @@ export const ConsultationPadContents = () => {
         labelText=""
         ref={input => input && input.focus()}
         value={consultationText}
+        style={{backgroundColor: 'white'}}
       ></TextArea>
     )
   }
