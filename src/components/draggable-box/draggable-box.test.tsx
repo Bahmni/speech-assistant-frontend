@@ -7,7 +7,7 @@ describe('Draggable Box', () => {
   let child = <h1>hello</h1>
   let handleClose = jest.fn()
 
-  it('should show consultation notes heading, close button and consultation pad components when draggable box is rendered', () => {
+  it('should show heading, close button and child components when draggable box is rendered', () => {
     render(
       <DraggableBox
         children={child}
@@ -20,7 +20,7 @@ describe('Draggable Box', () => {
     expect(screen.getByText('hello')).toBeInTheDocument()
   })
 
-  it('should close consultation pad when we clicked on close button', async () => {
+  it('should close draggable box when we clicked on close button', async () => {
     render(
       <DraggableBox
         children={child}
