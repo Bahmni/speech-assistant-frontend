@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@project-sunbird/open-speech-streaming-client": "^1.0.10",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.210",
     "@swc/jest": "^0.2.21",
@@ -70,7 +71,6 @@
     "webpack": "^5.73.0",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.9.3",
-    "@project-sunbird/open-speech-streaming-client": "^1.0.10"
+    "webpack-dev-server": "^4.9.3"
   }
 }
