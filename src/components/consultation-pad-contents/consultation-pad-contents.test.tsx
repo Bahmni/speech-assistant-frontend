@@ -2,7 +2,12 @@ import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
+import {
+  mockObsResponse,
+  mockConceptResponse,
+} from '../../__mocks__/saveConsultationNotes.mock'
 import {ConsultationPadContents} from './consultation-pad-contents'
+
 jest.mock('../../utils/socket-connection/socket-connection')
 
 describe('Consultation Pad Contents', () => {
@@ -94,5 +99,55 @@ describe('Consultation Pad Contents', () => {
         }),
       ).toBeEnabled()
     })
+  })
+
+  it('should save consultation notes when clicked on save button', async () => {
+    const mockSocketConnection = {
+      handleStart: jest.fn(),
+      handleStop: jest.fn(),
+    }
+    ;(SocketConnection as jest.Mock).mockImplementation(
+      () => mockSocketConnection,
+    )
+    render(<ConsultationPadContents />)
+    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
+      .calls[0][1]
+
+    global.fetch = jest.fn().mockImplementation(() => Promise<JSON>)
+    const mockFetch = global.fetch as jest.Mock
+    mockFetch
+      .mockResolvedValueOnce({
+        json: () => {
+          return mockConceptResponse
+        },
+      })
+      .mockResolvedValue({
+        json: () => {
+          return mockObsResponse
+        },
+      })
+
+    await waitFor(() => {
+      mockOnIncomingMessage('Consultation Notes')
+      expect(
+        screen.getByRole('button', {
+          name: /Save/i,
+        }),
+      ).toBeEnabled()
+    })
+
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    )
+    const conceptUrl = mockFetch.mock.calls[0][0]
+    const obsUrl = mockFetch.mock.calls[1][0]
+    const obsJsonBody = JSON.parse(mockFetch.mock.calls[1][1].body)
+
+    expect(fetch).toBeCalled()
+    expect(conceptUrl).toBe('/openmrs/ws/rest/v1/concept?q="Consultation Note')
+    expect(obsUrl).toBe('/openmrs/ws/rest/v1/obs')
+    expect(obsJsonBody.value).toBe('Consultation Notes')
   })
 })
