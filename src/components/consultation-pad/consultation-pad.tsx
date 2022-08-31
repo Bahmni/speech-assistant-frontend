@@ -1,7 +1,9 @@
 import React from 'react'
 import {ConsultationPadContents} from '../consultation-pad-contents/consultation-pad-contents'
 import {Modal} from '@carbon/react'
+import { activeEncounter } from './consultation-pad.resources'
 export const ConsultationPad = ({setConsultationPadToClosed}) => {
+  activeEncounter()
   return (
     <>
       <Modal
@@ -12,6 +14,7 @@ export const ConsultationPad = ({setConsultationPadToClosed}) => {
       >
         <ConsultationPadContents />
       </Modal>
+      {/* {activeEncounter()} */}
     </>
   )
 }
