@@ -29,25 +29,20 @@ const requestbody = (
 }
 
 export const saveConsultationNotes = async consultationText => {
-  let urlElements = window.location.href.split('/')
-  console.log('URL Elements----')
-  console.log(urlElements)
-
-  const patientUuid = urlElements[8]
-  console.log('Patient UUID-----')
-  console.log(patientUuid)
-
-  const location = document.cookie.split('%22')[9]
-  console.log('Location----' + location)
+  let url = window.location.href
 
   const conceptResponse = await getApiCall(conceptUrl).then(response =>
     response.json(),
   )
+  const patientUuid=url.match(/patient\/([a-fA-F\d-]+)/)[1]
+  const location =decodeURIComponent(document.cookie).match(/location={["a-z":]{7}"[A-Z a-z]*",["uuid:"]{7}"([a-fA-F\d-]*)/)[1]
+  console.log(location)
 
   const conceptUuid = conceptResponse.results[0].uuid
   const obsDatetime = new Date().toISOString()
   const visitUrl = `https://localhost/openmrs/ws/rest/v1/visit?includeInactive=false&patient=${patientUuid}&location=${location}&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)`
   console.log('Visit Url-----' + visitUrl)
+  // getApiCall(visitUrl).then(response=>response.json()).then(data=>{console.log(data)})
 
   const body = requestbody(
     patientUuid,
