@@ -3,9 +3,9 @@ import React, {useState} from 'react'
 import {Button} from '@carbon/react'
 import {Headset} from '@carbon/icons-react'
 import styles from './consultation-notes.scss'
+
 const ConsultationNotes = () => {
   const [showConsultationPad, setShowConsultationPad] = useState(false)
-
   return (
     <>
       {showConsultationPad ? (
