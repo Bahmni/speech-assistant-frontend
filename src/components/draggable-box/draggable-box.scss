@@ -1,0 +1,22 @@
+.draggableBox {
+    width: 30%;
+    position: fixed;
+    right: 0rem;
+    bottom: 0rem;
+    background-color: #f4f4f4;
+    opacity: 1;
+    padding: 1rem;
+    cursor: move;
+  }
+  .closeIcon{
+
+    width: 1.5rem;
+    block-size: auto;
+    cursor: pointer;
+
+  }
+  .heading{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+  }

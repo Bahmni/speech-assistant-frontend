@@ -37,11 +37,10 @@ describe('Floating Button and Consultation Pad', () => {
     const consultationNotesButtonName = {
       name: /Consultation Notes/i,
     }
-
     await userEvent.click(
       screen.getByRole('button', consultationNotesButtonName),
     )
-    await userEvent.click(screen.getByRole('button', {name: /close/i}))
+    await userEvent.click(screen.getByLabelText('close'))
 
     await waitFor(() => {
       expect(
