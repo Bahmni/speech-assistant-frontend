@@ -29,9 +29,7 @@ const requestbody = (
 }
 
 export const saveConsultationNotes = async consultationText => {
-  const conceptResponse = await getApiCall(conceptUrl).then(response =>
-    response.json(),
-  )
+  const conceptResponse = await getApiCall(conceptUrl)
   const conceptUuid = conceptResponse.results[0].uuid
   const obsDatetime = new Date().toISOString()
 
@@ -47,6 +45,6 @@ export const saveConsultationNotes = async consultationText => {
   postApiCall(saveNotesUrl, body)
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      return data
     })
 }

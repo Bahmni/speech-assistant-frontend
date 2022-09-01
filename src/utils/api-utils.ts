@@ -8,8 +8,12 @@ export const postApiCall = (url, data) => {
   })
 }
 
-export const getApiCall = url => {
-  return fetch(url, {
+export const getApiCall = async url => {
+  const response = await fetch(url, {
     method: 'GET',
   })
+
+  if (response.ok) {
+    return await response.json()
+  }
 }

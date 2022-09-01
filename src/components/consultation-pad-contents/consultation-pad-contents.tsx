@@ -61,6 +61,7 @@ export const ConsultationPadContents = () => {
       ></TextArea>
     )
   }
+
   return (
     <>
       {renderTextArea()}

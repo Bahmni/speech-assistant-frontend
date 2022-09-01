@@ -117,9 +117,8 @@ describe('Consultation Pad Contents', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => {
-          return mockConceptResponse
-        },
+        json: () => mockConceptResponse,
+        ok: true,
       })
       .mockResolvedValue({
         json: () => {

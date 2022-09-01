@@ -1,6 +1,26 @@
 .floating {
     position: fixed;
-    z-index: 1;
     right: 1rem;
     bottom: 1rem;
+    padding-right: 18px;
+    width: 170px;
+    height: 56px;
+    border-radius: 28px;
+    background: #007d79;
 }
+@media (max-width: 796px) {
+
+.floating > div  {
+    display: none;
+}
+
+.floating {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    padding: 0 1rem 0 1.1rem;
+}
+}
+.floating:hover {
+    background: #007d79
+}   
