@@ -6,6 +6,7 @@ export function ConsultationPad({setShowConsultationPad}) {
   function closeClick() {
     setShowConsultationPad(false)
   }
+
   return (
     <>
       <DraggableBox heading="Consultation Notes" handleClose={closeClick}>

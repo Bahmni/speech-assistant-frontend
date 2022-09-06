@@ -2,9 +2,22 @@ import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
+<<<<<<< HEAD
 import {mockObsResponse} from '../../__mocks__/saveConsultationNotes.mock'
 import {ConsultationPadContents} from './consultation-pad-contents'
 import {saveConsultationNotes} from './consultation-pad-contents.resources'
+=======
+import {
+  mockObsResponse,
+  mockConceptResponse,
+  mockVisitResponse,
+} from '../../__mocks__/saveConsultationNotes.mock'
+import {ConsultationPadContents} from './consultation-pad-contents'
+import {
+  getActiveEncounterUuid,
+  saveConsultationNotes,
+} from './consultation-pad-contents.resources'
+>>>>>>> 2d9d822 (Add. context for patient details)
 
 jest.mock('../../utils/socket-connection/socket-connection')
 
@@ -99,23 +112,68 @@ describe('Consultation Pad Contents', () => {
     })
   })
 
-  it('should save consultation notes when clicked on save button', () => {
-    global.fetch = jest.fn().mockImplementation()
-    const mockFetch = global.fetch as jest.Mock
-    render(<ConsultationPadContents />)
-    userEvent.type(screen.getByRole('textbox'), 'Consultation Notes')
+  // it('should save consultation notes when clicked on save button', async () => {
+  //   const mockSocketConnection = {
+  //     handleStart: jest.fn(),
+  //     handleStop: jest.fn(),
+  //   }
+  //   ;(SocketConnection as jest.Mock).mockImplementation(
+  //     () => mockSocketConnection,
+  //   )
+  //   render(<ConsultationPadContents />)
+  //   const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
+  //     .calls[0][1]
 
-    mockFetch.mockResolvedValue({
-      json: () => {
-        return mockObsResponse
-      },
-    })
-    const url = mockFetch.mock.calls[0][0]
-    const jsonBody = JSON.parse(mockFetch.mock.calls[0][1].body)
-    saveConsultationNotes('Consultation Notes')
+  //   global.fetch = jest.fn().mockImplementation(() => Promise<JSON>)
+  //   const mockFetch = global.fetch as jest.Mock
+  //   mockFetch
+  //     .mockResolvedValueOnce({
+  //       json: () => {
+  //         return mockConceptResponse
+  //       },
+  //     })
+  //     .mockResolvedValue({
+  //       json: () => {
+  //         return mockObsResponse
+  //       },
+  //     })
+  //   // .mockResolvedValue({
+  //   //   json: () => {
+  //   //     return mockObsResponse
+  //   //   },
+  //   // })
 
-    expect(fetch).toBeCalled()
-    expect(url).toBe('/openmrs/ws/rest/v1/obs')
-    expect(jsonBody.value).toBe('Consultation Notes')
-  })
+  //   await waitFor(() => {
+  //     mockOnIncomingMessage('Consultation Notes')
+  //     expect(
+  //       screen.getByRole('button', {
+  //         name: /Save/i,
+  //       }),
+  //     ).toBeEnabled()
+  //   })
+
+  //   await userEvent.click(
+  //     screen.getByRole('button', {
+  //       name: /Save/i,
+  //     }),
+  //   )
+
+  //   expect(
+  //     saveConsultationNotes('Notes', {
+  //       patientUuid: 'uuid',
+  //       location: 'location',
+  //       visitRespose: mockVisitResponse,
+  //     }),
+  //   ).toBeCalled()
+  //   // const visitUrl = mockFetch.mock.calls[0][0]
+  //   const conceptUrl = mockFetch.mock.calls[0][0]
+  //   const obsUrl = mockFetch.mock.calls[1][0]
+  //   const obsJsonBody = JSON.parse(mockFetch.mock.calls[1][1].body)
+
+  //   expect(fetch).toBeCalled()
+  //   // expect(visitUrl).toBe('')
+  //   expect(conceptUrl).toBe('/openmrs/ws/rest/v1/concept?q="Consultation Note')
+  //   expect(obsUrl).toBe('/openmrs/ws/rest/v1/obs')
+  //   expect(obsJsonBody.value).toBe('Consultation Notes')
+  // })
 })

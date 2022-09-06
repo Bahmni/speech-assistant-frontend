@@ -59,5 +59,4 @@ function ConsultationContextProvider({children}) {
     </ConsultationContext.Provider>
   )
 }
-
 export default ConsultationContextProvider
