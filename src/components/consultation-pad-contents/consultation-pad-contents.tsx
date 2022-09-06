@@ -1,10 +1,14 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {streamingURL} from '../../utils/constants'
 import {saveConsultationNotes} from './consultation-pad-contents.resources'
+import {
+  ConsultationContext,
+  PatientDetails,
+} from '../../context/consultation-context'
 
 export const ConsultationPadContents = () => {
   const [isRecording, setIsRecording] = useState(false)
@@ -61,6 +65,8 @@ export const ConsultationPadContents = () => {
       ></TextArea>
     )
   }
+  const {patientDetails}: any = useContext(ConsultationContext)
+  // console.log(patientDetails)
   return (
     <>
       {renderTextArea()}
@@ -70,7 +76,7 @@ export const ConsultationPadContents = () => {
           className={styles.saveButton}
           disabled={consultationText == ''}
           onClick={() => {
-            saveConsultationNotes(consultationText)
+            saveConsultationNotes(consultationText, patientDetails)
           }}
         >
           Save

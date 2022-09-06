@@ -2,11 +2,16 @@ import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
-// import {
-//   mockObsResponse,
-//   mockConceptResponse,
-// } from '../../__mocks__/saveConsultationNotes.mock'
+import {
+  mockObsResponse,
+  mockConceptResponse,
+  mockVisitResponse,
+} from '../../__mocks__/saveConsultationNotes.mock'
 import {ConsultationPadContents} from './consultation-pad-contents'
+import {
+  getActiveEncounterUuid,
+  saveConsultationNotes,
+} from './consultation-pad-contents.resources'
 
 jest.mock('../../utils/socket-connection/socket-connection')
 
@@ -126,6 +131,11 @@ describe('Consultation Pad Contents', () => {
   //         return mockObsResponse
   //       },
   //     })
+  //   // .mockResolvedValue({
+  //   //   json: () => {
+  //   //     return mockObsResponse
+  //   //   },
+  //   // })
 
   //   await waitFor(() => {
   //     mockOnIncomingMessage('Consultation Notes')
@@ -141,11 +151,21 @@ describe('Consultation Pad Contents', () => {
   //       name: /Save/i,
   //     }),
   //   )
+
+  //   expect(
+  //     saveConsultationNotes('Notes', {
+  //       patientUuid: 'uuid',
+  //       location: 'location',
+  //       visitRespose: mockVisitResponse,
+  //     }),
+  //   ).toBeCalled()
+  //   // const visitUrl = mockFetch.mock.calls[0][0]
   //   const conceptUrl = mockFetch.mock.calls[0][0]
   //   const obsUrl = mockFetch.mock.calls[1][0]
   //   const obsJsonBody = JSON.parse(mockFetch.mock.calls[1][1].body)
 
   //   expect(fetch).toBeCalled()
+  //   // expect(visitUrl).toBe('')
   //   expect(conceptUrl).toBe('/openmrs/ws/rest/v1/concept?q="Consultation Note')
   //   expect(obsUrl).toBe('/openmrs/ws/rest/v1/obs')
   //   expect(obsJsonBody.value).toBe('Consultation Notes')
