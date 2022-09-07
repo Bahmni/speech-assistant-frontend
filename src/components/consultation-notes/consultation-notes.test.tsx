@@ -1,12 +1,16 @@
 import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
+import ConsultationContextProvider from '../../context/consultation-context'
 import ConsultationNotes from './consultation-notes'
 
 describe('Floating Button and Consultation Pad', () => {
   it('should show Consultation Notes button when Consultation Notes component is rendered', () => {
-    render(<ConsultationNotes />)
-
+    render(
+      <ConsultationContextProvider>
+        <ConsultationNotes />
+      </ConsultationContextProvider>,
+    )
     expect(
       screen.getByRole('button', {
         name: /Consultation Notes/i,
@@ -15,7 +19,11 @@ describe('Floating Button and Consultation Pad', () => {
   })
 
   it('should show Consultation Pad when Consultation Notes button is clicked', async () => {
-    render(<ConsultationNotes />)
+    render(
+      <ConsultationContextProvider>
+        <ConsultationNotes />
+      </ConsultationContextProvider>,
+    )
     const consultationNotesButtonName = {
       name: /Consultation Notes/i,
     }
@@ -33,7 +41,11 @@ describe('Floating Button and Consultation Pad', () => {
   })
 
   it('should show Consultation Notes button when Consultation pad is closed', async () => {
-    render(<ConsultationNotes />)
+    render(
+      <ConsultationContextProvider>
+        <ConsultationNotes />
+      </ConsultationContextProvider>,
+    )
     const consultationNotesButtonName = {
       name: /Consultation Notes/i,
     }

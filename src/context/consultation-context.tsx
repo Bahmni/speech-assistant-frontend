@@ -2,19 +2,20 @@ import React, {useState} from 'react'
 
 export interface PatientDetails {
   patientUuid: string
-  location: string
+  locationUuid: string
   visitResponse: any
 }
 
-export const ConsultationContext = React.createContext({})
+export const ConsultationContext = React.createContext(null)
 
-export function ConsultationContextProvider({children}) {
+export const ConsultationContextProvider = ({children}) => {
   const [patientDetails, setPatientDetails] = useState<PatientDetails>()
 
   const contextValue = {
     patientDetails,
     setPatientDetails,
   }
+
   return (
     <ConsultationContext.Provider value={contextValue}>
       {children}

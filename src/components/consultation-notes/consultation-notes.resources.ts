@@ -15,6 +15,7 @@ export const fetchActiveVisits = async setPatientDetails => {
     .then(data => {
       return data
     })
+  console.log(activeVisitResponses)
   activeVisitResponses.results.length > 0
     ? setPatientDetails({
         patientUuid,
