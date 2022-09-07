@@ -28,41 +28,41 @@ const requestbody = (
   }
 }
 
-export const getActiveEncounterUuid = async visitRepsonse => {
-  const currentDatetime = new Date()
-  const encounters = visitRepsonse.results[0].encounters
-
+const getActiveEncounterUuid = visitRepsonse => {
+  let currentDatetime
+  let encounters
   let activeEncounterUuid = null
   let encounterDateTime
   let timeDifferenceInMinutes
 
-  encounters.forEach(encounter => {
-    encounter.encounterType.display == 'Consultation' &&
-      ((encounterDateTime = new Date(encounter.encounterDatetime)),
-      (timeDifferenceInMinutes =
-        (currentDatetime.getTime() - encounterDateTime.getTime()) / 60000),
-      console.log(timeDifferenceInMinutes),
-      timeDifferenceInMinutes < 60 && (activeEncounterUuid = encounter.uuid))
-  })
+  visitRepsonse.results.length > 0
+    ? ((currentDatetime = new Date()),
+      (encounters = visitRepsonse.results[0].encounters),
+      encounters.forEach(encounter => {
+        encounter.encounterType.display == 'Consultation' &&
+          ((encounterDateTime = new Date(encounter.encounterDatetime)),
+          (timeDifferenceInMinutes =
+            (currentDatetime.getTime() - encounterDateTime.getTime()) / 60000),
+          timeDifferenceInMinutes < 60 &&
+            (activeEncounterUuid = encounter.uuid))
+      }))
+    : console.log('No Active Visits')
 
   return activeEncounterUuid
 }
 
-export const saveConsultationNotes = async (
-  consultationText,
-  patientDetails,
-) => {
-  const activeEncounterUuid = await getActiveEncounterUuid(
+export const saveConsultationNotes = (consultationText, patientDetails) => {
+  const activeEncounterUuid = getActiveEncounterUuid(
     patientDetails.visitResponse,
   )
-  activeEncounterUuid != null
-    ? saveObsData(
-        consultationText,
-        patientDetails.patientUuid,
-        patientDetails.location,
-        activeEncounterUuid,
-      )
-    : console.log('No active Encounters')
+
+  activeEncounterUuid != null &&
+    saveObsData(
+      consultationText,
+      patientDetails.patientUuid,
+      patientDetails.location,
+      activeEncounterUuid,
+    )
 }
 
 export const saveObsData = async (

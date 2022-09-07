@@ -65,8 +65,7 @@ export function ConsultationPadContents() {
       ></TextArea>
     )
   }
-  const {patientDetails}: any = useContext(ConsultationContext)
-  // console.log(patientDetails)
+  const patientDetails: PatientDetails = useContext(ConsultationContext)
   return (
     <>
       {renderTextArea()}
