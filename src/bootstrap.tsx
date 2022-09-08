@@ -1,22 +1,32 @@
 import React from 'react'
-import {render} from 'react-dom'
 import App from './app/App'
+import {createRoot} from 'react-dom/client'
 
-//TODO make the container configurable mf-container
-
-function getSAMfContainer(bodyContainer) {
-  return bodyContainer.querySelector("div[mf-container='sa']")
-}
+const mfContainerAttribute = 'mf-container'
+const mfContainerValue = 'sa'
+const speechAssistantApp = 'sa-app'
 
 function renderApp() {
-  const mfContainer = getSAMfContainer(bodyContainer)
-  render(<App />, mfContainer)
+  const appContainer = document.getElementById(speechAssistantApp)
+  const root = createRoot(appContainer)
+  root.render(<App />)
 }
 
-const bodyContainer = document.getElementsByTagName('body')[0]
-if (!getSAMfContainer(bodyContainer)) {
+function createDOM() {
   const divContainer = document.createElement('div')
-  divContainer.setAttribute('mf-container', 'sa')
-  bodyContainer.appendChild(divContainer)
+  divContainer.setAttribute(mfContainerAttribute, mfContainerValue)
+  const appDivContainer = document.createElement('div')
+  appDivContainer.setAttribute('id', speechAssistantApp)
+
+  divContainer.appendChild(appDivContainer)
+  document.getElementsByTagName('body')[0].appendChild(divContainer)
+}
+
+if (
+  !document.querySelector(
+    `body div[${mfContainerAttribute}='${mfContainerValue}']`,
+  )
+) {
+  createDOM()
 }
 renderApp()

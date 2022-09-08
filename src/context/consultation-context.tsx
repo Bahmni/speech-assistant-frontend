@@ -53,10 +53,20 @@ function ConsultationContextProvider({children}) {
     setPatientUuid(getPatientUuid())
   })
 
+  window.addEventListener('hashchange', onUrlChange)
+
   return (
     <ConsultationContext.Provider value={patientDetails}>
       {children}
     </ConsultationContext.Provider>
   )
 }
+
+async function fetchActiveVisits(patiendId, locationId) {
+  const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
+  return activeVisitResponse?.results?.length > 0
+    ? activeVisitResponse?.results[0]
+    : null
+}
+
 export default ConsultationContextProvider
