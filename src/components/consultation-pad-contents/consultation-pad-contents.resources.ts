@@ -28,41 +28,42 @@ const requestbody = (
   }
 }
 
-const getActiveEncounterUuid = visitRepsonse => {
-  let currentDatetime
-  let encounters
-  let activeEncounterUuid = null
-  let encounterDateTime
-  let timeDifferenceInMinutes
+const getConsultationEncounter = encounters => {
+  for (const encounter of encounters) {
+    if (encounter.encounterType.display == 'Consultation') return encounter
+  }
+  console.log('Outside for each')
+  return false
+}
 
-  visitRepsonse.results.length > 0
-    ? ((currentDatetime = new Date()),
-      (encounters = visitRepsonse.results[0].encounters),
-      encounters.forEach(encounter => {
-        encounter.encounterType.display == 'Consultation' &&
-          ((encounterDateTime = new Date(encounter.encounterDatetime)),
-          (timeDifferenceInMinutes =
-            (currentDatetime.getTime() - encounterDateTime.getTime()) / 60000),
-          timeDifferenceInMinutes < 60 &&
-            (activeEncounterUuid = encounter.uuid))
-      }))
-    : console.log('No Active Visits')
-
-  return activeEncounterUuid
+const isConscultationEncounterActive = consultationEncounter => {
+  const consultationEncounterDateTime = new Date(
+    consultationEncounter.encounterDatetime,
+  )
+  const currentDatetime = new Date()
+  const timeDifferenceInMinutes =
+    (currentDatetime.getTime() - consultationEncounterDateTime.getTime()) /
+    60000
+  return timeDifferenceInMinutes < 60
 }
 
 export const saveConsultationNotes = (consultationText, patientDetails) => {
-  const activeEncounterUuid = getActiveEncounterUuid(
-    patientDetails.visitResponse,
-  )
-
-  activeEncounterUuid != null &&
-    saveObsData(
-      consultationText,
-      patientDetails.patientUuid,
-      patientDetails.location,
-      activeEncounterUuid,
-    )
+  let encounters
+  let consultationEncounter
+  let activeConsultationEncounterUuid
+  ;(encounters = patientDetails.visitResponse.encounters),
+    (consultationEncounter = getConsultationEncounter(encounters)),
+    consultationEncounter
+      ? isConscultationEncounterActive(consultationEncounter)
+        ? ((activeConsultationEncounterUuid = consultationEncounter.uuid),
+          saveObsData(
+            consultationText,
+            patientDetails.patientUuid,
+            patientDetails.location,
+            activeConsultationEncounterUuid,
+          ))
+        : console.log('No Active Consultation Encounter')
+      : console.log('No Consultation Encounter')
 }
 
 export const saveObsData = async (
@@ -71,9 +72,7 @@ export const saveObsData = async (
   location,
   encounterUuid,
 ) => {
-  const conceptResponse = await getApiCall(conceptUrl).then(response =>
-    response.json(),
-  )
+  const conceptResponse = await getApiCall(conceptUrl)
   const conceptUuid = conceptResponse.results[0].uuid
   const obsDatetime = new Date().toISOString()
 

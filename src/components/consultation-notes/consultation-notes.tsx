@@ -7,9 +7,11 @@ import {ConsultationContext} from '../../context/consultation-context'
 
 const ConsultationNotes = () => {
   const [showConsultationPad, setShowConsultationPad] = useState(false)
-  const patiendDetails = useContext(ConsultationContext)
+  const patientDetails = useContext(ConsultationContext)
+  console.log('Inside Notes')
+  console.log(patientDetails)
   return (
-    patiendDetails?.visitResponse && (
+    patientDetails?.visitResponse && (
       <>
         {showConsultationPad ? (
           <ConsultationPad setShowConsultationPad={setShowConsultationPad} />
@@ -26,7 +28,6 @@ const ConsultationNotes = () => {
       </>
     )
   )
-  // )
 }
 
 export default ConsultationNotes
