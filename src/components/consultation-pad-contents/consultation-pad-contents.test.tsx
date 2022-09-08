@@ -7,11 +7,11 @@ import {
 } from '../../context/consultation-context'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {
-  mockObsResponse,
   mockConceptResponse,
-  mockVisitResponse,
-  mockNoConsultationEncounerVisitResponse,
   mockExpiredConsultationEncounterVisitResponse,
+  mockNoConsultationEncounerVisitResponse,
+  mockObsResponse,
+  mockVisitResponse,
 } from '../../__mocks__/saveConsultationNotes.mock'
 import {ConsultationPadContents} from './consultation-pad-contents'
 
