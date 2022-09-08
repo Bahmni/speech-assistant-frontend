@@ -25,7 +25,6 @@ function ConsultationNotes() {
       </Button>
     ))
   )
-  // )
 }
 
 export default ConsultationNotes

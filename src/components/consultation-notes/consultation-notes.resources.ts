@@ -10,17 +10,17 @@ export const fetchActiveVisits = async setPatientDetails => {
 
   const visitUrl = `https://localhost/openmrs/ws/rest/v1/visit?includeInactive=false&patient=${patientUuid}&location=${locationUuid}&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)`
 
-  const activeVisitResponses = await getApiCall(visitUrl)
+  const visitResponse = await getApiCall(visitUrl)
     .then(response => response.json())
     .then(data => {
       return data
     })
-  console.log(activeVisitResponses)
-  activeVisitResponses.results.length > 0
+  // console.log(activeVisitResponses)
+  visitResponse.results.length > 0
     ? setPatientDetails({
         patientUuid,
-        location,
-        activeVisitResponses,
+        locationUuid,
+        visitResponse,
       })
     : setPatientDetails(null)
 }
