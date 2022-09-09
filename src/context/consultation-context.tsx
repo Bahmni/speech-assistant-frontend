@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {getApiCall} from '../utils/api-utils'
 import {visitUrl} from '../utils/constants'
 import {
@@ -15,56 +15,37 @@ export interface PatientDetails {
 export const ConsultationContext = React.createContext({} as PatientDetails)
 
 function ConsultationContextProvider({children}) {
-  const [patientDetails, setPatientDetails] = useState<PatientDetails>({
-    patientUuid: '',
-    locationUuid: '',
-    visitResponse: null,
-  })
-  let isVisitsLoading = false
+  const [patientDetails, setPatientDetails] = useState<PatientDetails>()
+  const [patientUuid, setPatientUuid] = useState('')
+  const [locationUuid, setLocationUuid] = useState('')
 
-  useEffect(() => updatePatientDetails(), [])
-
-  const onUrlChange = useCallback(() => {
-    console.dir(patientDetails)
-    console.log(isVisitsLoading)
-    if (!isVisitsLoading) updatePatientDetails()
-  }, [])
-
-  function updatePatientDetails() {
-    const patientId = getPatientUuid()
-    const locationId = getLocationUuid()
-
-    if (
-      patientId &&
-      locationId &&
-      isPatientOrLocationDifferent(patientId, locationId)
-    ) {
-      isVisitsLoading = true
-      fetchActiveVisits(patientId, locationId).then(data => {
-        isVisitsLoading = false
+  useEffect(() => {
+    if (patientUuid && locationUuid) {
+      const activeVisit = fetchActiveVisits(patientUuid, locationUuid)
+      activeVisit.then(visit => {
         setPatientDetails({
-          patientUuid: patientId,
-          locationUuid: locationId,
-          visitResponse: data,
+          patientUuid: patientUuid,
+          locationUuid: locationUuid,
+          visitResponse: visit,
         })
       })
-    } else if (!(patientId && locationId)) {
+    } else {
       setPatientDetails({
-        patientUuid: patientId,
-        locationUuid: locationId,
+        patientUuid: patientUuid,
+        locationUuid: locationUuid,
         visitResponse: null,
       })
     }
-  }
+  }, [patientUuid, locationUuid])
 
-  function isPatientOrLocationDifferent(patientId, locationId) {
-    return (
-      patientId !== patientDetails.patientUuid ||
-      locationId !== patientDetails.locationUuid
-    )
-  }
+  useEffect(() => {
+    setPatientUuid(getPatientUuid())
+    setLocationUuid(getLocationUuid())
+  }, [])
 
-  window.addEventListener('hashchange', onUrlChange)
+  window.addEventListener('hashchange', () => {
+    setPatientUuid(getPatientUuid())
+  })
 
   return (
     <ConsultationContext.Provider value={patientDetails}>

@@ -8,8 +8,6 @@ import {ConsultationContext} from '../../context/consultation-context'
 const ConsultationNotes = () => {
   const [showConsultationPad, setShowConsultationPad] = useState(false)
   const patientDetails = useContext(ConsultationContext)
-  console.log('Inside Notes')
-  console.log(patientDetails)
   return (
     patientDetails?.visitResponse && (
       <>

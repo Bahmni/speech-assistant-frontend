@@ -1,5 +1,4 @@
-export const streamingURL =
-  'http://' + location.hostname + (location.port ? ':' + location.port : '')
+export const streamingURL = 'http://localhost'
 export const language = 'en'
 export const saveNotesUrl = '/openmrs/ws/rest/v1/obs'
 export const conceptUrl = '/openmrs/ws/rest/v1/concept?q="Consultation Note'

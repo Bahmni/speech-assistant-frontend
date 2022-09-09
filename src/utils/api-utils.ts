@@ -12,6 +12,7 @@ export const getApiCall = async url => {
   const response = await fetch(url, {
     method: 'GET',
   })
-  const body = await response.json()
-  return body
+  if (response.ok) {
+    return await response.json()
+  }
 }

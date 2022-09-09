@@ -6,7 +6,7 @@ export const getPatientUuid = () => {
 
 export const getLocationUuid = () => {
   const matchedPatterns = decodeURIComponent(document.cookie).match(
-    /location={["a-z":]{7}"[A-Z a-z]*",["uuid:"]{7}"([a-fA-F\d-]*)/,
+    /location=.+["uuid:"]([a-fA-F\d-]+)/,
   )
   return matchedPatterns == null ? '' : matchedPatterns[1]
 }
