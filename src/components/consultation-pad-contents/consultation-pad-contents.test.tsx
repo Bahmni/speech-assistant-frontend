@@ -19,9 +19,10 @@ jest.mock('../../utils/socket-connection/socket-connection')
 
 describe('Consultation Pad Contents', () => {
   afterEach(() => jest.clearAllMocks())
+  const handleClose = jest.fn()
 
-  it('should show the textbox, start mic and save button when consultation pad contents component is rendered', () => {
-    render(<ConsultationPadContents />)
+  it('should show the textbox, start mic and save button when consultation pad contents component is rendered', async () => {
+    render(<ConsultationPadContents handleClose={handleClose} />)
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
     expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
@@ -40,7 +41,7 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents />)
+    render(<ConsultationPadContents handleClose={handleClose} />)
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
@@ -63,7 +64,7 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents />)
+    render(<ConsultationPadContents handleClose={handleClose} />)
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
@@ -90,7 +91,7 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents />)
+    render(<ConsultationPadContents handleClose={handleClose} />)
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
       .calls[0][1]
 
@@ -110,49 +111,6 @@ describe('Consultation Pad Contents', () => {
     })
   })
 
-  it('should not save consultation notes when clicked on save button and active visits are not present', async () => {
-    const mockSocketConnection = {
-      handleStart: jest.fn(),
-      handleStop: jest.fn(),
-    }
-    ;(SocketConnection as jest.Mock).mockImplementation(
-      () => mockSocketConnection,
-    )
-    global.fetch = jest.fn().mockImplementation(() => Promise<JSON>)
-
-    const patientDetails: PatientDetails = {
-      patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
-      locationUuid: '',
-      visitResponse: {
-        results: [],
-      },
-    }
-
-    render(
-      <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents />
-      </ConsultationContext.Provider>,
-    )
-    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
-      .calls[0][1]
-
-    await waitFor(() => {
-      mockOnIncomingMessage('Consultation Notes')
-      expect(
-        screen.getByRole('button', {
-          name: /Save/i,
-        }),
-      ).toBeEnabled()
-    })
-
-    await userEvent.click(
-      screen.getByRole('button', {
-        name: /Save/i,
-      }),
-    )
-    expect(fetch).not.toBeCalled()
-  })
-
   it('should not save consultation notes when clicked on save button and consultation encounter is not present', async () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
@@ -161,17 +119,17 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    global.fetch = jest.fn().mockImplementation(() => Promise<JSON>)
+    global.fetch = jest.fn().mockImplementation()
 
     const patientDetails: PatientDetails = {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: '',
-      visitResponse: mockNoConsultationEncounerVisitResponse,
+      activeVisit: mockNoConsultationEncounerVisitResponse,
     }
 
     render(
       <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents />
+        <ConsultationPadContents handleClose={handleClose} />
       </ConsultationContext.Provider>,
     )
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
@@ -203,29 +161,28 @@ describe('Consultation Pad Contents', () => {
       () => mockSocketConnection,
     )
 
-    global.fetch = jest.fn().mockImplementation(() => Promise<JSON>)
+    global.fetch = jest.fn().mockImplementation()
+
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => {
-          return mockConceptResponse
-        },
+        json: () => mockConceptResponse,
+        ok: true,
       })
       .mockResolvedValue({
-        json: () => {
-          return mockObsResponse
-        },
+        json: () => mockObsResponse,
+        ok: true,
       })
 
     const patientDetails: PatientDetails = {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: '',
-      visitResponse: mockVisitResponse,
+      activeVisit: mockVisitResponse,
     }
 
     render(
       <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents />
+        <ConsultationPadContents handleClose={handleClose} />
       </ConsultationContext.Provider>,
     )
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
@@ -252,7 +209,6 @@ describe('Consultation Pad Contents', () => {
     const obsJsonBody = JSON.parse(mockFetch.mock.calls[1][1].body)
 
     expect(fetch).toBeCalled()
-    // expect(visitUrl).toBe('')
     expect(conceptUrl).toBe('/openmrs/ws/rest/v1/concept?q="Consultation Note')
     expect(obsUrl).toBe('/openmrs/ws/rest/v1/obs')
     expect(obsJsonBody.value).toBe('Consultation Notes')
@@ -270,12 +226,12 @@ describe('Consultation Pad Contents', () => {
     const patientDetails: PatientDetails = {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: '',
-      visitResponse: mockExpiredConsultationEncounterVisitResponse,
+      activeVisit: mockExpiredConsultationEncounterVisitResponse,
     }
 
     render(
       <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents />
+        <ConsultationPadContents handleClose={handleClose} />
       </ConsultationContext.Provider>,
     )
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock

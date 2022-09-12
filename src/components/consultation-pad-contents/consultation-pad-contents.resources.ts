@@ -32,29 +32,32 @@ const getConsultationEncounter = encounters => {
   for (const encounter of encounters) {
     if (encounter.encounterType.display == 'Consultation') return encounter
   }
-  console.log('Outside for each')
   return false
 }
 
-const isConscultationEncounterActive = consultationEncounter => {
+const isConsultationEncounterActive = consultationEncounter => {
   const consultationEncounterDateTime = new Date(
     consultationEncounter.encounterDatetime,
   )
   const currentDatetime = new Date()
+  const MILLISECONDS_TO_MINUTES_CONVERSION_FACTOR = 60000
+  const SIXTY_MINUTES = 60
+
   const timeDifferenceInMinutes =
     (currentDatetime.getTime() - consultationEncounterDateTime.getTime()) /
-    60000
-  return timeDifferenceInMinutes < 60
+    MILLISECONDS_TO_MINUTES_CONVERSION_FACTOR
+
+  return timeDifferenceInMinutes < SIXTY_MINUTES
 }
 
 export const saveConsultationNotes = (consultationText, patientDetails) => {
   let encounters
   let consultationEncounter
   let activeConsultationEncounterUuid
-  ;(encounters = patientDetails.visitResponse.encounters),
+  ;(encounters = patientDetails.activeVisit.encounters),
     (consultationEncounter = getConsultationEncounter(encounters)),
     consultationEncounter
-      ? isConscultationEncounterActive(consultationEncounter)
+      ? isConsultationEncounterActive(consultationEncounter)
         ? ((activeConsultationEncounterUuid = consultationEncounter.uuid),
           saveObsData(
             consultationText,
@@ -74,6 +77,7 @@ export const saveObsData = async (
 ) => {
   const conceptResponse = await getApiCall(conceptUrl)
   const conceptUuid = conceptResponse.results[0].uuid
+
   const obsDatetime = new Date().toISOString()
 
   const body = requestbody(
@@ -85,9 +89,5 @@ export const saveObsData = async (
     encounterUuid,
   )
 
-  postApiCall(saveNotesUrl, body)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-    })
+  postApiCall(saveNotesUrl, body).then(response => response.json())
 }

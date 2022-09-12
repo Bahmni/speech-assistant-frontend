@@ -70,6 +70,7 @@ export const mockObsResponse = {
     },
   ],
   resourceVersion: '1.11',
+  ok: 'true',
 }
 
 export const mockConceptResponse = {

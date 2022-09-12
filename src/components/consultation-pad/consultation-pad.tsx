@@ -10,7 +10,7 @@ export function ConsultationPad({setShowConsultationPad}) {
   return (
     <>
       <DraggableBox heading="Consultation Notes" handleClose={closeClick}>
-        <ConsultationPadContents />
+        <ConsultationPadContents handleClose={closeClick} />
       </DraggableBox>
     </>
   )

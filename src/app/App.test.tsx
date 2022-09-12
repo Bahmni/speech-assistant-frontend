@@ -34,7 +34,6 @@ describe('Speech Assistant App', () => {
       },
     })
     render(<App />)
-
     expect(
       screen.queryByRole('button', {
         name: /Consultation Pad/i,
