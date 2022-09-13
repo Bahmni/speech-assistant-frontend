@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const path = require('path')
+const Dotenv = require('dotenv-webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
@@ -52,6 +53,7 @@ const config = {
     ],
   },
   plugins: [
+    new Dotenv(),
     new ForkTsCheckerWebpackPlugin(),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
