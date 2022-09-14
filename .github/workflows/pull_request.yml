@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Setup Node.js 16.x
         uses: actions/setup-node@v1
         with:
@@ -15,5 +17,11 @@ jobs:
       - run: yarn install
       - run: yarn lint
       - run: yarn typescript
-      - run: yarn test
+      - name: Test and coverage
+        run: yarn jest --coverage
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
       - run: yarn build

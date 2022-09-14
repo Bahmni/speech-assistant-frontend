@@ -9,11 +9,13 @@
       "^lodash-es/(.*)$": "lodash/$1"
     },
     "collectCoverageFrom": [
-      "**/src/*.tsx",
+      "**/src/**/*.{ts,tsx}",
       "!**/node_modules/**",
       "!**/vendor/**",
       "!**/src/**/*.test.*",
-      "!**/src/declarations.d.tsx"
+      "!**/src/declarations.d.tsx",
+      "!**/src/index.tsx",
+      "!**/src/bootstrap.tsx"
     ],
     "coverageThreshold": {
       "global": {
