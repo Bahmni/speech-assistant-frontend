@@ -52,3 +52,8 @@ yarn build
 ```
 yarn test
 ```
+ ### Notes:
+```
+   * By default, speech-asstant-proxy server url will be the application origin url.
+   * If we want to change default proxy server url, update it in .env file.
+```
