@@ -10,7 +10,7 @@ import {
   PatientDetails,
 } from '../../context/consultation-context'
 
-export const ConsultationPadContents = ({handleClose}) => {
+export const ConsultationPadContents = ({closeConsultationPad}) => {
   const [isRecording, setIsRecording] = useState(false)
   const [consultationText, setConsultationText] = useState('')
   const [socketConnection, setSocketConnection] = useState(null)
@@ -76,7 +76,7 @@ export const ConsultationPadContents = ({handleClose}) => {
           disabled={consultationText == ''}
           onClick={() => {
             saveConsultationNotes(consultationText, patientDetails)
-            handleClose()
+            closeConsultationPad()
           }}
         >
           Save

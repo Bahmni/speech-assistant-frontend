@@ -28,45 +28,37 @@ const requestbody = (
   }
 }
 
-const getConsultationEncounter = encounters => {
-  for (const encounter of encounters) {
-    if (encounter.encounterType.display == 'Consultation') return encounter
-  }
-  return false
-}
+const MILLISECOND_TO_MINUTE_CONVERSION_FACTOR = 60000
+const SIXTY_MINUTES = 60
 
 const isConsultationEncounterActive = consultationEncounter => {
   const consultationEncounterDateTime = new Date(
     consultationEncounter.encounterDatetime,
   )
   const currentDatetime = new Date()
-  const MILLISECONDS_TO_MINUTES_CONVERSION_FACTOR = 60000
-  const SIXTY_MINUTES = 60
 
   const timeDifferenceInMinutes =
     (currentDatetime.getTime() - consultationEncounterDateTime.getTime()) /
-    MILLISECONDS_TO_MINUTES_CONVERSION_FACTOR
+    MILLISECOND_TO_MINUTE_CONVERSION_FACTOR
 
   return timeDifferenceInMinutes < SIXTY_MINUTES
 }
 
 export const saveConsultationNotes = (consultationText, patientDetails) => {
-  let encounters
-  let consultationEncounter
-  let activeConsultationEncounterUuid
-  ;(encounters = patientDetails.activeVisit.encounters),
-    (consultationEncounter = getConsultationEncounter(encounters)),
-    consultationEncounter
-      ? isConsultationEncounterActive(consultationEncounter)
-        ? ((activeConsultationEncounterUuid = consultationEncounter.uuid),
-          saveObsData(
-            consultationText,
-            patientDetails.patientUuid,
-            patientDetails.location,
-            activeConsultationEncounterUuid,
-          ))
-        : console.log('No Active Consultation Encounter')
-      : console.log('No Consultation Encounter')
+  const consultationActiveEncounter =
+    patientDetails.activeVisit.encounters.find(
+      encounter =>
+        encounter.encounterType.display == 'Consultation' &&
+        isConsultationEncounterActive(encounter),
+    )
+  consultationActiveEncounter
+    ? saveObsData(
+        consultationText,
+        patientDetails.patientUuid,
+        patientDetails.location,
+        consultationActiveEncounter.uuid,
+      )
+    : console.log('No Active Consultation Encounter')
 }
 
 export const saveObsData = async (

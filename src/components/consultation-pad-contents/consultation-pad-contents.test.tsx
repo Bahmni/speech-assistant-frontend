@@ -6,13 +6,11 @@ import {
   PatientDetails,
 } from '../../context/consultation-context'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
-import {
-  mockConceptResponse,
-  mockExpiredConsultationEncounterVisitResponse,
-  mockNoConsultationEncounerVisitResponse,
-  mockObsResponse,
-  mockVisitResponse,
-} from '../../__mocks__/saveConsultationNotes.mock'
+import {mockConceptResponse} from '../../__mocks__/conceptResponse.mock'
+import {mockExpiredConsultationEncounterVisitResponse} from '../../__mocks__/expiredConsultationEncounterVisitResponse.mock'
+import {mockNoConsultationEncounerVisitResponse} from '../../__mocks__/noConsultationEncounterVisitResponse.mock'
+import {mockObsResponse} from '../../__mocks__/obsResponse.mock'
+import {mockVisitResponse} from '../../__mocks__/visitResponse.mock'
 import {ConsultationPadContents} from './consultation-pad-contents'
 
 jest.mock('../../utils/socket-connection/socket-connection')
@@ -21,8 +19,8 @@ describe('Consultation Pad Contents', () => {
   afterEach(() => jest.clearAllMocks())
   const handleClose = jest.fn()
 
-  it('should show the textbox, start mic and save button when consultation pad contents component is rendered', async () => {
-    render(<ConsultationPadContents handleClose={handleClose} />)
+  it('should show the textbox, start mic and save button when consultation pad contents component is rendered', () => {
+    render(<ConsultationPadContents closeConsultationPad={handleClose} />)
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
     expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
@@ -41,7 +39,7 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents handleClose={handleClose} />)
+    render(<ConsultationPadContents closeConsultationPad={handleClose} />)
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
@@ -64,7 +62,7 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents handleClose={handleClose} />)
+    render(<ConsultationPadContents closeConsultationPad={handleClose} />)
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
@@ -91,7 +89,7 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents handleClose={handleClose} />)
+    render(<ConsultationPadContents closeConsultationPad={handleClose} />)
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
       .calls[0][1]
 
@@ -129,7 +127,7 @@ describe('Consultation Pad Contents', () => {
 
     render(
       <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents handleClose={handleClose} />
+        <ConsultationPadContents closeConsultationPad={handleClose} />
       </ConsultationContext.Provider>,
     )
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
@@ -182,13 +180,12 @@ describe('Consultation Pad Contents', () => {
 
     render(
       <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents handleClose={handleClose} />
+        <ConsultationPadContents closeConsultationPad={handleClose} />
       </ConsultationContext.Provider>,
     )
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
       .calls[0][1]
 
-    // ;(
     await waitFor(() => {
       mockOnIncomingMessage('Consultation Notes')
       expect(
@@ -231,7 +228,7 @@ describe('Consultation Pad Contents', () => {
 
     render(
       <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents handleClose={handleClose} />
+        <ConsultationPadContents closeConsultationPad={handleClose} />
       </ConsultationContext.Provider>,
     )
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock

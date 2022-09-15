@@ -8,6 +8,5 @@ export const getLocationUuid = () => {
   const matchedPatterns = decodeURIComponent(document.cookie).match(
     /bahmni.user.location=(.[^;]*)/,
   )
-
   return matchedPatterns ? JSON.parse(matchedPatterns[1]).uuid : ''
 }
