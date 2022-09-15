@@ -11,6 +11,12 @@ export interface PatientDetails {
   locationUuid: string
   activeVisit: any
 }
+async function fetchActiveVisits(patiendId, locationId) {
+  const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
+  return activeVisitResponse?.results?.length > 0
+    ? activeVisitResponse?.results[0]
+    : null
+}
 
 export const ConsultationContext = React.createContext({} as PatientDetails)
 
@@ -52,13 +58,6 @@ function ConsultationContextProvider({children}) {
       {children}
     </ConsultationContext.Provider>
   )
-}
-
-async function fetchActiveVisits(patiendId, locationId) {
-  const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
-  return activeVisitResponse?.results?.length > 0
-    ? activeVisitResponse?.results[0]
-    : null
 }
 
 export default ConsultationContextProvider

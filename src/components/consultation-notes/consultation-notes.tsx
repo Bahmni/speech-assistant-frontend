@@ -5,25 +5,22 @@ import {MicrophoneFilled} from '@carbon/icons-react'
 import styles from './consultation-notes.scss'
 import {ConsultationContext} from '../../context/consultation-context'
 
-const ConsultationNotes = () => {
+function ConsultationNotes() {
   const [showConsultationPad, setShowConsultationPad] = useState(false)
   const patientDetails = useContext(ConsultationContext)
+  function clickConsultationPadButton() {
+    setShowConsultationPad(true)
+  }
   return (
-    patientDetails?.activeVisit && (
-      <>
-        {showConsultationPad ? (
-          <ConsultationPad setShowConsultationPad={setShowConsultationPad} />
-        ) : (
-          <Button
-            className={styles.floating}
-            onClick={() => setShowConsultationPad(true)}
-          >
-            <MicrophoneFilled size="20" />
-            <div className="consultationPadText">Consultation Pad</div>
-          </Button>
-        )}
-      </>
-    )
+    patientDetails?.activeVisit &&
+    (showConsultationPad ? (
+      <ConsultationPad setShowConsultationPad={setShowConsultationPad} />
+    ) : (
+      <Button onClick={clickConsultationPadButton} className={styles.floating}>
+        <MicrophoneFilled size="20" />
+        <div className="consultationPadText">Consultation Pad</div>
+      </Button>
+    ))
   )
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import {ConsultationPadContents} from '../consultation-pad-contents/consultation-pad-contents'
 import {DraggableBox} from '../draggable-box/draggable-box'
 
-export const ConsultationPad = ({setShowConsultationPad}) => {
+export function ConsultationPad({setShowConsultationPad}) {
   function closeClick() {
     setShowConsultationPad(false)
   }

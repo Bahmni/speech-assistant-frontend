@@ -14,6 +14,6 @@ export const getApiCall = async url => {
   })
 
   if (response.ok) {
-    return await response.json()
+    return response.json()
   }
 }
