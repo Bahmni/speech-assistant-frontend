@@ -9,7 +9,7 @@ import {
 export interface PatientDetails {
   patientUuid: string
   locationUuid: string
-  activeVisit: any
+  activeVisit
 }
 async function fetchActiveVisits(patiendId, locationId) {
   const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
