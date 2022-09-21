@@ -25,9 +25,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
       - run: yarn build
-      - name: DeepSource Test Coverage
-        uses: deepsourcelabs/test-coverage-action@master
-        with:
-          key: javascript
-          coverage-file: ./coverage/clover.xml
-          dsn: ${{ secrets.DEEPSOURCE_DSN }}
