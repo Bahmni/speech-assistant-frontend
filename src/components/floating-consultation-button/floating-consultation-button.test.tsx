@@ -8,7 +8,7 @@ describe('Floating Consultation Button', () => {
     render(
       <FloatingConsultationButton
         setShowConsultationPad={mockSetShowConsultationPad}
-        isConsulationTextPresent={false}
+        isUnsavedNotesPresent={false}
       />,
     )
 
@@ -19,11 +19,11 @@ describe('Floating Consultation Button', () => {
     ).toBeInTheDocument()
   })
 
-  it('should not show warning filled icon when consultation text is not present in the text area ', () => {
+  it('should not show warning filled icon when unsaved notes are not present in the text area ', () => {
     render(
       <FloatingConsultationButton
         setShowConsultationPad={mockSetShowConsultationPad}
-        isConsulationTextPresent={false}
+        isUnsavedNotesPresent={false}
       />,
     )
 
@@ -34,11 +34,11 @@ describe('Floating Consultation Button', () => {
     expect(screen.queryByLabelText('warningFilled')).not.toBeInTheDocument()
   })
 
-  it('should show warning filled icon when consultation text is present in the text area', () => {
+  it('should show warning filled icon when unsaved notes are present in the text area', () => {
     render(
       <FloatingConsultationButton
         setShowConsultationPad={mockSetShowConsultationPad}
-        isConsulationTextPresent={true}
+        isUnsavedNotesPresent
       />,
     )
 

@@ -6,17 +6,23 @@ export function ConsultationPad({
   consultationText,
   setConsultationText,
   setShowConsultationPad,
+  setSavedNotes,
 }) {
   const clickCloseButton = useCallback(() => setShowConsultationPad(false), [])
 
   return (
-    <>
-      <DraggableBox heading="Consultation Notes" handleClose={closeClick}>
-        <ConsultationPadContents
-          consultationText={consultationText}
-          setConsultationText={setConsultationText}
-        />
-      </DraggableBox>
-    </>
+    <DraggableBox
+      heading="Consultation Notes"
+      handleClose={clickCloseButton}
+      setConsultationText={setConsultationText}
+      setSavedNotes={setSavedNotes}
+    >
+      <ConsultationPadContents
+        closeConsultationPad={clickCloseButton}
+        consultationText={consultationText}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />
+    </DraggableBox>
   )
 }

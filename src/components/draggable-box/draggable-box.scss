@@ -7,9 +7,10 @@
     opacity: 1;
     padding: 1rem;
     cursor: move;
+    z-index: 10;
   }
-  .closeIcon{
 
+  .closeIcon{
     width: 1.5rem;
     block-size: auto;
     cursor: pointer;

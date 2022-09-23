@@ -1,61 +1,11 @@
 import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import {
-  ConsultationContext,
-  PatientDetails,
-} from '../../context/consultation-context'
 import ConsultationNotes from './consultation-notes'
 
 describe('Floating Button and Consultation Pad', () => {
-  it('should not show consultation pad button when patient has no active visit', () => {
-    const mockPatientDetails: PatientDetails = null
-
-    render(
-      <ConsultationContext.Provider value={mockPatientDetails}>
-        <ConsultationNotes />
-      </ConsultationContext.Provider>,
-    )
-
-    expect(
-      screen.queryByRole('button', {
-        name: /Consultation Pad/i,
-      }),
-    ).not.toBeInTheDocument()
-  })
-
-  it('should show consultation pad button when consultation notes component is rendered and patient has active visit', () => {
-    const mockPatientDetails: PatientDetails = {
-      patientUuid: 'abc',
-      locationUuid: 'def',
-      isActiveVisit: true,
-    }
-
-    render(
-      <ConsultationContext.Provider value={mockPatientDetails}>
-        <ConsultationNotes />
-      </ConsultationContext.Provider>,
-    )
-
-    expect(
-      screen.getByRole('button', {
-        name: /Consultation Pad/i,
-      }),
-    ).toBeInTheDocument()
-  })
-
   it('should show consultation pad when consultation pad button is clicked', async () => {
-    const mockPatientDetails: PatientDetails = {
-      patientUuid: 'abc',
-      locationUuid: 'def',
-      isActiveVisit: true,
-    }
->>>>>>> 224a11e (Add. new state for staging consultation notes)
-    render(
-      <ConsultationContext.Provider value={mockPatientDetails}>
-        <ConsultationNotes />
-      </ConsultationContext.Provider>,
-    )
+    render(<ConsultationNotes />)
 
     const consultationPadButtonName = {
       name: /Consultation Pad/i,
@@ -72,16 +22,7 @@ describe('Floating Button and Consultation Pad', () => {
   })
 
   it('should show consultation pad button when minimize icon is clicked', async () => {
-    const mockPatientDetails: PatientDetails = {
-      patientUuid: 'abc',
-      locationUuid: 'def',
-      activeVisit: mockVisitResponse,
-    }
-    render(
-      <ConsultationContext.Provider value={mockPatientDetails}>
-        <ConsultationNotes />
-      </ConsultationContext.Provider>,
-    )
+    render(<ConsultationNotes />)
 
     const consultationPadButtonName = {
       name: /Consultation Pad/i,
@@ -97,16 +38,7 @@ describe('Floating Button and Consultation Pad', () => {
   })
 
   it('should show consultation pad button when consultation pad is closed', async () => {
-    const mockPatientDetails: PatientDetails = {
-      patientUuid: 'abc',
-      locationUuid: 'def',
-      isActiveVisit: true,
-    }
-    render(
-      <ConsultationContext.Provider value={mockPatientDetails}>
-        <ConsultationNotes />
-      </ConsultationContext.Provider>,
-    )
+    render(<ConsultationNotes />)
 
     const consultationPadButtonName = {
       name: /Consultation Pad/i,

@@ -1,24 +1,24 @@
+import React, {useState} from 'react'
 import {ConsultationPad} from '../consultation-pad/consultation-pad'
-import React, {useContext, useState} from 'react'
 import {FloatingConsultationButton} from '../floating-consultation-button/floating-consultation-button'
-import {ConsultationContext} from '../../context/consultation-context'
 
-const ConsultationNotes = () => {
+function ConsultationNotes() {
   const [showConsultationPad, setShowConsultationPad] = useState(false)
-
-  const patientDetails = useContext(ConsultationContext)
-
   const [consultationText, setConsultationText] = useState('')
+  const [savedNotes, setSavedNotes] = useState('')
 
   return showConsultationPad ? (
     <ConsultationPad
       consultationText={consultationText}
       setConsultationText={setConsultationText}
       setShowConsultationPad={setShowConsultationPad}
+      setSavedNotes={setSavedNotes}
     />
   ) : (
     <FloatingConsultationButton
-      isConsulationTextPresent={consultationText != ''}
+      isUnsavedNotesPresent={
+        consultationText != savedNotes && consultationText != ''
+      }
       setShowConsultationPad={setShowConsultationPad}
     />
   )

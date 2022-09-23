@@ -14,19 +14,29 @@ import {
   setConsultationNotes,
 } from '../bahmni/bahmni-save-button-listener/save-button-listener'
 
-export const ConsultationPadContents = ({
+export function ConsultationPadContents({
+  closeConsultationPad,
   consultationText,
   setConsultationText,
-}) => {
+  setSavedNotes,
+}) {
   const [isRecording, setIsRecording] = useState(false)
   const [socketConnection, setSocketConnection] = useState(null)
+  const [recordedText, setRecordedText] = useState('')
 
   const patientDetails: PatientDetails = useContext(ConsultationContext)
 
+  useEffect(() => {
+    if (!isRecording && recordedText != '') {
+      setConsultationText(`${consultationText} ${recordedText}`)
+      setRecordedText('')
+    }
+  }, [isRecording])
+
   const onIncomingMessage = (message: string) => {
-    setConsultationText(consultationText => consultationText + ' ' + message)
-    console.log(consultationText)
+    setRecordedText(message)
   }
+
   const onRecording = (isRecording: boolean) => {
     setIsRecording(isRecording)
   }
@@ -68,20 +78,28 @@ export const ConsultationPadContents = ({
     )
   }
 
+  const appendRecordedText = () => {
+    return consultationText
+      ? `${consultationText} ${recordedText}`
+      : recordedText
+  }
+
   const renderTextArea = () => {
     return (
       <TextArea
         onChange={event => setConsultationText(event.target.value)}
         labelText=""
         ref={input => input && input.focus()}
-        value={consultationText}
+        value={recordedText ? appendRecordedText() : consultationText}
         style={{backgroundColor: 'white'}}
-      ></TextArea>
+        readOnly={isRecording}
+      />
     )
   }
 
   const clickSaveButton = useCallback(() => {
     saveConsultationNotes(consultationText, patientDetails)
+    setSavedNotes(consultationText)
     closeConsultationPad()
   }, [consultationText])
 

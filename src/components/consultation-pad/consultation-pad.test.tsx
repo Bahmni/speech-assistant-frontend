@@ -6,9 +6,10 @@ describe('Consultation Pad', () => {
   it('should show consultation notes heading, minimize icon, close icon, start mic and save button when consultation pad component is rendered', () => {
     render(
       <ConsultationPad
-        setShowConsultationPad={true}
-        consultationText={undefined}
-        setConsultationText={undefined}
+        setShowConsultationPad
+        consultationText={''}
+        setConsultationText={jest.fn()}
+        setSavedNotes={jest.fn()}
       />,
     )
 

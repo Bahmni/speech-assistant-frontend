@@ -1,11 +1,11 @@
 import React from 'react'
-import ConsultationNotes from '../components/consultation-notes/consultation-notes'
+import ActiveConsultation from '../components/active-consultation/active-consultation'
 import ConsultationContextProvider from '../context/consultation-context'
 
 function App() {
   return (
     <ConsultationContextProvider>
-      <ConsultationNotes />
+      <ActiveConsultation />
     </ConsultationContextProvider>
   )
 }

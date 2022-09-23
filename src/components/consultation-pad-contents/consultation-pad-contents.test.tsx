@@ -19,9 +19,18 @@ jest.mock('../../utils/socket-connection/socket-connection')
 describe('Consultation Pad Contents', () => {
   afterEach(() => jest.clearAllMocks())
   const handleClose = jest.fn()
+  const setConsultationText = jest.fn()
+  const setSavedNotes = jest.fn()
 
   it('should show the textbox, start mic and save button when consultation pad contents component is rendered', () => {
-    render(<ConsultationPadContents closeConsultationPad={handleClose} />)
+    render(
+      <ConsultationPadContents
+        closeConsultationPad={handleClose}
+        consultationText={''}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />,
+    )
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
     expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
@@ -40,7 +49,14 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents closeConsultationPad={handleClose} />)
+    render(
+      <ConsultationPadContents
+        closeConsultationPad={handleClose}
+        consultationText={''}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />,
+    )
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
@@ -64,7 +80,14 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents closeConsultationPad={handleClose} />)
+    render(
+      <ConsultationPadContents
+        closeConsultationPad={handleClose}
+        consultationText={''}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />,
+    )
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
@@ -84,6 +107,48 @@ describe('Consultation Pad Contents', () => {
     })
   })
 
+  it('should append the notes to the existing consultation notes in the text area when again clicked on start mic', async () => {
+    const mockSocketConnection = {
+      handleStart: jest.fn(),
+      handleStop: jest.fn(),
+    }
+    ;(SocketConnection as jest.Mock).mockImplementation(
+      () => mockSocketConnection,
+    )
+
+    render(
+      <ConsultationPadContents
+        closeConsultationPad={handleClose}
+        consultationText={'Consultation'}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />,
+    )
+    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
+      .calls[0][1]
+    const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
+    mockSocketConnection.handleStart.mockImplementation(() =>
+      mockOnRecording(true),
+    )
+    mockSocketConnection.handleStop.mockImplementation(() =>
+      mockOnRecording(false),
+    )
+    await userEvent.click(screen.getByLabelText('Start Mic'))
+    waitFor(() => {
+      expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
+    })
+
+    mockOnIncomingMessage('Notes')
+    await userEvent.click(screen.getByLabelText('Stop Mic'))
+    waitFor(() => {
+      expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
+    })
+
+    await waitFor(() => {
+      expect(setConsultationText).toHaveBeenCalledWith('Consultation Notes')
+    })
+  })
+
   it('should enable save button when text is present in text area', () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
@@ -92,7 +157,14 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(<ConsultationPadContents closeConsultationPad={handleClose} />)
+    render(
+      <ConsultationPadContents
+        closeConsultationPad={handleClose}
+        consultationText={''}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />,
+    )
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
       .calls[0][1]
 
@@ -135,20 +207,20 @@ describe('Consultation Pad Contents', () => {
 
     render(
       <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents closeConsultationPad={handleClose} />
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={'Consultation Notes'}
+          setConsultationText={setConsultationText}
+          setSavedNotes={setSavedNotes}
+        />
       </ConsultationContext.Provider>,
     )
-    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
-      .calls[0][1]
 
-    await waitFor(() => {
-      mockOnIncomingMessage('Consultation Notes')
-      expect(
-        screen.getByRole('button', {
-          name: /Save/i,
-        }),
-      ).toBeEnabled()
-    })
+    expect(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    ).toBeEnabled()
 
     await userEvent.click(
       screen.getByRole('button', {
@@ -162,14 +234,6 @@ describe('Consultation Pad Contents', () => {
   })
 
   it('should save consultation notes when clicked on save button and active consultation encounter is present', async () => {
-    const mockSocketConnection = {
-      handleStart: jest.fn(),
-      handleStop: jest.fn(),
-    }
-    ;(SocketConnection as jest.Mock).mockImplementation(
-      () => mockSocketConnection,
-    )
-
     global.fetch = jest.fn().mockImplementation()
 
     const mockFetch = global.fetch as jest.Mock
@@ -192,23 +256,24 @@ describe('Consultation Pad Contents', () => {
       locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
       isActiveVisit: true,
     }
+    const consultationText = 'Consultation Notes'
 
     render(
       <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents closeConsultationPad={handleClose} />
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={consultationText}
+          setConsultationText={setConsultationText}
+          setSavedNotes={setSavedNotes}
+        />
       </ConsultationContext.Provider>,
     )
-    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
-      .calls[0][1]
 
-    await waitFor(() => {
-      mockOnIncomingMessage('Consultation Notes')
-      expect(
-        screen.getByRole('button', {
-          name: /Save/i,
-        }),
-      ).toBeEnabled()
-    })
+    expect(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    ).toBeEnabled()
 
     await userEvent.click(
       screen.getByRole('button', {
@@ -227,5 +292,6 @@ describe('Consultation Pad Contents', () => {
     expect(conceptUrl).toBe('/openmrs/ws/rest/v1/concept?q="Consultation Note')
     expect(obsUrl).toBe('/openmrs/ws/rest/v1/obs')
     expect(obsJsonBody.value).toBe('Consultation Notes')
+    expect(setSavedNotes).toHaveBeenCalledWith(consultationText)
   })
 })
