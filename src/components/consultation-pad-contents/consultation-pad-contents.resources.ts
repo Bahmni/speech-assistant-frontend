@@ -1,5 +1,5 @@
 import {postApiCall, getApiCall} from '../../utils/api-utils'
-import {saveNotesUrl, conceptUrl} from '../../utils/constants'
+import {saveNotesUrl, conceptUrl, customVisitUrl} from '../../utils/constants'
 
 interface ObsType {
   person: string
@@ -44,6 +44,15 @@ const isConsultationEncounterActive = consultationEncounter => {
   return timeDifferenceInMinutes < SIXTY_MINUTES
 }
 
+export const getEncounters = async patientDetails => {
+  const encounters = await getApiCall(
+    customVisitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
+  )
+  return encounters?.results?.length > 0
+    ? encounters?.results[0]?.encounters
+    : null
+}
+
 export const saveObsData = async (
   consultationText,
   patientUuid,
@@ -67,13 +76,16 @@ export const saveObsData = async (
   postApiCall(saveNotesUrl, body).then(response => response.json())
 }
 
-export const saveConsultationNotes = (consultationText, patientDetails) => {
-  const consultationActiveEncounter =
-    patientDetails.activeVisit.encounters.find(
-      encounter =>
-        encounter.encounterType.display == 'Consultation' &&
-        isConsultationEncounterActive(encounter),
-    )
+export const saveConsultationNotes = async (
+  consultationText,
+  patientDetails,
+) => {
+  const encounters = await getEncounters(patientDetails)
+  const consultationActiveEncounter = encounters.find(
+    encounter =>
+      encounter.encounterType.display == 'Consultation' &&
+      isConsultationEncounterActive(encounter),
+  )
   if (consultationActiveEncounter)
     saveObsData(
       consultationText,

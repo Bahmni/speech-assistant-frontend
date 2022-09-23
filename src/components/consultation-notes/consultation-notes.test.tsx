@@ -5,7 +5,6 @@ import {
   ConsultationContext,
   PatientDetails,
 } from '../../context/consultation-context'
-import {mockVisitResponse} from '../../__mocks__/visitResponse.mock'
 import ConsultationNotes from './consultation-notes'
 
 describe('Floating Button and Consultation Pad', () => {
@@ -28,7 +27,7 @@ describe('Floating Button and Consultation Pad', () => {
     const mockPatientDetails: PatientDetails = {
       patientUuid: 'abc',
       locationUuid: 'def',
-      activeVisit: mockVisitResponse,
+      isActiveVisit: true,
     }
 
     render(
@@ -48,7 +47,7 @@ describe('Floating Button and Consultation Pad', () => {
     const mockPatientDetails: PatientDetails = {
       patientUuid: 'abc',
       locationUuid: 'def',
-      activeVisit: mockVisitResponse,
+      isActiveVisit: true,
     }
     render(
       <ConsultationContext.Provider value={mockPatientDetails}>
@@ -74,7 +73,7 @@ describe('Floating Button and Consultation Pad', () => {
     const mockPatientDetails: PatientDetails = {
       patientUuid: 'abc',
       locationUuid: 'def',
-      activeVisit: mockVisitResponse,
+      isActiveVisit: true,
     }
     render(
       <ConsultationContext.Provider value={mockPatientDetails}>

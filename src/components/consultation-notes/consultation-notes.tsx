@@ -13,9 +13,8 @@ function ConsultationNotes() {
     () => setShowConsultationPad(true),
     [],
   )
-
   return (
-    patientDetails?.activeVisit &&
+    patientDetails?.isActiveVisit &&
     (showConsultationPad ? (
       <ConsultationPad setShowConsultationPad={setShowConsultationPad} />
     ) : (

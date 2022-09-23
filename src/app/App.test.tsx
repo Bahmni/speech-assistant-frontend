@@ -2,6 +2,7 @@ import {act, render, screen} from '@testing-library/react'
 import React from 'react'
 import {mockVisitResponse} from '../__mocks__/visitResponse.mock'
 import App from './App'
+
 global.fetch = jest.fn().mockImplementation()
 
 describe('Speech Assistant App', () => {
@@ -66,7 +67,7 @@ describe('Speech Assistant App', () => {
     expect(consultationPadButton).toBeInTheDocument()
     const visitUrl = mockFetch.mock.calls[0][0]
     expect(visitUrl).toBe(
-      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
+      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75',
     )
   })
 
@@ -77,8 +78,8 @@ describe('Speech Assistant App', () => {
       },
     })
     Object.defineProperty(document, 'cookie', {value: testCookieWithLocationId})
-    const mockEmptyResponse = {}
-    mockFetch.mockResolvedValueOnce({
+    const mockEmptyResponse = {results: []}
+    mockFetch.mockResolvedValue({
       json: () => mockEmptyResponse,
       ok: true,
     })
@@ -96,7 +97,7 @@ describe('Speech Assistant App', () => {
     ).not.toBeInTheDocument()
     const visitUrl = mockFetch.mock.calls[0][0]
     expect(visitUrl).toBe(
-      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
+      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75',
     )
   })
 })

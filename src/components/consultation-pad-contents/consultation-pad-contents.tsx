@@ -9,11 +9,18 @@ import {
   ConsultationContext,
   PatientDetails,
 } from '../../context/consultation-context'
+import {
+  addSaveButtonListener,
+  setConsultationNotes,
+} from '../bahmni/bahmni-save-button-listener/save-button-listener'
+import {saveConsultationNotes} from './consultation-pad-contents.resources'
 
 export function ConsultationPadContents({closeConsultationPad}) {
   const [isRecording, setIsRecording] = useState(false)
   const [consultationText, setConsultationText] = useState('')
   const [socketConnection, setSocketConnection] = useState(null)
+
+  const patientDetails: PatientDetails = useContext(ConsultationContext)
 
   const onIncomingMessage = (message: string) => {
     setConsultationText(message)
@@ -26,7 +33,12 @@ export function ConsultationPadContents({closeConsultationPad}) {
     setSocketConnection(
       new SocketConnection(streamingURL, onIncomingMessage, onRecording),
     )
+    addSaveButtonListener(patientDetails, closeConsultationPad)
   }, [])
+
+  useEffect(() => {
+    setConsultationNotes(consultationText)
+  }, [consultationText])
 
   const renderStopMic = () => {
     return (
@@ -65,11 +77,12 @@ export function ConsultationPadContents({closeConsultationPad}) {
       ></TextArea>
     )
   }
-  const patientDetails: PatientDetails = useContext(ConsultationContext)
+
   const clickSaveButton = useCallback(() => {
     saveConsultationNotes(consultationText, patientDetails)
     closeConsultationPad()
   }, [consultationText])
+
   return (
     <>
       {renderTextArea()}
@@ -80,7 +93,7 @@ export function ConsultationPadContents({closeConsultationPad}) {
           disabled={consultationText == ''}
           onClick={clickSaveButton}
         >
-          Save
+          save notes
         </Button>
       </div>
     </>

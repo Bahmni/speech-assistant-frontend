@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {getApiCall} from '../utils/api-utils'
-import {visitUrl} from '../utils/constants'
+import {defaultVisitUrl} from '../utils/constants'
 import {
   getLocationUuid,
   getPatientUuid,
@@ -9,13 +9,13 @@ import {
 export interface PatientDetails {
   patientUuid: string
   locationUuid: string
-  activeVisit
+  isActiveVisit: boolean
 }
 async function fetchActiveVisits(patiendId, locationId) {
-  const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
-  return activeVisitResponse?.results?.length > 0
-    ? activeVisitResponse?.results[0]
-    : null
+  const activeVisitResponse = await getApiCall(
+    defaultVisitUrl(patiendId, locationId),
+  )
+  return activeVisitResponse?.results?.length > 0 ? true : false
 }
 
 export const ConsultationContext = React.createContext({} as PatientDetails)
@@ -28,18 +28,18 @@ function ConsultationContextProvider({children}) {
   useEffect(() => {
     if (patientUuid && locationUuid) {
       const activeVisit = fetchActiveVisits(patientUuid, locationUuid)
-      activeVisit.then(visit => {
+      activeVisit.then(response => {
         setPatientDetails({
           patientUuid: patientUuid,
           locationUuid: locationUuid,
-          activeVisit: visit,
+          isActiveVisit: response,
         })
       })
     } else {
       setPatientDetails({
         patientUuid: patientUuid,
         locationUuid: locationUuid,
-        activeVisit: null,
+        isActiveVisit: false,
       })
     }
   }, [patientUuid, locationUuid])

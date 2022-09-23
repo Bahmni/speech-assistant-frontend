@@ -7,10 +7,11 @@ import {
 } from '../../context/consultation-context'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {mockConceptResponse} from '../../__mocks__/conceptResponse.mock'
-import {mockExpiredConsultationEncounterVisitResponse} from '../../__mocks__/expiredConsultationEncounterVisitResponse.mock'
-import {mockNoConsultationEncounerVisitResponse} from '../../__mocks__/noConsultationEncounterVisitResponse.mock'
 import {mockObsResponse} from '../../__mocks__/obsResponse.mock'
-import {mockVisitResponse} from '../../__mocks__/visitResponse.mock'
+import {customVisitUrl} from '../../utils/constants'
+import {mockVisitResponseWithActiveEncounter} from '../../__mocks__/activeVisitWithActiveEncounters.mock'
+import {mockVisitResponseWithInactiveEncounter} from '../../__mocks__/activeVisitWithInactiveEncounters.mock'
+
 import {ConsultationPadContents} from './consultation-pad-contents'
 
 jest.mock('../../utils/socket-connection/socket-connection')
@@ -109,7 +110,7 @@ describe('Consultation Pad Contents', () => {
     })
   })
 
-  it('should not save consultation notes when clicked on save button and consultation encounter is not present', async () => {
+  it('should not save consultation notes when clicked on save button and active consultation encounter is not present', async () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
       handleStop: jest.fn(),
@@ -118,11 +119,16 @@ describe('Consultation Pad Contents', () => {
       () => mockSocketConnection,
     )
     global.fetch = jest.fn().mockImplementation()
+    const mockFetch = global.fetch as jest.Mock
+    mockFetch.mockResolvedValue({
+      json: () => mockVisitResponseWithInactiveEncounter,
+      ok: true,
+    })
 
     const patientDetails: PatientDetails = {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
-      locationUuid: '',
-      activeVisit: mockNoConsultationEncounerVisitResponse,
+      locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
+      isActiveVisit: true,
     }
 
     render(
@@ -147,7 +153,10 @@ describe('Consultation Pad Contents', () => {
         name: /Save/i,
       }),
     )
-    expect(fetch).not.toBeCalled()
+    expect(fetch).toBeCalledTimes(1)
+    expect(mockFetch.mock.calls[0][0]).toBe(
+      customVisitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
+    )
   })
 
   it('should save consultation notes when clicked on save button and active consultation encounter is present', async () => {
@@ -164,6 +173,10 @@ describe('Consultation Pad Contents', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
+        json: () => mockVisitResponseWithActiveEncounter,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
         json: () => mockConceptResponse,
         ok: true,
       })
@@ -174,8 +187,8 @@ describe('Consultation Pad Contents', () => {
 
     const patientDetails: PatientDetails = {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
-      locationUuid: '',
-      activeVisit: mockVisitResponse.results[0],
+      locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
+      isActiveVisit: true,
     }
 
     render(
@@ -200,54 +213,17 @@ describe('Consultation Pad Contents', () => {
         name: /Save/i,
       }),
     )
+    const visiturl = mockFetch.mock.calls[0][0]
+    const conceptUrl = mockFetch.mock.calls[1][0]
+    const obsUrl = mockFetch.mock.calls[2][0]
+    const obsJsonBody = JSON.parse(mockFetch.mock.calls[2][1].body)
 
-    const conceptUrl = mockFetch.mock.calls[0][0]
-    const obsUrl = mockFetch.mock.calls[1][0]
-    const obsJsonBody = JSON.parse(mockFetch.mock.calls[1][1].body)
-
-    expect(fetch).toBeCalled()
+    expect(fetch).toBeCalledTimes(3)
+    expect(visiturl).toBe(
+      customVisitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
+    )
     expect(conceptUrl).toBe('/openmrs/ws/rest/v1/concept?q="Consultation Note')
     expect(obsUrl).toBe('/openmrs/ws/rest/v1/obs')
     expect(obsJsonBody.value).toBe('Consultation Notes')
-  })
-
-  it('should not save consultation notes when clicked on save button and active consultation encounter is not present', async () => {
-    const mockSocketConnection = {
-      handleStart: jest.fn(),
-      handleStop: jest.fn(),
-    }
-    ;(SocketConnection as jest.Mock).mockImplementation(
-      () => mockSocketConnection,
-    )
-
-    const patientDetails: PatientDetails = {
-      patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
-      locationUuid: '',
-      activeVisit: mockExpiredConsultationEncounterVisitResponse,
-    }
-
-    render(
-      <ConsultationContext.Provider value={patientDetails}>
-        <ConsultationPadContents closeConsultationPad={handleClose} />
-      </ConsultationContext.Provider>,
-    )
-    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
-      .calls[0][1]
-
-    await waitFor(() => {
-      mockOnIncomingMessage('Consultation Notes')
-      expect(
-        screen.getByRole('button', {
-          name: /Save/i,
-        }),
-      ).toBeEnabled()
-    })
-
-    await userEvent.click(
-      screen.getByRole('button', {
-        name: /Save/i,
-      }),
-    )
-    expect(fetch).not.toBeCalled()
   })
 })
