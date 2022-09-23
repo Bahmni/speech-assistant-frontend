@@ -28,7 +28,6 @@ function ConsultationContextProvider({children}) {
   useEffect(() => {
     if (patientUuid && locationUuid) {
       const activeVisit = fetchActiveVisits(patientUuid, locationUuid)
-
       activeVisit.then(visit => {
         setPatientDetails({
           patientUuid: patientUuid,

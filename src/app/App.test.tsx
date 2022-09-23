@@ -10,6 +10,7 @@ describe('Speech Assistant App', () => {
   const testSearchUrl = 'http://localhost/patient/search'
   const testCookieWithLocationId =
     'bahmni.user=%22superman%22; app.clinical.grantProviderAccessData=null; bahmni.user.location=%7B%22name%22%3A%22OPD-1%22%2C%22uuid%22%3A%22c58e12ed-3f12-11e4-adec-0800271c1b75%22%7D'
+  const mockFetch = global.fetch as jest.Mock
 
   it('should not show consultation pad button when patient uuid is not present in the url', () => {
     Object.defineProperty(window, 'location', {
@@ -50,9 +51,7 @@ describe('Speech Assistant App', () => {
     Object.defineProperty(document, 'cookie', {value: testCookieWithLocationId})
 
     render(<App />)
-
-    const mockFetch = global.fetch as jest.Mock
-    mockFetch.mockResolvedValueOnce({
+    mockFetch.mockResolvedValue({
       json: () => mockVisitResponse,
       ok: true,
     })
@@ -65,6 +64,35 @@ describe('Speech Assistant App', () => {
       name: /Consultation Pad/i,
     })
     expect(consultationPadButton).toBeInTheDocument()
+    const visitUrl = mockFetch.mock.calls[0][0]
+    expect(visitUrl).toBe(
+      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
+    )
+  })
+
+  it('should not show consultation pad button when there is no active visits for the patient in the set location', async () => {
+    Object.defineProperty(window, 'location', {
+      value: {
+        href: testSearchUrl,
+      },
+    })
+    Object.defineProperty(document, 'cookie', {value: testCookieWithLocationId})
+    mockFetch.mockResolvedValueOnce({
+      json: () => {},
+      ok: true,
+    })
+
+    render(<App />)
+
+    await act(() => {
+      window.location.href = testUrlWithPatientId
+      window.dispatchEvent(new HashChangeEvent('hashchange'))
+    })
+    expect(
+      screen.queryByRole('button', {
+        name: /Consultation Pad/i,
+      }),
+    ).not.toBeInTheDocument()
     const visitUrl = mockFetch.mock.calls[0][0]
     expect(visitUrl).toBe(
       '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',

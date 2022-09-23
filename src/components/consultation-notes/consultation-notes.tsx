@@ -1,12 +1,9 @@
 import {ConsultationPad} from '../consultation-pad/consultation-pad'
-<<<<<<< HEAD
 import React, {useCallback, useContext, useState} from 'react'
-=======
-import React, {useState} from 'react'
->>>>>>> 1b68cdd (BAH-1941 | Saving consultation notes through speech when active encounter is present)
 import {Button} from '@carbon/react'
 import {MicrophoneFilled} from '@carbon/icons-react'
 import styles from './consultation-notes.scss'
+import {ConsultationContext} from '../../context/consultation-context'
 
 function ConsultationNotes() {
   const [showConsultationPad, setShowConsultationPad] = useState(false)

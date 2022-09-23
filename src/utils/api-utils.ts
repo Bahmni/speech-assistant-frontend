@@ -6,6 +6,7 @@ export const getApiCall = async url => {
   if (response.ok) {
     return response.json()
   }
+}
 export const postApiCall = (url, data) => {
   return fetch(url, {
     method: 'POST',
@@ -14,13 +15,4 @@ export const postApiCall = (url, data) => {
     },
     body: JSON.stringify(data),
   })
-}
-
-export const getApiCall = async url => {
-  const response = await fetch(url, {
-    method: 'GET',
-  })
-  if (response.ok) {
-    return response.json()
-  }
 }

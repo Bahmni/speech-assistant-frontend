@@ -175,7 +175,7 @@ describe('Consultation Pad Contents', () => {
     const patientDetails: PatientDetails = {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: '',
-      activeVisit: mockVisitResponse,
+      activeVisit: mockVisitResponse.results[0],
     }
 
     render(
