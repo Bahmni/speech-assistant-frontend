@@ -77,8 +77,9 @@ describe('Speech Assistant App', () => {
       },
     })
     Object.defineProperty(document, 'cookie', {value: testCookieWithLocationId})
+    const mockEmptyResponse = {}
     mockFetch.mockResolvedValueOnce({
-      json: () => {},
+      json: () => mockEmptyResponse,
       ok: true,
     })
 

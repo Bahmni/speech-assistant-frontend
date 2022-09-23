@@ -44,23 +44,6 @@ const isConsultationEncounterActive = consultationEncounter => {
   return timeDifferenceInMinutes < SIXTY_MINUTES
 }
 
-export const saveConsultationNotes = (consultationText, patientDetails) => {
-  const consultationActiveEncounter =
-    patientDetails.activeVisit.encounters.find(
-      encounter =>
-        encounter.encounterType.display == 'Consultation' &&
-        isConsultationEncounterActive(encounter),
-    )
-  consultationActiveEncounter
-    ? saveObsData(
-        consultationText,
-        patientDetails.patientUuid,
-        patientDetails.location,
-        consultationActiveEncounter.uuid,
-      )
-    : console.log('No Active Consultation Encounter')
-}
-
 export const saveObsData = async (
   consultationText,
   patientUuid,
@@ -82,4 +65,20 @@ export const saveObsData = async (
   )
 
   postApiCall(saveNotesUrl, body).then(response => response.json())
+}
+
+export const saveConsultationNotes = (consultationText, patientDetails) => {
+  const consultationActiveEncounter =
+    patientDetails.activeVisit.encounters.find(
+      encounter =>
+        encounter.encounterType.display == 'Consultation' &&
+        isConsultationEncounterActive(encounter),
+    )
+  if (consultationActiveEncounter)
+    saveObsData(
+      consultationText,
+      patientDetails.patientUuid,
+      patientDetails.location,
+      consultationActiveEncounter.uuid,
+    )
 }

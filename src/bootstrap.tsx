@@ -19,7 +19,7 @@ function createDOM() {
   appDivContainer.setAttribute('id', speechAssistantApp)
 
   divContainer.appendChild(appDivContainer)
-  document.getElementsByTagName('body')[0].appendChild(divContainer)
+  document.body.appendChild(divContainer)
 }
 
 if (
