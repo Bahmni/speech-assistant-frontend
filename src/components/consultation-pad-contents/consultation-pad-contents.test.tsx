@@ -45,6 +45,7 @@ describe('Consultation Pad Contents', () => {
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
     expect(SocketConnection).toHaveBeenCalled()
+
     await userEvent.click(screen.getByLabelText('Start Mic'))
 
     expect(mockSocketConnection.handleStart).toHaveBeenCalled()
@@ -72,6 +73,7 @@ describe('Consultation Pad Contents', () => {
       mockOnRecording(true)
       expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
     })
+
     await userEvent.click(screen.getByLabelText('Stop Mic'))
 
     expect(mockSocketConnection.handleStop).toHaveBeenCalled()

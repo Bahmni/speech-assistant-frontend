@@ -23,6 +23,7 @@ describe('Floating Button and Consultation Pad', () => {
       }),
     ).not.toBeInTheDocument()
   })
+
   it('should show consultation pad button when consultation notes component is rendered and patient has active visit', () => {
     const mockPatientDetails: PatientDetails = {
       patientUuid: 'abc',
@@ -43,12 +44,13 @@ describe('Floating Button and Consultation Pad', () => {
     ).toBeInTheDocument()
   })
 
-  it('should show consultation notes component when consultation pad button is clicked', async () => {
+  it('should show consultation pad when consultation pad button is clicked', async () => {
     const mockPatientDetails: PatientDetails = {
       patientUuid: 'abc',
       locationUuid: 'def',
       isActiveVisit: true,
     }
+>>>>>>> 224a11e (Add. new state for staging consultation notes)
     render(
       <ConsultationContext.Provider value={mockPatientDetails}>
         <ConsultationNotes />
@@ -67,6 +69,31 @@ describe('Floating Button and Consultation Pad', () => {
     expect(
       screen.queryByRole('button', consultationPadButtonName),
     ).not.toBeInTheDocument()
+  })
+
+  it('should show consultation pad button when minimize icon is clicked', async () => {
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      activeVisit: mockVisitResponse,
+    }
+    render(
+      <ConsultationContext.Provider value={mockPatientDetails}>
+        <ConsultationNotes />
+      </ConsultationContext.Provider>,
+    )
+
+    const consultationPadButtonName = {
+      name: /Consultation Pad/i,
+    }
+    await userEvent.click(screen.getByRole('button', consultationPadButtonName))
+    await userEvent.click(screen.getByLabelText('minimizeIcon'))
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', consultationPadButtonName),
+      ).toBeInTheDocument()
+    })
   })
 
   it('should show consultation pad button when consultation pad is closed', async () => {

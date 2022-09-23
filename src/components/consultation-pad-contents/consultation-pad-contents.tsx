@@ -14,15 +14,18 @@ import {
   setConsultationNotes,
 } from '../bahmni/bahmni-save-button-listener/save-button-listener'
 
-export function ConsultationPadContents({closeConsultationPad}) {
+export const ConsultationPadContents = ({
+  consultationText,
+  setConsultationText,
+}) => {
   const [isRecording, setIsRecording] = useState(false)
-  const [consultationText, setConsultationText] = useState('')
   const [socketConnection, setSocketConnection] = useState(null)
 
   const patientDetails: PatientDetails = useContext(ConsultationContext)
 
   const onIncomingMessage = (message: string) => {
-    setConsultationText(message)
+    setConsultationText(consultationText => consultationText + ' ' + message)
+    console.log(consultationText)
   }
   const onRecording = (isRecording: boolean) => {
     setIsRecording(isRecording)

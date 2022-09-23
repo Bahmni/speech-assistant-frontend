@@ -55,9 +55,12 @@ typings/
 .next
 
 dist/
+index.html
 
 # Intellij integration
 *.iml
 
 # macos
 .DS_Store
+
+

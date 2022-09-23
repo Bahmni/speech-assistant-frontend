@@ -15,8 +15,14 @@
     cursor: pointer;
 
   }
+  .minimizeIcon{
+    width: 1.5rem;
+    block-size: auto;
+    cursor: pointer;
+  }
   .heading{
     display: flex;
     justify-content: space-between;
     padding-bottom: 0.5rem;
   }
+  
