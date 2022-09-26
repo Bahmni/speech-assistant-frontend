@@ -7,16 +7,35 @@ export const setConsultationNotes = value => {
   consultationNotes = value
 }
 
-export const addSaveButtonListener = (patientDetails, handleClose) => {
-  const save = document
-    .getElementsByClassName('confirm save-consultation')
-    .item(0)
-  save?.addEventListener('click', () => onClick(patientDetails, handleClose))
+let saveButton = null
+
+const setSaveButton = value => {
+  saveButton = value
 }
 
 const onClick = (patientDetails, handleClose) => {
-  setTimeout(async () => {
+  setTimeout(() => {
     saveConsultationNotes(consultationNotes, patientDetails)
     handleClose()
   }, bahmniSaveButtonResponseTime)
+}
+
+const addBahmniSaveButtonListener = (patientDetails, handleClose) => {
+  const bahmniSaveButton = document
+    .getElementsByClassName('confirm save-consultation')
+    .item(0)
+  if (!bahmniSaveButton) setSaveButton(null)
+
+  if (bahmniSaveButton !== null && saveButton === null) {
+    setSaveButton(bahmniSaveButton)
+    saveButton?.addEventListener('click', () =>
+      onClick(patientDetails, handleClose),
+    )
+  }
+}
+
+export const addSaveButtonListener = (patientDetails, handleClose) => {
+  window.addEventListener('hashchange', () =>
+    addBahmniSaveButtonListener(patientDetails, handleClose),
+  )
 }

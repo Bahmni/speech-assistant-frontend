@@ -90,6 +90,7 @@ describe('Speech Assistant App', () => {
       window.location.href = testUrlWithPatientId
       window.dispatchEvent(new HashChangeEvent('hashchange'))
     })
+
     expect(
       screen.queryByRole('button', {
         name: /Consultation Pad/i,

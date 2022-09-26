@@ -13,7 +13,6 @@ import {
   addSaveButtonListener,
   setConsultationNotes,
 } from '../bahmni/bahmni-save-button-listener/save-button-listener'
-import {saveConsultationNotes} from './consultation-pad-contents.resources'
 
 export function ConsultationPadContents({closeConsultationPad}) {
   const [isRecording, setIsRecording] = useState(false)
@@ -93,7 +92,7 @@ export function ConsultationPadContents({closeConsultationPad}) {
           disabled={consultationText == ''}
           onClick={clickSaveButton}
         >
-          save notes
+          Save Notes
         </Button>
       </div>
     </>

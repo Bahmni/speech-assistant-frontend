@@ -49,13 +49,12 @@ typings/
 .yarn-integrity
 
 # # dotenv environment variables file
- .env
+.env
 
 # next.js build output
 .next
 
 dist/
-index.html
 
 # Intellij integration
 *.iml

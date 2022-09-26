@@ -10,7 +10,7 @@ jest.mock('../../consultation-pad-contents/consultation-pad-contents.resources')
 jest.useFakeTimers()
 
 describe('Bahmni save button listener', () => {
-  it('should trigger event listener on click of bahmni save button', async () => {
+  it('should trigger event listener on click of bahmni save button', () => {
     const mockedSaveConsultationNotes = jest.mocked(saveConsultationNotes)
     const handleClose = jest.fn()
 
@@ -31,6 +31,8 @@ describe('Bahmni save button listener', () => {
     document.body.appendChild(save)
 
     addSaveButtonListener(patientDetails, handleClose)
+    window.dispatchEvent(new HashChangeEvent('hashchange'))
+
     save.click()
 
     expect(setTimeout).toHaveBeenCalledTimes(1)

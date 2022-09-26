@@ -3,8 +3,8 @@
   "private": true,
   "description": "sahaya Frontend",
   "scripts": {
-    "serve": "webpack serve",
-    "build": "npx webpack",
+    "serve": "webpack serve --env speechAssistantProxy=http://localhost:9009/",
+    "build": "npx webpack  --env speechAssistantProxy=https://localhost/",
     "lint": "eslint src --ext tsx",
     "prettier": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx}\"",
     "typescript": "tsc",
@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@carbon/react": "^1.7.0",
-    "dotenv-webpack": "^8.0.1",
     "postcss-loader": "^7.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
