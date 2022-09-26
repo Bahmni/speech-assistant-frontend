@@ -19,7 +19,11 @@ function ConsultationNotes() {
     (showConsultationPad ? (
       <ConsultationPad setShowConsultationPad={setShowConsultationPad} />
     ) : (
-      <Button onClick={clickConsultationPadButton} className={styles.floating}>
+      <Button
+        id="consultationButton"
+        onClick={clickConsultationPadButton}
+        className={styles.floating}
+      >
         <MicrophoneFilled size="20" />
         <div className="consultationPadText">Consultation Pad</div>
       </Button>

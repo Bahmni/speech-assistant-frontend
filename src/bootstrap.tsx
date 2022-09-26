@@ -22,11 +22,15 @@ function createDOM() {
   document.body.appendChild(divContainer)
 }
 
-if (
-  !document.querySelector(
-    `body div[${mfContainerAttribute}='${mfContainerValue}']`,
-  )
-) {
-  createDOM()
+function bootstrap() {
+  if (
+    !document.querySelector(
+      `body div[${mfContainerAttribute}='${mfContainerValue}']`,
+    )
+  ) {
+    createDOM()
+  }
+  renderApp()
 }
-renderApp()
+
+export {bootstrap}
