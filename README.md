@@ -42,18 +42,23 @@ yarn install
 ```
 yarn serve
 ```
+#### Notes:
+```
+   * By default, yarn serve command will take speech-asstant-proxy server url as 'http://localhost:9009/'
+   * If we want to change default proxy server url, update it in package.json file.
+```
 
 4. To build the application
 ```
 yarn build
 ```
+#### Notes:
+```
+   * By default, yarn build command will take speech-asstant-proxy server url as 'http://localhost/'
+   * If we want to change default proxy server url, update it in package.json file.
+```
 
 5. To test the application
 ```
 yarn test
-```
- ### Notes:
-```
-   * By default, speech-asstant-proxy server url will be the application origin url.
-   * If we want to change default proxy server url, update it in .env file.
 ```
