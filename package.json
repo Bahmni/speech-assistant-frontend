@@ -3,8 +3,8 @@
   "private": true,
   "description": "sahaya Frontend",
   "scripts": {
-    "serve": "webpack serve --env speechAssistantProxy=http://localhost:9009/",
-    "build": "npx webpack  --env speechAssistantProxy=https://localhost/",
+    "serve": "webpack serve",
+    "build": "npx webpack",
     "lint": "eslint src --ext tsx",
     "prettier": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx}\"",
     "typescript": "tsc",

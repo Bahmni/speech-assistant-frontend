@@ -1,5 +1,4 @@
-export const streamingURL =
-  process.env.SPEECH_ASSISTANT_PROXY_URL || location.origin
+export const streamingURL = location.origin
 export const language = 'en'
 export const bahmniSaveButtonResponseTime = 3000
 export const saveNotesUrl = '/openmrs/ws/rest/v1/obs'

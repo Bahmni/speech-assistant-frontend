@@ -4,13 +4,12 @@ import {
   setConsultationNotes,
 } from './save-button-listener'
 import {saveConsultationNotes} from '../../consultation-pad-contents/consultation-pad-contents.resources'
-import {bahmniSaveButtonResponseTime} from '../../../utils/constants'
 
 jest.mock('../../consultation-pad-contents/consultation-pad-contents.resources')
 jest.useFakeTimers()
 
 describe('Bahmni save button listener', () => {
-  it('should trigger event listener on click of bahmni save button', () => {
+  it('should trigger event listener only once irrespective of multiple url changes when bahmni save button is clicked', () => {
     const mockedSaveConsultationNotes = jest.mocked(saveConsultationNotes)
     const handleClose = jest.fn()
 
@@ -32,14 +31,10 @@ describe('Bahmni save button listener', () => {
 
     addSaveButtonListener(patientDetails, handleClose)
     window.dispatchEvent(new HashChangeEvent('hashchange'))
+    window.dispatchEvent(new HashChangeEvent('hashchange'))
+    window.dispatchEvent(new HashChangeEvent('hashchange'))
 
     save.click()
-
-    expect(setTimeout).toHaveBeenCalledTimes(1)
-    expect(setTimeout).toHaveBeenLastCalledWith(
-      expect.any(Function),
-      bahmniSaveButtonResponseTime,
-    )
 
     jest.runAllTimers()
 
