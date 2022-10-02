@@ -19,14 +19,15 @@ function isSaConsultationButtonAvailable() {
 function updateConsultationHeader() {
   const opdElements = document.getElementById('opd-tabs')
   if (opdElements) {
-    if (isSaConsultationButtonAvailable) removeConsultationTab()
+    if (isSaConsultationButtonAvailable()) removeConsultationTab()
   }
 }
 
 function performDOMOperations() {
-  window.addEventListener('hashchange', () => {
+  const mutationObserver = new MutationObserver(() => {
     updateConsultationHeader()
   })
+  mutationObserver.observe(document.body, {childList: true, subtree: true})
 }
 
 export {performDOMOperations}

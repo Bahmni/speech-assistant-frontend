@@ -1,6 +1,7 @@
 import React from 'react'
 import App from './app/App'
 import {createRoot} from 'react-dom/client'
+import {performDOMOperations as performBahmniDOMOperations} from './bahmni'
 
 const mfContainerAttribute = 'mf-container'
 const mfContainerValue = 'sa'
@@ -31,6 +32,7 @@ function bootstrap() {
     createDOM()
   }
   renderApp()
+  performBahmniDOMOperations()
 }
 
 export {bootstrap}
