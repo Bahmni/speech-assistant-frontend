@@ -16,7 +16,7 @@
       "!**/src/declarations.d.tsx",
       "!**/src/index.tsx",
       "!**/src/bootstrap.tsx",
-      "!**/src/bahmni.tsx"
+      "!**/src/bahmni.ts"
     ],
     "coverageThreshold": {
       "global": {

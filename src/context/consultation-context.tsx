@@ -44,14 +44,15 @@ function ConsultationContextProvider({children}) {
     }
   }, [patientUuid, locationUuid])
 
+  const onUrlChangeCallback = () => {
+    setPatientUuid(getPatientUuid)
+  }
+
   useEffect(() => {
     setPatientUuid(getPatientUuid())
     setLocationUuid(getLocationUuid())
+    window.addEventListener('hashchange', onUrlChangeCallback)
   }, [])
-
-  window.addEventListener('hashchange', () => {
-    setPatientUuid(getPatientUuid())
-  })
 
   return (
     <ConsultationContext.Provider value={patientDetails}>
