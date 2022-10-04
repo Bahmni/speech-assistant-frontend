@@ -1,5 +1,11 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
@@ -26,12 +32,33 @@ export function ConsultationPadContents({
 
   const patientDetails: PatientDetails = useContext(ConsultationContext)
 
+  const consultationTextRef = useRef(null)
+  const recordedTextRef = useRef(null)
+
+  consultationTextRef.current = consultationText
+  recordedTextRef.current = recordedText
+
   useEffect(() => {
     if (!isRecording && recordedText != '') {
-      setConsultationText(`${consultationText} ${recordedText}`)
+      consultationText
+        ? setConsultationText(`${consultationText} ${recordedText}`)
+        : setConsultationText(recordedText)
       setRecordedText('')
     }
   }, [isRecording])
+
+  useEffect(() => {
+    return () => {
+      if (recordedTextRef.current != '') {
+        consultationTextRef.current
+          ? setConsultationText(
+              `${consultationTextRef.current} ${recordedTextRef.current}`,
+            )
+          : setConsultationText(recordedTextRef.current)
+        setRecordedText('')
+      }
+    }
+  }, [])
 
   const onIncomingMessage = (message: string) => {
     setRecordedText(message)
@@ -52,12 +79,16 @@ export function ConsultationPadContents({
     setConsultationNotes(consultationText)
   }, [consultationText])
 
+  const clickStopMic = useCallback(() => {
+    socketConnection.handleStop()
+  }, [socketConnection])
+
   const renderStopMic = () => {
     return (
       <>
         <StopFilled
           className={styles.stopIcon}
-          onClick={() => socketConnection.handleStop()}
+          onClick={clickStopMic}
           aria-label="Stop Mic"
         />
         <h6>Listening</h6>
@@ -65,12 +96,16 @@ export function ConsultationPadContents({
     )
   }
 
+  const clickStartMic = useCallback(() => {
+    socketConnection.handleStart()
+  }, [socketConnection])
+
   const renderStartMic = () => {
     return (
       <>
         <MicrophoneFilled
           className={styles.microphoneIcon}
-          onClick={() => socketConnection.handleStart()}
+          onClick={clickStartMic}
           aria-label="Start Mic"
         />
         <h6 className="styles.heading">Start Recording</h6>
@@ -84,14 +119,31 @@ export function ConsultationPadContents({
       : recordedText
   }
 
+  const setCursorAtEnd = useCallback(event => {
+    const textLength = event.currentTarget.value.length
+    event.currentTarget.setSelectionRange(textLength, textLength)
+  }, [])
+
+  const setText = useCallback(event => {
+    setConsultationText(event.target.value)
+  }, [])
+
+  const focusTextarea = useCallback(
+    input => {
+      input && input.focus()
+    },
+    [isRecording],
+  )
+
   const renderTextArea = () => {
     return (
       <TextArea
-        onChange={event => setConsultationText(event.target.value)}
+        onChange={setText}
         labelText=""
-        ref={input => input && input.focus()}
+        ref={focusTextarea}
         value={recordedText ? appendRecordedText() : consultationText}
         style={{backgroundColor: 'white'}}
+        onFocus={setCursorAtEnd}
         readOnly={isRecording}
       />
     )
