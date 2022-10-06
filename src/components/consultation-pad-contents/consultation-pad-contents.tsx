@@ -55,7 +55,6 @@ export function ConsultationPadContents({
               `${consultationTextRef.current} ${recordedTextRef.current}`,
             )
           : setConsultationText(recordedTextRef.current)
-        setRecordedText('')
       }
     }
   }, [])
@@ -162,7 +161,7 @@ export function ConsultationPadContents({
         {isRecording ? renderStopMic() : renderStartMic()}
         <Button
           className={styles.saveButton}
-          disabled={consultationText == ''}
+          disabled={consultationText == '' && recordedText == ''}
           onClick={clickSaveButton}
         >
           Save Notes

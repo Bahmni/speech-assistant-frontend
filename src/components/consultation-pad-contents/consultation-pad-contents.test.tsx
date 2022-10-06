@@ -1,4 +1,4 @@
-import {render, screen, waitFor} from '@testing-library/react'
+import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {
@@ -92,6 +92,8 @@ describe('Consultation Pad Contents', () => {
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
 
     await userEvent.click(screen.getByLabelText('Start Mic'))
+    expect(mockSocketConnection.handleStart).toHaveBeenCalled()
+
     await waitFor(() => {
       mockOnRecording(true)
       expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
@@ -107,7 +109,52 @@ describe('Consultation Pad Contents', () => {
     })
   })
 
-  it('should append the notes to the existing consultation notes in the text area when again clicked on start mic', async () => {
+  it('should update the consultation notes with the recorded text when consultation notes is empty', async () => {
+    const mockSocketConnection = {
+      handleStart: jest.fn(),
+      handleStop: jest.fn(),
+    }
+    ;(SocketConnection as jest.Mock).mockImplementation(
+      () => mockSocketConnection,
+    )
+    render(
+      <ConsultationPadContents
+        closeConsultationPad={handleClose}
+        consultationText={''}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />,
+    )
+
+    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
+      .calls[0][1]
+    const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
+
+    mockSocketConnection.handleStart.mockImplementation(() =>
+      mockOnRecording(true),
+    )
+    mockSocketConnection.handleStop.mockImplementation(() =>
+      mockOnRecording(false),
+    )
+
+    await userEvent.click(screen.getByLabelText('Start Mic'))
+    waitFor(() => {
+      expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
+    })
+
+    mockOnIncomingMessage('Notes')
+
+    await userEvent.click(screen.getByLabelText('Stop Mic'))
+    waitFor(() => {
+      expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
+    })
+
+    await waitFor(() => {
+      expect(setConsultationText).toHaveBeenCalledWith('Notes')
+    })
+  })
+
+  it('should append the consultation notes with the recorded text when consultation notes is available', async () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
       handleStop: jest.fn(),
@@ -124,21 +171,25 @@ describe('Consultation Pad Contents', () => {
         setSavedNotes={setSavedNotes}
       />,
     )
+
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
       .calls[0][1]
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
+
     mockSocketConnection.handleStart.mockImplementation(() =>
       mockOnRecording(true),
     )
     mockSocketConnection.handleStop.mockImplementation(() =>
       mockOnRecording(false),
     )
+
     await userEvent.click(screen.getByLabelText('Start Mic'))
     waitFor(() => {
       expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
     })
 
     mockOnIncomingMessage('Notes')
+
     await userEvent.click(screen.getByLabelText('Stop Mic'))
     waitFor(() => {
       expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
@@ -160,28 +211,17 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationPadContents
         closeConsultationPad={handleClose}
-        consultationText={''}
+        consultationText={'Consultation'}
         setConsultationText={setConsultationText}
         setSavedNotes={setSavedNotes}
       />,
     )
-    const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
-      .calls[0][1]
 
     expect(
       screen.getByRole('button', {
         name: /Save/i,
       }),
-    ).toBeDisabled()
-
-    waitFor(() => {
-      mockOnIncomingMessage('hello')
-      expect(
-        screen.getByRole('button', {
-          name: /Save/i,
-        }),
-      ).toBeEnabled()
-    })
+    ).toBeEnabled()
   })
 
   it('should not save consultation notes when clicked on save button and active consultation encounter is not present', async () => {
@@ -293,5 +333,38 @@ describe('Consultation Pad Contents', () => {
     expect(obsUrl).toBe('/openmrs/ws/rest/v1/obs')
     expect(obsJsonBody.value).toBe('Consultation Notes')
     expect(setSavedNotes).toHaveBeenCalledWith(consultationText)
+  })
+
+  it('should update the consultation notes when user is typing manually on consultation pad', () => {
+    const mockSocketConnection = {
+      handleStart: jest.fn(),
+      handleStop: jest.fn(),
+    }
+    ;(SocketConnection as jest.Mock).mockImplementation(
+      () => mockSocketConnection,
+    )
+    let consultationText = ''
+    const setConsultationText = jest.fn()
+    setConsultationText.mockImplementation(value => (consultationText = value))
+
+    render(
+      <ConsultationPadContents
+        closeConsultationPad={handleClose}
+        consultationText={consultationText}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />,
+    )
+
+    expect(
+      screen.getByRole('button', {
+        name: /Save Notes/i,
+      }),
+    ).toBeDisabled()
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: {value: 'Consultation'},
+    })
+
+    expect(consultationText).toBe('Consultation')
   })
 })
