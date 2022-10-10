@@ -11,8 +11,8 @@ import {mockObsResponse} from '../../__mocks__/obsResponse.mock'
 import {customVisitUrl} from '../../utils/constants'
 import {mockVisitResponseWithActiveEncounter} from '../../__mocks__/activeVisitWithActiveEncounters.mock'
 import {mockVisitResponseWithInactiveEncounter} from '../../__mocks__/activeVisitWithInactiveEncounters.mock'
-
 import {ConsultationPadContents} from './consultation-pad-contents'
+import {mockVisitResponseWithNoEncounter} from '../../__mocks__/activeVisitWithNoEncounter.mock'
 
 jest.mock('../../utils/socket-connection/socket-connection')
 
@@ -236,6 +236,55 @@ describe('Consultation Pad Contents', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch.mockResolvedValue({
       json: () => mockVisitResponseWithInactiveEncounter,
+      ok: true,
+    })
+
+    const patientDetails: PatientDetails = {
+      patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
+      locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
+      isActiveVisit: true,
+    }
+
+    render(
+      <ConsultationContext.Provider value={patientDetails}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={'Consultation Notes'}
+          setConsultationText={setConsultationText}
+          setSavedNotes={setSavedNotes}
+        />
+      </ConsultationContext.Provider>,
+    )
+
+    expect(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    ).toBeEnabled()
+
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    )
+    expect(fetch).toBeCalledTimes(1)
+    expect(mockFetch.mock.calls[0][0]).toBe(
+      customVisitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
+    )
+  })
+
+  it('should not save consultation notes when clicked on save button and consultation encounter is not present', async () => {
+    const mockSocketConnection = {
+      handleStart: jest.fn(),
+      handleStop: jest.fn(),
+    }
+    ;(SocketConnection as jest.Mock).mockImplementation(
+      () => mockSocketConnection,
+    )
+    global.fetch = jest.fn().mockImplementation()
+    const mockFetch = global.fetch as jest.Mock
+    mockFetch.mockResolvedValue({
+      json: () => mockVisitResponseWithNoEncounter,
       ok: true,
     })
 

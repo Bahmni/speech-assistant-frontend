@@ -1,11 +1,5 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
@@ -32,12 +26,6 @@ export function ConsultationPadContents({
 
   const patientDetails: PatientDetails = useContext(ConsultationContext)
 
-  const consultationTextRef = useRef(null)
-  const recordedTextRef = useRef(null)
-
-  consultationTextRef.current = consultationText
-  recordedTextRef.current = recordedText
-
   useEffect(() => {
     if (!isRecording && recordedText != '') {
       consultationText
@@ -46,18 +34,6 @@ export function ConsultationPadContents({
       setRecordedText('')
     }
   }, [isRecording])
-
-  useEffect(() => {
-    return () => {
-      if (recordedTextRef.current != '') {
-        consultationTextRef.current
-          ? setConsultationText(
-              `${consultationTextRef.current} ${recordedTextRef.current}`,
-            )
-          : setConsultationText(recordedTextRef.current)
-      }
-    }
-  }, [])
 
   const onIncomingMessage = (message: string) => {
     setRecordedText(message)

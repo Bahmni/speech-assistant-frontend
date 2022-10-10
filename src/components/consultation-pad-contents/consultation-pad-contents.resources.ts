@@ -81,7 +81,7 @@ export const saveConsultationNotes = async (
   patientDetails,
 ) => {
   const encounters = await getEncounters(patientDetails)
-  const consultationActiveEncounter = encounters.find(
+  const consultationActiveEncounter = encounters?.find(
     encounter =>
       encounter.encounterType.display == 'Consultation' &&
       isConsultationEncounterActive(encounter),
