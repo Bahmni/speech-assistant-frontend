@@ -60,14 +60,11 @@ export function ConsultationPadContents({
 
   const renderStopMic = () => {
     return (
-      <>
-        <StopFilled
-          className={styles.stopIcon}
-          onClick={clickStopMic}
-          aria-label="Stop Mic"
-        />
-        <h6>Listening</h6>
-      </>
+      <Button onClick={clickStopMic} className={styles.button}>
+        <StopFilled className={styles.stopIcon} aria-label="Stop Mic" />
+        <span className={styles.pulse} />
+        <h6 className={styles.listening}>Listening</h6>
+      </Button>
     )
   }
 
@@ -77,14 +74,13 @@ export function ConsultationPadContents({
 
   const renderStartMic = () => {
     return (
-      <>
+      <Button onClick={clickStartMic} className={styles.button}>
         <MicrophoneFilled
           className={styles.microphoneIcon}
-          onClick={clickStartMic}
           aria-label="Start Mic"
         />
-        <h6 className="styles.heading">Start Recording</h6>
-      </>
+        <h6 className={styles.startRecording}>Start Recording</h6>
+      </Button>
     )
   }
 

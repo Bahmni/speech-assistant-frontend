@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {Button} from '@carbon/react'
 import styles from './floating-consultation-button.scss'
-import {WarningFilled, MicrophoneFilled} from '@carbon/icons-react'
+import {WarningFilled, Document} from '@carbon/icons-react'
 
 export function FloatingConsultationButton({
   isUnsavedNotesPresent,
@@ -13,8 +13,8 @@ export function FloatingConsultationButton({
 
   return (
     <Button onClick={clickConsultationPadButton} className={styles.floating}>
+      <Document size="25" className={styles.notes} />
       <div>
-        <MicrophoneFilled size="20" className={styles.microPhone} />
         {isUnsavedNotesPresent && (
           <WarningFilled
             aria-label="warningFilled"
@@ -22,8 +22,7 @@ export function FloatingConsultationButton({
           />
         )}
       </div>
-
-      <div className="consultationPadText">Consultation Pad</div>
+      <div>Notes</div>
     </Button>
   )
 }

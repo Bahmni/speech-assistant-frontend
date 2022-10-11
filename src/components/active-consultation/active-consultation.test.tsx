@@ -18,7 +18,7 @@ describe('Active Consultation', () => {
 
     expect(
       screen.queryByRole('button', {
-        name: /Consultation Pad/i,
+        name: /Notes/i,
       }),
     ).not.toBeInTheDocument()
   })
@@ -38,7 +38,7 @@ describe('Active Consultation', () => {
 
     expect(
       screen.getByRole('button', {
-        name: /Consultation Pad/i,
+        name: /Notes/i,
       }),
     ).toBeInTheDocument()
   })

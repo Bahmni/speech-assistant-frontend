@@ -14,7 +14,7 @@ describe('Floating Consultation Button', () => {
 
     expect(
       screen.getByRole('button', {
-        name: /Consultation Pad/i,
+        name: /Notes/i,
       }),
     ).toBeInTheDocument()
   })
@@ -27,9 +27,7 @@ describe('Floating Consultation Button', () => {
       />,
     )
 
-    expect(
-      screen.getByRole('button', {name: /Consultation Pad/i}),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: /Notes/i})).toBeInTheDocument()
 
     expect(screen.queryByLabelText('warningFilled')).not.toBeInTheDocument()
   })
@@ -42,9 +40,7 @@ describe('Floating Consultation Button', () => {
       />,
     )
 
-    expect(
-      screen.getByRole('button', {name: /Consultation Pad/i}),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: /Notes/i})).toBeInTheDocument()
 
     expect(screen.getByLabelText('warningFilled')).toBeInTheDocument()
   })

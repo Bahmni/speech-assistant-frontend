@@ -2,11 +2,12 @@
     position: fixed;
     right: 1rem;
     bottom: 1rem;
-    padding-right: 18px;
-    width: 170px;
-    height: 56px;
+    padding-right: 22px;
+    width: 120px;
+    height: 60px;
     border-radius: 28px;
     background: #007d79;
+    font-size: 18px;
 }
 @media (max-width: 796px) {
 
@@ -18,7 +19,6 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    padding: 0 1rem 0 1.1rem;
 }
 }
 .floating:hover {
@@ -35,7 +35,6 @@
     border-radius: 80%;
 }
 
-.microPhone{
+.notes{
     position: absolute;
-    top: 17px;
 }

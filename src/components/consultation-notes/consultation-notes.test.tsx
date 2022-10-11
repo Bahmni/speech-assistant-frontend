@@ -8,7 +8,7 @@ describe('Floating Button and Consultation Pad', () => {
     render(<ConsultationNotes />)
 
     const consultationPadButtonName = {
-      name: /Consultation Pad/i,
+      name: 'Notes',
     }
 
     await userEvent.click(screen.getByRole('button', consultationPadButtonName))
@@ -25,7 +25,7 @@ describe('Floating Button and Consultation Pad', () => {
     render(<ConsultationNotes />)
 
     const consultationPadButtonName = {
-      name: /Consultation Pad/i,
+      name: /Notes/i,
     }
     await userEvent.click(screen.getByRole('button', consultationPadButtonName))
     await userEvent.click(screen.getByLabelText('minimizeIcon'))

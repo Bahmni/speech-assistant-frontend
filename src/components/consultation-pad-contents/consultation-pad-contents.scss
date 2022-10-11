@@ -8,26 +8,71 @@
 .saveButton:hover {
   background: #88AF28;
 }
+
 .microphoneIcon {
   fill: rgb(240, 18, 18);
   height: 2rem;
   width: 2rem;
   cursor: pointer;
 }
-.stopIcon {
+.stopIcon { 
   fill: rgb(240, 18, 18);
   height: 2rem;
   width: 2rem;
+  align-items: center;
+  position: absolute;
   cursor: pointer;
-  }
-.padBottomArea{
-  display: flex;
-  justify-content:center;
-  padding-top: 1rem;
-  }
-.heading{
-  padding-top: 0.5rem;
-  font-size: 13px;
-  font-style: italic;
 }
 
+.padBottomArea{
+  display: flex;
+  justify-content:left;
+  padding-top: 1rem;
+  }
+
+.startRecording{
+  font-size: 13px;
+  font-style: italic;
+  cursor: pointer;
+}
+.listening{
+  padding-left: 0.4rem;
+  font-size: 13px;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.pulse {
+  content: '';
+  background: transparent;
+  border-radius: 50%;
+  border: 5px solid darkgrey;
+  z-index: -2;
+  animation: animate 1s linear infinite;
+  width: 2rem;
+  height: 2rem;
+}
+
+@keyframes animate {
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5, 1.5);
+    opacity: 0;
+  }
+}
+
+.button {
+  background: none;
+    padding: 0px;
+    border: none;
+  min-height: 0;
+  border-color: none;
+}
+
+.button:hover {
+  background:none;
+  border-color: none;
+}

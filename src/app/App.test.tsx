@@ -24,7 +24,7 @@ describe('Speech Assistant App', () => {
 
     expect(
       screen.queryByRole('button', {
-        name: /Consultation Pad/i,
+        name: /Notes/i,
       }),
     ).not.toBeInTheDocument()
   })
@@ -38,7 +38,7 @@ describe('Speech Assistant App', () => {
     render(<App />)
     expect(
       screen.queryByRole('button', {
-        name: /Consultation Pad/i,
+        name: /Notes/i,
       }),
     ).not.toBeInTheDocument()
   })
@@ -62,7 +62,7 @@ describe('Speech Assistant App', () => {
     })
 
     const consultationPadButton = await screen.findByRole('button', {
-      name: /Consultation Pad/i,
+      name: /Notes/i,
     })
     expect(consultationPadButton).toBeInTheDocument()
     const visitUrl = mockFetch.mock.calls[0][0]
@@ -93,7 +93,7 @@ describe('Speech Assistant App', () => {
 
     expect(
       screen.queryByRole('button', {
-        name: /Consultation Pad/i,
+        name: /Notes/i,
       }),
     ).not.toBeInTheDocument()
     const visitUrl = mockFetch.mock.calls[0][0]
