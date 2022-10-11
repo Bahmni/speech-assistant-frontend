@@ -36,20 +36,4 @@ describe('Floating Button and Consultation Pad', () => {
       ).toBeInTheDocument()
     })
   })
-
-  it('should show consultation pad button when consultation pad is closed', async () => {
-    render(<ConsultationNotes />)
-
-    const consultationPadButtonName = {
-      name: /Consultation Pad/i,
-    }
-    await userEvent.click(screen.getByRole('button', consultationPadButtonName))
-    await userEvent.click(screen.getByLabelText('close'))
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', consultationPadButtonName),
-      ).toBeInTheDocument()
-    })
-  })
 })
