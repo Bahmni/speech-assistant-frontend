@@ -10,9 +10,9 @@ jest.useFakeTimers()
 
 describe('Bahmni save button listener', () => {
   it('should trigger event listener only once irrespective of multiple url changes when bahmni save button is clicked', () => {
-    const mockedSaveConsultationNotes = jest.mocked(saveConsultationNotes)
-    const handleClose = jest.fn()
-
+    const mockSaveConsultationNotes = jest.mocked(saveConsultationNotes)
+    const mockHandleClose = jest.fn()
+    const mockSetSaveButton = jest.fn()
     jest.spyOn(global, 'setTimeout')
 
     const patientDetails: PatientDetails = {
@@ -29,7 +29,7 @@ describe('Bahmni save button listener', () => {
 
     document.body.appendChild(save)
 
-    addSaveButtonListener(patientDetails, handleClose)
+    addSaveButtonListener(patientDetails, mockHandleClose, mockSetSaveButton)
     window.dispatchEvent(new HashChangeEvent('hashchange'))
     window.dispatchEvent(new HashChangeEvent('hashchange'))
     window.dispatchEvent(new HashChangeEvent('hashchange'))
@@ -38,7 +38,8 @@ describe('Bahmni save button listener', () => {
 
     jest.runAllTimers()
 
-    expect(mockedSaveConsultationNotes).toBeCalledTimes(1)
-    expect(handleClose).toBeCalledTimes(1)
+    expect(mockSaveConsultationNotes).toBeCalledTimes(1)
+    expect(mockHandleClose).toBeCalledTimes(1)
+    expect(mockSetSaveButton).toBeCalledTimes(1)
   })
 })

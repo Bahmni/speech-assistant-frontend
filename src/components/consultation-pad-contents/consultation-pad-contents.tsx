@@ -47,7 +47,7 @@ export function ConsultationPadContents({
     setSocketConnection(
       new SocketConnection(streamingURL, onIncomingMessage, onRecording),
     )
-    addSaveButtonListener(patientDetails, closeConsultationPad)
+    addSaveButtonListener(patientDetails, closeConsultationPad, setSavedNotes)
   }, [])
 
   useEffect(() => {

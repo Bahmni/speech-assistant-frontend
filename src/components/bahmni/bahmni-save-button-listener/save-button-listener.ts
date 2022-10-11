@@ -8,15 +8,25 @@ export const setConsultationNotes = value => {
 }
 
 let saveButton = null
+let isHashChangeEventAdded = false
 
-const onBahmniSaveButtonClick = (patientDetails, closeConsultationPad) => {
+const onBahmniSaveButtonClick = (
+  patientDetails,
+  closeConsultationPad,
+  setSavedNotes,
+) => {
   setTimeout(() => {
     saveConsultationNotes(consultationNotes, patientDetails)
+    setSavedNotes(consultationNotes)
     closeConsultationPad()
   }, bahmniSaveButtonResponseTime)
 }
 
-const addBahmniSaveButtonListener = (patientDetails, closeConsultationPad) => {
+const addBahmniSaveButtonListener = (
+  patientDetails,
+  closeConsultationPad,
+  setSavedNotes,
+) => {
   const bahmniSaveButton = document
     .getElementsByClassName('confirm save-consultation')
     .item(0)
@@ -25,7 +35,11 @@ const addBahmniSaveButtonListener = (patientDetails, closeConsultationPad) => {
     if (saveButton === null) {
       saveButton = bahmniSaveButton
       saveButton.addEventListener('click', () =>
-        onBahmniSaveButtonClick(patientDetails, closeConsultationPad),
+        onBahmniSaveButtonClick(
+          patientDetails,
+          closeConsultationPad,
+          setSavedNotes,
+        ),
       )
     }
   } else {
@@ -33,8 +47,24 @@ const addBahmniSaveButtonListener = (patientDetails, closeConsultationPad) => {
   }
 }
 
-export const addSaveButtonListener = (patientDetails, closeConsultationPad) => {
-  window.addEventListener('hashchange', () =>
-    addBahmniSaveButtonListener(patientDetails, closeConsultationPad),
-  )
+export const addSaveButtonListener = (
+  patientDetails,
+  closeConsultationPad,
+  setSavedNotes,
+) => {
+  if (isHashChangeEventAdded === false) {
+    addBahmniSaveButtonListener(
+      patientDetails,
+      closeConsultationPad,
+      setSavedNotes,
+    )
+    window.addEventListener('hashchange', () => {
+      addBahmniSaveButtonListener(
+        patientDetails,
+        closeConsultationPad,
+        setSavedNotes,
+      )
+    })
+    isHashChangeEventAdded = true
+  }
 }
