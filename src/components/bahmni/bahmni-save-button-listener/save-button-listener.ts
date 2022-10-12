@@ -15,10 +15,10 @@ const onBahmniSaveButtonClick = (
   closeConsultationPad,
   setSavedNotes,
 ) => {
+  closeConsultationPad()
   setTimeout(() => {
     saveConsultationNotes(consultationNotes, patientDetails)
     setSavedNotes(consultationNotes)
-    closeConsultationPad()
   }, bahmniSaveButtonResponseTime)
 }
 

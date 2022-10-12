@@ -1,5 +1,11 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
@@ -21,10 +27,18 @@ export function ConsultationPadContents({
   setSavedNotes,
 }) {
   const [isRecording, setIsRecording] = useState(false)
-  const [socketConnection, setSocketConnection] = useState(null)
   const [recordedText, setRecordedText] = useState('')
 
   const patientDetails: PatientDetails = useContext(ConsultationContext)
+
+  const consultationTextRef = useRef(null)
+  const recordedTextRef = useRef(null)
+  const isRecordingRef = useRef(null)
+  const socketConnectionRef = useRef(null)
+
+  consultationTextRef.current = consultationText
+  recordedTextRef.current = recordedText
+  isRecordingRef.current = isRecording
 
   useEffect(() => {
     if (!isRecording && recordedText != '') {
@@ -44,10 +58,25 @@ export function ConsultationPadContents({
   }
 
   useEffect(() => {
-    setSocketConnection(
-      new SocketConnection(streamingURL, onIncomingMessage, onRecording),
+    socketConnectionRef.current = new SocketConnection(
+      streamingURL,
+      onIncomingMessage,
+      onRecording,
     )
     addSaveButtonListener(patientDetails, closeConsultationPad, setSavedNotes)
+    return () => {
+      if (isRecordingRef.current) {
+        if (recordedTextRef.current != '') {
+          const updatedText = consultationTextRef.current
+            ? `${consultationTextRef.current} ${recordedTextRef.current}`
+            : recordedTextRef.current
+
+          setConsultationText(updatedText)
+          setConsultationNotes(updatedText)
+        }
+        socketConnectionRef.current.handleStop()
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -55,8 +84,8 @@ export function ConsultationPadContents({
   }, [consultationText])
 
   const clickStopMic = useCallback(() => {
-    socketConnection.handleStop()
-  }, [socketConnection])
+    socketConnectionRef.current.handleStop()
+  }, [])
 
   const renderStopMic = () => {
     return (
@@ -69,8 +98,8 @@ export function ConsultationPadContents({
   }
 
   const clickStartMic = useCallback(() => {
-    socketConnection.handleStart()
-  }, [socketConnection])
+    socketConnectionRef.current.handleStart()
+  }, [])
 
   const renderStartMic = () => {
     return (
