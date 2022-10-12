@@ -6,7 +6,13 @@ const checkActiveVisit = patientDetails => patientDetails?.isActiveVisit
 
 function ActiveConsultation() {
   const patientDetails = useContext(ConsultationContext)
-  return checkActiveVisit(patientDetails) && <ConsultationNotes />
+  return (
+    checkActiveVisit(patientDetails) && (
+      <div id="sa-consultation">
+        <ConsultationNotes />
+      </div>
+    )
+  )
 }
 
 export default ActiveConsultation

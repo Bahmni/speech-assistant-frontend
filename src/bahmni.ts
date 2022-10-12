@@ -12,14 +12,14 @@ function removeConsultationTab() {
   }
 }
 
-function isSaConsultationButtonAvailable() {
-  return document.getElementById('consultationButton')
+function isSaConsultationAvailable() {
+  return document.getElementById('sa-consultation')
 }
 
 function updateConsultationHeader() {
   const opdElements = document.getElementById('opd-tabs')
   if (opdElements) {
-    if (isSaConsultationButtonAvailable()) removeConsultationTab()
+    if (isSaConsultationAvailable()) removeConsultationTab()
   }
 }
 
