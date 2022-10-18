@@ -3,6 +3,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const {DefinePlugin} = require('webpack')
 
 const cssLoader = {
   loader: 'css-loader',
@@ -21,52 +22,59 @@ const cssLoader = {
   },
 }
 
-const config = {
-  mode: 'development',
-  entry: './src/index.tsx',
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle/bundle.js',
-  },
-  target: 'web',
-  devServer: {
-    port: 3030, // you can change the port
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(woff(2)?)$/,
-        generator: {
-          filename: './fonts/[name][ext]',
+const config = env => {
+  return {
+    mode: 'development',
+    entry: './src/index.tsx',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: 'bundle/bundle.js',
+    },
+    target: 'web',
+    devServer: {
+      port: 3030, // you can change the port
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(woff(2)?)$/,
+          generator: {
+            filename: './fonts/[name][ext]',
+          },
         },
-      },
-      {
-        use: 'swc-loader',
-        test: /\.ts|tsx$/,
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: ['style-loader', cssLoader, 'sass-loader'],
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', cssLoader],
-        exclude: /node_modules/,
-      },
+        {
+          use: 'swc-loader',
+          test: /\.ts|tsx$/,
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.s[ac]ss$/,
+          use: ['style-loader', cssLoader, 'sass-loader'],
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', cssLoader],
+          exclude: /node_modules/,
+        },
+      ],
+    },
+    plugins: [
+      new DefinePlugin({
+        'process.env.ENABLE_SA_APP': env.enable_sa || true,
+      }),
+      new ForkTsCheckerWebpackPlugin(),
+      new CleanWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        template: 'public/index.html', // to import index.html file inside index.js
+      }),
     ],
-  },
-  plugins: [
-    new ForkTsCheckerWebpackPlugin(),
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      template: 'public/index.html', // to import index.html file inside index.js
-    }),
-  ],
-  resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.css'],
-  },
+    resolve: {
+      extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.css'],
+    },
+  }
 }
 
-module.exports = config
+module.exports = env => {
+  return config(env)
+}

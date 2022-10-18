@@ -1,4 +1,4 @@
-# Sahaya Frontend
+# speech-assistant-frontend
 
 ## Overview
 
@@ -29,16 +29,16 @@ Bahmni voice assistant UI
 
 ### Setup
 
-1. Clone the [sahaya-frontend](https://github.com/bahmni/sahaya-frontend) repo.
+1. Clone the [speech-assistant-frontend](https://github.com/Bahmni/speech-assistant-frontend) repo.
 ```
-git clone https://github.com/bahmni/sahaya-frontend
+git clone https://github.com/Bahmni/speech-assistant-frontend
 ```
 
 2. Install dependencies in the root directory of the repo.
 ```
 yarn install
 ```
-3. To start application
+3. To start the application
 ```
 yarn serve
 ```
@@ -52,3 +52,10 @@ yarn build
 ```
 yarn test
 ```
+
+### Note:
+
+ * By default speech assistant app will be enabled while building the app
+ * To disable the speech assistant app at build time, trigger the workflow with false value of Load SA App
+
+   <img src="public/images/manual_workflow_trigger.png" width="250">

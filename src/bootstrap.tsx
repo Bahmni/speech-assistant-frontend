@@ -24,15 +24,16 @@ function createDOM() {
 }
 
 function bootstrap() {
-  if (
-    !document.querySelector(
+  if (process.env.ENABLE_SA_APP) {
+    const isSAPresent = document.querySelector(
       `body div[${mfContainerAttribute}='${mfContainerValue}']`,
     )
-  ) {
-    createDOM()
+    if (!isSAPresent) {
+      createDOM()
+    }
+    renderApp()
+    performBahmniDOMOperations()
   }
-  renderApp()
-  performBahmniDOMOperations()
 }
 
 export {bootstrap}
