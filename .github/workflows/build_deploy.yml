@@ -9,6 +9,10 @@ on:
         description: 'Load SA App'
         required: true
         default: 'true'
+        type: choice
+        options:
+        - 'true'
+        - 'false'
 
 jobs:
   build:

@@ -55,7 +55,6 @@ yarn test
 
 ### Note:
 
- * By default speech assistant app will be enabled while building the app
- * To disable the speech assistant app at build time, trigger the workflow with false value of Load SA App
+ * There is a feature toggle functionality available. The Speech assistant microfrontend will not render if build workflow is triggered with false value.
 
    <img src="public/images/manual_workflow_trigger.png" width="250">
