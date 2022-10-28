@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {getApiCall} from '../utils/api-utils'
-import {customVisitUrl} from '../utils/constants'
+import {visitUrl, sessionUrl} from '../utils/constants'
 import {
   getActiveConsultationEncounter,
   getConsultationObs,
@@ -14,6 +14,7 @@ export interface PatientDetails {
   patientUuid: string
   locationUuid: string
   isActiveVisit: boolean
+  providerUuid: string
 }
 
 export interface ConsultationContextProps {
@@ -26,9 +27,7 @@ export const ConsultationContext =
   React.createContext<ConsultationContextProps>(null)
 
 async function fetchActiveVisitResponse(patiendId, locationId) {
-  const activeVisitResponse = await getApiCall(
-    customVisitUrl(patiendId, locationId),
-  )
+  const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
   return activeVisitResponse
 }
 
@@ -45,11 +44,17 @@ export function useSavedConsultationNotes() {
   }
 }
 
+async function getProviderUuid() {
+  const response = await getApiCall(sessionUrl)
+  return response?.currentProvider?.uuid
+}
+
 function ConsultationContextProvider({children}) {
   const [patientDetails, setPatientDetails] = useState<PatientDetails>()
   const [patientUuid, setPatientUuid] = useState('')
   const [locationUuid, setLocationUuid] = useState('')
   const [savedConsultationNotes, setSavedConsultationNotes] = useState('')
+  const providerUuidRef = useRef('')
 
   const updateSavedConsultationNotes = activeVisitResponse => {
     const consultationActiveEncounter =
@@ -57,10 +62,9 @@ function ConsultationContextProvider({children}) {
 
     if (consultationActiveEncounter) {
       const consultationObs = getConsultationObs(consultationActiveEncounter)
+      const matcher = new RegExp(`Consultation Note: (?<notes>.*)`)
       if (consultationObs) {
-        const savedData = consultationObs.display.match(
-          /^Consultation Note: (.*)/,
-        )[1]
+        const savedData = matcher.exec(consultationObs.display).groups?.notes
         setSavedConsultationNotes(savedData)
       }
     }
@@ -75,9 +79,10 @@ function ConsultationContextProvider({children}) {
 
     if (isActiveVisit) {
       setPatientDetails({
-        patientUuid: patientUuid,
-        locationUuid: locationUuid,
-        isActiveVisit: isActiveVisit,
+        patientUuid,
+        locationUuid,
+        isActiveVisit,
+        providerUuid: providerUuidRef.current,
       })
       updateSavedConsultationNotes(activeVisitResponse)
     }
@@ -88,9 +93,10 @@ function ConsultationContextProvider({children}) {
       updatePatientDetails(patientUuid, locationUuid)
     } else {
       setPatientDetails({
-        patientUuid: patientUuid,
-        locationUuid: locationUuid,
+        patientUuid,
+        locationUuid,
         isActiveVisit: false,
+        providerUuid: providerUuidRef.current,
       })
       setSavedConsultationNotes('')
     }
@@ -103,6 +109,10 @@ function ConsultationContextProvider({children}) {
   useEffect(() => {
     setPatientUuid(getPatientUuid())
     setLocationUuid(getLocationUuid())
+    const providerUuidResponse = getProviderUuid()
+    providerUuidResponse.then(uuid => {
+      providerUuidRef.current = uuid
+    })
     window.addEventListener('hashchange', onUrlChangeCallback)
   }, [])
 

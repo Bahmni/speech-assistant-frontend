@@ -19,6 +19,7 @@ describe('Bahmni save button listener', () => {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
       isActiveVisit: true,
+      providerUuid: '',
     }
 
     setConsultationNotes('testing')
