@@ -15,7 +15,6 @@ const cssLoader = {
         } else {
           const name = fileName.replace(/\.[^/.]+$/, '')
           return `${name}__${localName}`
-          //
         }
       }
     }
@@ -27,7 +26,7 @@ const config = {
   entry: './src/index.tsx',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle/bundle.js'
   },
   target: 'web',
   devServer: {
@@ -35,6 +34,12 @@ const config = {
   },
   module: {
     rules: [
+      {
+        test: /\.(woff(2)?)$/,
+        generator: {
+          filename: './fonts/[name][ext]',
+        },
+      },
       {
         use: 'swc-loader',
         test: /\.ts|tsx$/,

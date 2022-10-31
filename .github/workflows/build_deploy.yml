@@ -1,11 +1,11 @@
-name: Build
+name: Build and Deploy
 on:
   push:
     branches: 
       - main
 jobs:
   build:
-    name: Build and Test
+    name: Build Test and Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,3 +18,8 @@ jobs:
       - run: yarn typescript
       - run: yarn test
       - run: yarn build
+      - name: Deploy to github Page
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages
+          folder: dist/bundle
