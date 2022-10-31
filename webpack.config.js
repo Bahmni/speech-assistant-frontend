@@ -75,6 +75,4 @@ const config = env => {
   }
 }
 
-module.exports = env => {
-  return config(env)
-}
+module.exports = config
