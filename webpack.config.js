@@ -22,6 +22,7 @@ const cssLoader = {
   },
 }
 
+<<<<<<< HEAD
 const config = env => {
   return {
     mode: 'development',
@@ -73,6 +74,54 @@ const config = env => {
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.css'],
     },
   }
+=======
+const config = {
+  mode: 'development',
+  entry: './src/index.tsx',
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle/bundle.js',
+  },
+  target: 'web',
+  devServer: {
+    port: 3030, // you can change the port
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(woff(2)?)$/,
+        generator: {
+          filename: './fonts/[name][ext]',
+        },
+      },
+      {
+        use: 'swc-loader',
+        test: /\.ts|tsx$/,
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: ['style-loader', cssLoader, 'sass-loader'],
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', cssLoader],
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin(),
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: 'public/index.html', // to import index.html file inside index.js
+    }),
+  ],
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.css'],
+  },
+>>>>>>> 0a355ef (Format code with standardjs and prettier)
 }
 
 module.exports = config
