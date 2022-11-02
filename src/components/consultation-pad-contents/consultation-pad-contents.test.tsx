@@ -311,13 +311,26 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationPadContents
-        closeConsultationPad={handleClose}
-        consultationText={'consultationText'}
-        setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={'consultationText'}
+          setConsultationText={setConsultationText}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
