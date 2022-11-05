@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "webpack serve",
     "build": "npx webpack",
+    "deploy": "gh-pages -d dist/bundle",
     "lint": "eslint src --ext tsx",
     "prettier": "prettier --config prettier.config.js --write \"src/**/*.{ts,tsx}\"",
     "typescript": "tsc",
@@ -14,6 +15,7 @@
   },
   "dependencies": {
     "@carbon/react": "^1.7.0",
+    "gh-pages": "^4.0.0",
     "postcss-loader": "^7.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

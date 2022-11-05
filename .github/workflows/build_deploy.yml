@@ -18,8 +18,9 @@ jobs:
       - run: yarn typescript
       - run: yarn test
       - run: yarn build
-      - name: Deploy to github Page
-        uses: JamesIves/github-pages-deploy-action@4.1.1
-        with:
-          branch: gh-pages
-          folder: dist/bundle
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          yarn deploy -u "github-actions-bot <support+actions@github.com>" -m "${{ github.event.head_commit.message }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
