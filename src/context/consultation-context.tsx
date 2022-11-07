@@ -51,15 +51,20 @@ function ConsultationContextProvider({children}) {
 
   const updateSavedConsultationNotes = (encountersResponse, visitUuId) => {
     const consultationActiveEncounter =
-      getActiveConsultationEncounter(encountersResponse)
+      getProviderSpecificActiveConsultationEncounter(
+        activeVisitResponse,
+        locationUuid,
+        providerUuidRef.current,
+      )
 
     if (consultationActiveEncounter) {
+      // console.log(getConsultationObs(encounter).value)
       const consultationObs = getConsultationObs(consultationActiveEncounter)
       if (consultationObs) {
-        const savedData = consultationObs.display.match(
-          /Consultation Note: (?<notes>.*)/,
-        )[1]
-        setSavedConsultationNotes(savedData)
+        // const savedData = consultationObs.display.match(
+        //   /^Consultation Note: (.*)/,
+        // )[1]
+        setSavedConsultationNotes(consultationObs.value)
       }
     }
   }

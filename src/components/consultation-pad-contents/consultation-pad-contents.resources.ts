@@ -2,7 +2,6 @@ import {postApiCall, getApiCall} from '../../utils/api-utils'
 import {
   getProviderSpecificActiveConsultationEncounter,
   getConsultationObs,
-  getProviderFromEncounterUrl as getProviderSpecificActiveConsultationEncounter2,
 } from '../../utils/encounter-details/encounter-details'
 import {
   visitUrl,
@@ -153,12 +152,10 @@ export const updateConsultationObs = (obsUuid, consultationText) => {
   postApiCall(updateObsUrl(obsUuid), body).then(response => response.json())
 }
 
-const getEncountersFromUrl = async (patientid, date) => {
-  console.log(patientid)
-  // console.log(encountertype);
-  console.log(date)
-
-  const response = await getApiCall(encounterurl(patientid, date))
+const getEncounters = async (patientid, fromdate, encounterType) => {
+  const response = await getApiCall(
+    encounterurl(patientid, fromdate, encounterType),
+  )
   return response
 }
 
@@ -190,8 +187,30 @@ export const saveConsultationNotes = async (
   const visitResponse = await getApiCall(
     visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
   )
+  const consultationEncounterTypeUuid = '81852aee-3f10-11e4-adec-0800271c1b75'
+
+  const date = new Date()
+
+  date.setHours(date.getHours() - 1)
+  let fromdate = date.toISOString()
+  console.log(fromdate)
+
+  const encountersResult = await getEncounters(
+    patientDetails.patientUuid,
+    fromdate,
+    consultationEncounterTypeUuid,
+  )
+
   const consultationActiveEncounter =
-    getActiveConsultationEncounter(visitResponse)
+    await getProviderSpecificActiveConsultationEncounter(
+      encountersResult,
+      patientDetails.locationUuid,
+      patientDetails.providerUuid,
+    )
+  console.log('return value')
+
+  console.log(consultationActiveEncounter)
+
   const visitUuid = visitResponse?.results[0]?.uuid
   const encounterDatetime = new Date().toISOString()
 
