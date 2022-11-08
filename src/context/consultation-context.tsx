@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react'
-import {getApiCall} from '../utils/api-utils'
-import {visitUrl, sessionUrl} from '../utils/constants'
+import {getActiveVisitResponse, getProviderUuid} from '../utils/api-utils'
 import {
   getActiveConsultationEncounter,
   getConsultationObs,
@@ -26,11 +25,6 @@ export interface ConsultationContextProps {
 export const ConsultationContext =
   React.createContext<ConsultationContextProps>(null)
 
-async function fetchActiveVisitResponse(patiendId, locationId) {
-  const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
-  return activeVisitResponse
-}
-
 export function usePatientDetails() {
   const context = React.useContext(ConsultationContext)
   return context.patientDetails
@@ -42,11 +36,6 @@ export function useSavedConsultationNotes() {
     savedConsultationNotes: context.savedConsultationNotes,
     setSavedConsultationNotes: context.setSavedConsultationNotes,
   }
-}
-
-async function getProviderUuid() {
-  const response = await getApiCall(sessionUrl)
-  return response?.currentProvider?.uuid
 }
 
 function ConsultationContextProvider({children}) {
@@ -71,10 +60,10 @@ function ConsultationContextProvider({children}) {
     }
   }
 
-  const updatePatientDetails = async (patientUuid, locationUuid) => {
-    const activeVisitResponse = await fetchActiveVisitResponse(
-      patientUuid,
-      locationUuid,
+  const updatePatientDetails = async (patientId, locationId) => {
+    const activeVisitResponse = await getActiveVisitResponse(
+      patientId,
+      locationId,
     )
     const isActiveVisit = activeVisitResponse?.results?.length > 0
 

@@ -533,7 +533,6 @@ describe('Consultation Pad Contents', () => {
       () => mockSocketConnection,
     )
     let consultationText = ''
-    const setConsultationText = jest.fn()
     setConsultationText.mockImplementation(value => (consultationText = value))
 
     const patientDetails: PatientDetails = {
@@ -599,9 +598,7 @@ describe('Consultation Pad Contents', () => {
         ok: true,
       })
       .mockResolvedValue({
-        json: () => {
-          // do nothing
-        },
+        json: () => ({}),
         ok: true,
       })
 
@@ -684,9 +681,7 @@ describe('Consultation Pad Contents', () => {
         ok: true,
       })
       .mockResolvedValue({
-        json: () => {
-          // do nothing
-        },
+        json: () => ({}),
         ok: true,
       })
 

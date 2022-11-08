@@ -134,7 +134,7 @@ async function createEncounterWithObs(
   const encounterRoleUuid = await getEncounterRoleUuid()
   const consultationNotesConceptUuid = await getconsultationNotesConceptUuid()
 
-  const requestbody = encounterRequestBody(
+  const encounterData = encounterRequestBody(
     encounterDatetime,
     visitUuid,
     encounterTypeUuid,
@@ -143,7 +143,7 @@ async function createEncounterWithObs(
     consultationText,
     patientDetails,
   )
-  postApiCall(encounterUrl, requestbody).then(response => response.json())
+  postApiCall(encounterUrl, encounterData).then(response => response.json())
 }
 
 export const updateConsultationObs = (obsUuid, consultationText) => {
@@ -179,9 +179,8 @@ export const saveConsultationNotes = async (
   const visitResponse = await getApiCall(
     visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
   )
-  const consultationActiveEncounter = await getActiveConsultationEncounter(
-    visitResponse,
-  )
+  const consultationActiveEncounter =
+    getActiveConsultationEncounter(visitResponse)
   const visitUuid = visitResponse?.results[0]?.uuid
   const encounterDatetime = new Date().toISOString()
 
