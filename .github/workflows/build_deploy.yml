@@ -6,7 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       sa_enable:
+<<<<<<< HEAD
         description: 'enable SA App'
+=======
+        description: 'Load SA App'
+>>>>>>> 33f0c2a (BAH-2211 | Implementing feature toggle on build time  (#25))
         required: true
         default: 'true'
         type: choice
@@ -28,6 +32,7 @@ jobs:
       - run: yarn lint
       - run: yarn typescript
       - run: yarn test
+<<<<<<< HEAD
       - if: github.event.inputs.sa_enable == ''
         run: yarn build
       - if: github.event.inputs.sa_enable == 'true'
@@ -40,6 +45,14 @@ jobs:
         run: |
           yarn build:disable
           echo "custom_message=disable SA feature" >> $GITHUB_ENV
+=======
+      - if: github.event.inputs.sa_enable == '' || github.event.inputs.sa_enable == 'true'
+        name: load SA App
+        run: yarn build
+      - if: github.event.inputs.sa_enable == 'false'
+        name: unload SA App
+        run: yarn build:disable
+>>>>>>> 33f0c2a (BAH-2211 | Implementing feature toggle on build time  (#25))
       - name: Deploy with gh-pages
         run: |
           git remote set-url origin https://git:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}

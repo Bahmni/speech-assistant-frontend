@@ -30,6 +30,20 @@ const config = env => {
       path: path.join(__dirname, 'dist'),
       filename: 'bundle/bundle.js',
     },
+<<<<<<< HEAD
+=======
+  },
+}
+
+const config = env => {
+  return {
+    mode: 'development',
+    entry: './src/index.tsx',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: 'bundle/bundle.js',
+    },
+>>>>>>> 33f0c2a (BAH-2211 | Implementing feature toggle on build time  (#25))
     target: 'web',
     devServer: {
       port: 3030, // you can change the port
