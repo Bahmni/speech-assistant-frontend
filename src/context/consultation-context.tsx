@@ -62,9 +62,10 @@ function ConsultationContextProvider({children}) {
 
     if (consultationActiveEncounter) {
       const consultationObs = getConsultationObs(consultationActiveEncounter)
-      const matcher = new RegExp(`Consultation Note: (?<notes>.*)`)
       if (consultationObs) {
-        const savedData = matcher.exec(consultationObs.display).groups?.notes
+        const savedData = consultationObs.display.match(
+          /Consultation Note: (?<notes>.*)/,
+        )[1]
         setSavedConsultationNotes(savedData)
       }
     }
