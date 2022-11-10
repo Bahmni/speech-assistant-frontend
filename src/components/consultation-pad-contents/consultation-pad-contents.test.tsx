@@ -21,7 +21,6 @@ jest.mock('../../utils/socket-connection/socket-connection')
 
 describe('Consultation Pad Contents', () => {
   afterEach(() => jest.clearAllMocks())
-  const handleClose = jest.fn()
   const setConsultationText = jest.fn()
 
   it('should show the textbox, start mic and save button when consultation pad contents component is rendered', () => {
@@ -39,7 +38,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={''}
           setConsultationText={setConsultationText}
         />
@@ -79,7 +77,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={''}
           setConsultationText={setConsultationText}
         />
@@ -123,7 +120,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={''}
           setConsultationText={setConsultationText}
         />
@@ -173,7 +169,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={''}
           setConsultationText={setConsultationText}
         />
@@ -231,11 +226,9 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={'Consultation'}
           setConsultationText={setConsultationText}
         />
-        , ,
       </ConsultationContext.Provider>,
     )
 
@@ -289,11 +282,9 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={'Consultation'}
           setConsultationText={setConsultationText}
         />
-        , ,
       </ConsultationContext.Provider>,
     )
     expect(
@@ -325,7 +316,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={'consultationText'}
           setConsultationText={setConsultationText}
         />
@@ -401,7 +391,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
         />
@@ -454,7 +443,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
         />
@@ -513,7 +501,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
         />
@@ -577,7 +564,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
         />
@@ -637,7 +623,6 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
         />

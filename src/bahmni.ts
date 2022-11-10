@@ -16,18 +16,53 @@ function isSaConsultationAvailable() {
   return document.getElementById('sa-consultation')
 }
 
-function updateConsultationHeader() {
-  const opdElements = document.getElementById('opd-tabs')
-  if (opdElements) {
-    if (isSaConsultationAvailable()) removeConsultationTab()
+function performDOMOperations() {
+  const mutationObserver = new MutationObserver(mutations => {
+    if (isSaConsultationAvailable()) {
+      //TODO come back later to see if one mutation loop can be avoided
+      if (isConsultationScreen(mutations)) {
+        removeConsultationTab()
+        dispatchSaveConsultationEvent(mutations)
+      }
+    }
+  })
+  mutationObserver.observe(document.body, {childList: true, subtree: true})
+}
+
+const isConsultationScreen = mutations => {
+  for (const mutation of mutations) {
+    for (const addedNode of mutation.addedNodes) {
+      if (verifyNodeClassName(addedNode, 'consultation-content')) {
+        if (addedNode.innerHTML) {
+          return true
+        }
+      }
+    }
   }
 }
 
-function performDOMOperations() {
-  const mutationObserver = new MutationObserver(() => {
-    updateConsultationHeader()
-  })
-  mutationObserver.observe(document.body, {childList: true, subtree: true})
+const dispatchSaveConsultationEvent = mutations => {
+  for (const mutation of mutations) {
+    for (const addedNode of mutation.addedNodes) {
+      if (verifyNodeClassName(addedNode, 'success-message-container')) {
+        if (addedNode.innerText.trim() === 'Saved') {
+          document.dispatchEvent(new CustomEvent('click:saveConsultationNotes'))
+          return true
+        }
+      }
+    }
+  }
+}
+
+const verifyNodeClassName = (node, selectedClassName) => {
+  if (node.classList) {
+    for (const className of node.classList) {
+      if (className === selectedClassName) {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 export {performDOMOperations}

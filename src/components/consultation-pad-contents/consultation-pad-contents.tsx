@@ -16,7 +16,6 @@ import {
 } from '../bahmni/bahmni-save-button-listener/save-button-listener'
 
 export function ConsultationPadContents({
-  closeConsultationPad,
   consultationText,
   setConsultationText,
 }) {
@@ -57,11 +56,6 @@ export function ConsultationPadContents({
       streamingURL,
       onIncomingMessage,
       onRecording,
-    )
-    addSaveButtonListener(
-      patientDetails,
-      closeConsultationPad,
-      setSavedConsultationNotes,
     )
     return () => {
       if (isRecordingRef.current) {
@@ -149,10 +143,8 @@ export function ConsultationPadContents({
   }
 
   const clickSaveButton = useCallback(() => {
-    saveConsultationNotes(consultationText, patientDetails)
-    setSavedConsultationNotes(consultationText)
-    closeConsultationPad()
-  }, [consultationText])
+    document.dispatchEvent(new Event('click:saveConsultationNotes'))
+  }, [])
 
   const onDisable = () => {
     return (consultationText === '' && recordedText === '') || isRecording

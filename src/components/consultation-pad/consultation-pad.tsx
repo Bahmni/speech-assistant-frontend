@@ -15,7 +15,6 @@ export function ConsultationPad({
       handleMinimize={clickMinimizeIcon}
     >
       <ConsultationPadContents
-        closeConsultationPad={clickMinimizeIcon}
         consultationText={consultationText}
         setConsultationText={setConsultationText}
       />

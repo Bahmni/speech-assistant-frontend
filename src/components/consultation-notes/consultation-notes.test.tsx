@@ -1,4 +1,4 @@
-import {render, screen, waitFor} from '@testing-library/react'
+import {act, fireEvent, render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {
@@ -6,6 +6,9 @@ import {
   PatientDetails,
 } from '../../context/consultation-context'
 import ConsultationNotes from './consultation-notes'
+import {saveConsultationNotes} from '../consultation-pad-contents/consultation-pad-contents.resources'
+
+jest.mock('../consultation-pad-contents/consultation-pad-contents.resources')
 
 describe('Floating Button and Consultation Pad', () => {
   it('should show consultation pad when consultation pad button is clicked', async () => {
@@ -60,5 +63,31 @@ describe('Floating Button and Consultation Pad', () => {
         screen.getByRole('button', consultationPadButtonName),
       ).toBeInTheDocument()
     })
+  })
+})
+
+describe('Save Consultation Notes Event', () => {
+  it('should save consultation notes and minimize the box when saveConsultationNotes event is dispatched', async () => {
+    const mockSaveConsultationNotes = jest.mocked(saveConsultationNotes)
+    render(<ConsultationNotes />)
+    const consultationPadButtonName = {
+      name: /Notes/i,
+    }
+    await userEvent.click(screen.getByRole('button', consultationPadButtonName))
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: {value: 'New Consultation'},
+    })
+    act(() => {
+      document.dispatchEvent(new Event('click:saveConsultationNotes'))
+    })
+    expect(mockSaveConsultationNotes).toHaveBeenCalledWith(
+      'New Consultation',
+      {},
+    )
+    expect(
+      screen.getByRole('button', consultationPadButtonName),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Consultation Notes')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('warningFilled')).not.toBeInTheDocument()
   })
 })
