@@ -1,22 +1,21 @@
 export const getProviderSpecificActiveConsultationEncounter = async (
   response,
+  visitUuid,
   locationUuid,
   providerUuId,
 ) => {
-  console.log(response)
+  let encounters = response?.results?.length > 0 ? response.results : null
 
-  let encounters = response.results.length > 0 ? response.results : null
-  console.log(encounters)
-
-  if (response.results.length > 0) {
+  if (await encounters) {
     const consultationActiveEncounter = encounters?.find(
       encounter =>
-        locationUuid == encounter.location.uuid &&
-        encounter.encounterProviders[0].provider.uuid == providerUuId,
+        locationUuid === encounter.location?.uuid &&
+        encounter.encounterProviders[0].provider.uuid === providerUuId &&
+        visitUuid === encounter.visit.uuid,
     )
     return consultationActiveEncounter
   }
-  return false
+  return null
 }
 
 export const getConsultationObs = consultationActiveEncounter => {

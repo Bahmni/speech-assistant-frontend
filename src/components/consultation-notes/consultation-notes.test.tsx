@@ -15,6 +15,7 @@ describe('Floating Button and Consultation Pad', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -42,6 +43,7 @@ describe('Floating Button and Consultation Pad', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
     render(
       <ConsultationContext.Provider value={value}>

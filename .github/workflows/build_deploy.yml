@@ -7,10 +7,14 @@ on:
     inputs:
       sa_enable:
 <<<<<<< HEAD
+<<<<<<< HEAD
         description: 'enable SA App'
 =======
         description: 'Load SA App'
 >>>>>>> 33f0c2a (BAH-2211 | Implementing feature toggle on build time  (#25))
+=======
+        description: 'enable SA App'
+>>>>>>> e501f92 (update the custom message for manual trigger workflow (#30))
         required: true
         default: 'true'
         type: choice
@@ -33,6 +37,7 @@ jobs:
       - run: yarn typescript
       - run: yarn test
 <<<<<<< HEAD
+<<<<<<< HEAD
       - if: github.event.inputs.sa_enable == ''
         run: yarn build
       - if: github.event.inputs.sa_enable == 'true'
@@ -48,8 +53,17 @@ jobs:
 =======
       - if: github.event.inputs.sa_enable == '' || github.event.inputs.sa_enable == 'true'
         name: load SA App
+=======
+      - if: github.event.inputs.sa_enable == ''
+>>>>>>> e501f92 (update the custom message for manual trigger workflow (#30))
         run: yarn build
+      - if: github.event.inputs.sa_enable == 'true'
+        name: enable SA App
+        run: |
+          yarn build
+          echo "custom_message=enable SA feature" >> $GITHUB_ENV
       - if: github.event.inputs.sa_enable == 'false'
+<<<<<<< HEAD
         name: unload SA App
         run: yarn build:disable
 >>>>>>> 33f0c2a (BAH-2211 | Implementing feature toggle on build time  (#25))
@@ -57,3 +71,13 @@ jobs:
         run: |
           git remote set-url origin https://git:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           yarn deploy -u "github-actions-bot <support+actions@github.com>" -m "${{ github.event.head_commit.message }}${{ env.custom_message }}"
+=======
+        name: disable SA App
+        run: |
+          yarn build:disable
+          echo "custom_message=disable SA feature" >> $GITHUB_ENV
+      - name: Deploy with gh-pages
+        run: |
+          git remote set-url origin https://git:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          yarn deploy -u "github-actions-bot <support+actions@github.com>" -m "${{ github.event.head_commit.message }}${{ env.custom_message }}"
+>>>>>>> e501f92 (update the custom message for manual trigger workflow (#30))

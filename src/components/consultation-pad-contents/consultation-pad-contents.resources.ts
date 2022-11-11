@@ -4,7 +4,6 @@ import {
   getConsultationObs,
 } from '../../utils/encounter-details/encounter-details'
 import {
-  visitUrl,
   consultationEncounterTypeUrl,
   encounterUrl,
   unknownEncounterRoleUrl,
@@ -91,7 +90,7 @@ const encounterRequestBody = (
   }
 }
 
-const getEncounterTypeUuid = async () => {
+export const getEncounterTypeUuid = async () => {
   const response = await getApiCall(consultationEncounterTypeUrl)
   return response?.results[0]?.uuid
 }
@@ -124,6 +123,15 @@ export const createConsultationObs = async (
 
   await postApiCall(saveNotesUrl, body).then(response => response.json())
 }
+export const getActiveEncounterDate = () => {
+  let date = new Date()
+  date.setHours(date.getHours() - 1)
+  // date.setMinutes(date.getMinutes() - 59)
+
+  const fromDate = date.toISOString()
+  return fromDate
+}
+
 
 async function createEncounterWithObs(
   encounterDatetime,
@@ -152,7 +160,7 @@ export const updateConsultationObs = (obsUuid, consultationText) => {
   postApiCall(updateObsUrl(obsUuid), body).then(response => response.json())
 }
 
-const getEncounters = async (patientid, fromdate, encounterType) => {
+export const getEncounters = async (patientid, fromdate, encounterType) => {
   const response = await getApiCall(
     encounterurl(patientid, fromdate, encounterType),
   )
@@ -183,35 +191,25 @@ const saveConsultationObs = (
 export const saveConsultationNotes = async (
   consultationText,
   patientDetails,
+  visitUuid,
 ) => {
-  const visitResponse = await getApiCall(
-    visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
-  )
-  const consultationEncounterTypeUuid = '81852aee-3f10-11e4-adec-0800271c1b75'
+  const encounterTypeUuid = await getEncounterTypeUuid()
 
-  const date = new Date()
-
-  date.setHours(date.getHours() - 1)
-  let fromdate = date.toISOString()
-  console.log(fromdate)
+  const encounterDateTimeForActiveEncounter = getActiveEncounterDate()
 
   const encountersResult = await getEncounters(
     patientDetails.patientUuid,
-    fromdate,
-    consultationEncounterTypeUuid,
+    encounterDateTimeForActiveEncounter,
+    encounterTypeUuid,
   )
 
   const consultationActiveEncounter =
     await getProviderSpecificActiveConsultationEncounter(
       encountersResult,
+      visitUuid,
       patientDetails.locationUuid,
       patientDetails.providerUuid,
     )
-  console.log('return value')
-
-  console.log(consultationActiveEncounter)
-
-  const visitUuid = visitResponse?.results[0]?.uuid
   const encounterDatetime = new Date().toISOString()
 
   if (consultationActiveEncounter) {

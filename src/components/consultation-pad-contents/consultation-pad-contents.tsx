@@ -9,6 +9,7 @@ import {
   PatientDetails,
   usePatientDetails,
   useSavedConsultationNotes,
+  useVisitDetails,
 } from '../../context/consultation-context'
 import {
   addSaveButtonListener,
@@ -26,6 +27,7 @@ export function ConsultationPadContents({
   const patientDetails: PatientDetails = usePatientDetails()
   const {setSavedConsultationNotes} = useSavedConsultationNotes()
 
+  const visitUuid = useVisitDetails()
   const consultationTextRef = useRef(null)
   const recordedTextRef = useRef(null)
   const isRecordingRef = useRef(null)
@@ -36,7 +38,7 @@ export function ConsultationPadContents({
   isRecordingRef.current = isRecording
 
   useEffect(() => {
-    if (!isRecording && recordedText != '') {
+    if (!isRecording && recordedText !== '') {
       consultationText
         ? setConsultationText(`${consultationText} ${recordedText}`)
         : setConsultationText(recordedText)
@@ -48,8 +50,8 @@ export function ConsultationPadContents({
     setRecordedText(message)
   }
 
-  const onRecording = (isRecording: boolean) => {
-    setIsRecording(isRecording)
+  const onRecording = (isRecordingInProgress: boolean) => {
+    setIsRecording(isRecordingInProgress)
   }
 
   useEffect(() => {
@@ -62,10 +64,11 @@ export function ConsultationPadContents({
       patientDetails,
       closeConsultationPad,
       setSavedConsultationNotes,
+      visitUuid,
     )
     return () => {
       if (isRecordingRef.current) {
-        if (recordedTextRef.current != '') {
+        if (recordedTextRef.current !== '') {
           const updatedText = consultationTextRef.current
             ? `${consultationTextRef.current} ${recordedTextRef.current}`
             : recordedTextRef.current
@@ -149,7 +152,7 @@ export function ConsultationPadContents({
   }
 
   const clickSaveButton = useCallback(() => {
-    saveConsultationNotes(consultationText, patientDetails)
+    saveConsultationNotes(consultationText, patientDetails, visitUuid)
     setSavedConsultationNotes(consultationText)
     closeConsultationPad()
   }, [consultationText])

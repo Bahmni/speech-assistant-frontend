@@ -1,9 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react'
-import {getActiveVisitResponse, getProviderUuid} from '../utils/api-utils'
 import {
-  getProviderSpecificActiveConsultationEncounter,
-  getConsultationObs,
-} from '../utils/encounter-details/encounter-details'
+  getActiveEncounterDate,
+  getEncounters,
+  getEncounterTypeUuid,
+} from '../components/consultation-pad-contents/consultation-pad-contents.resources'
+import {getApiCall} from '../utils/api-utils'
+import {visitUrl, sessionUrl} from '../utils/constants'
+import {getProviderSpecificActiveConsultationEncounter} from '../utils/encounter-details/encounter-details'
 import {
   getLocationUuid,
   getPatientUuid,
@@ -25,6 +28,11 @@ export interface ConsultationContextProps {
 export const ConsultationContext =
   React.createContext<ConsultationContextProps>(null)
 
+async function fetchActiveVisitResponse(patiendId, locationId) {
+  const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
+  return activeVisitResponse
+}
+
 export function usePatientDetails() {
   const context = React.useContext(ConsultationContext)
   return context.patientDetails
@@ -42,45 +50,53 @@ export function useSavedConsultationNotes() {
   }
 }
 
+async function getProviderUuid() {
+  const response = await getApiCall(sessionUrl)
+  return response?.currentProvider?.uuid
+}
+
 function ConsultationContextProvider({children}) {
   const [patientDetails, setPatientDetails] = useState<PatientDetails>()
   const [patientUuid, setPatientUuid] = useState('')
   const [locationUuid, setLocationUuid] = useState('')
   const [savedConsultationNotes, setSavedConsultationNotes] = useState('')
   const providerUuidRef = useRef('')
+  const [visitUuid, setVisitUuid] = useState('')
 
-  const updateSavedConsultationNotes = (encountersResponse, visitUuId) => {
+  const updateSavedConsultationNotes = async (encountersResponse, visitUuId) => {
     const consultationActiveEncounter =
       getProviderSpecificActiveConsultationEncounter(
-        activeVisitResponse,
+        encountersResponse,
+        visitUuId,
         locationUuid,
         providerUuidRef.current,
       )
-
-    if (consultationActiveEncounter) {
-      // console.log(getConsultationObs(encounter).value)
-      const consultationObs = getConsultationObs(consultationActiveEncounter)
-      if (consultationObs) {
-        // const savedData = consultationObs.display.match(
-        //   /^Consultation Note: (.*)/,
-        // )[1]
-        setSavedConsultationNotes(consultationObs.value)
-      }
+    if (await consultationActiveEncounter) {
+      consultationActiveEncounter.then(data => {
+        setSavedConsultationNotes(data?.obs[0].value)
+      })
     }
   }
+  const updatePatientDetails = async (patientUuId, locationUuId) => {
+    const activeVisitResponse = await fetchActiveVisitResponse(
+      patientUuId,
+      locationUuId,
+    )
+    const encounterTypeUuid = await getEncounterTypeUuid()
 
-  const updatePatientDetails = async (patientId, locationId) => {
-    const activeVisitResponse = await getActiveVisitResponse(
-      patientId,
-      locationId,
+    const fromDate = getActiveEncounterDate()
+
+    const encountersResponse = await getEncounters(
+      patientUuId,
+      fromDate,
+      encounterTypeUuid,
     )
     const isActiveVisit = activeVisitResponse?.results?.length > 0
     const visituuid = activeVisitResponse?.results[0]?.uuid
-
     if (isActiveVisit) {
       setPatientDetails({
-        patientUuid,
-        locationUuid,
+        patientUuid: patientUuId,
+        locationUuid: locationUuId,
         isActiveVisit,
         providerUuid: providerUuidRef.current,
       })

@@ -2,17 +2,19 @@ import {act, render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {sessionUrl} from '../utils/constants'
-import {mockVisitResponseWithActiveEncounter} from '../__mocks__/activeVisitWithActiveEncounters.mock'
+import {mockEncounterResponseWithActiveEncounter} from '../__mocks__/encounterResponseWithActiveEncounter.mock'
+import {mockConsultationEncounterTypeResponse} from '../__mocks__/encounterTypeResponse.mock'
+import {mockEncounterTypeUuidTypeResponse} from '../__mocks__/mockEncounterTypeUuid.mock'
 import {mockSessionResponse} from '../__mocks__/sessionResponse.mock'
 import {mockVisitResponse} from '../__mocks__/visitResponse.mock'
 import App from './App'
 
 describe('Speech Assistant App', () => {
   const testUrlWithPatientId =
-    'http://localhost/patient/dbebab89-40b4-4121-a786-110e61bbc714'
+    'http://localhost/patient/dc9444c6-ad55-4200-b6e9-407e025eb948'
   const testSearchUrl = 'http://localhost/patient/search'
   const testCookieWithLocationId =
-    'bahmni.user=%22superman%22; app.clinical.grantProviderAccessData=null; bahmni.user.location=%7B%22name%22%3A%22OPD-1%22%2C%22uuid%22%3A%22c58e12ed-3f12-11e4-adec-0800271c1b75%22%7D'
+    'bahmni.user=%22superman%22; app.clinical.grantProviderAccessData=null; bahmni.user.location=%7B%22name%22%3A%22OPD-1%22%2C%22uuid%22%3A%22baf7bd38-d225-11e4-9c67-080027b662ec%22%7D'
 
   afterEach(() => jest.clearAllMocks())
 
@@ -79,6 +81,14 @@ describe('Speech Assistant App', () => {
         json: () => mockVisitResponse,
         ok: true,
       })
+      .mockResolvedValueOnce({
+        json: () => mockEncounterResponseWithActiveEncounter,
+        ok: true,
+      })
+      .mockResolvedValue({
+        json: () => mockEncounterTypeUuidTypeResponse,
+        ok: true,
+      })
 
     render(<App />)
 
@@ -90,12 +100,18 @@ describe('Speech Assistant App', () => {
     const consultationPadButton = await screen.findByRole('button', {
       name: /Notes/i,
     })
+
     expect(consultationPadButton).toBeInTheDocument()
     const mockSessionUrl = mockFetch.mock.calls[0][0]
     const mockVisitUrl = mockFetch.mock.calls[1][0]
+    const encounterType = mockFetch.mock.calls[2][0]
+
     expect(mockSessionUrl).toBe(sessionUrl)
     expect(mockVisitUrl).toBe(
-      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
+      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dc9444c6-ad55-4200-b6e9-407e025eb948&location=baf7bd38-d225-11e4-9c67-080027b662ec&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
+    )
+    expect(encounterType).toBe(
+      '/openmrs/ws/rest/v1/encountertype?q=Consultation',
     )
   })
 
@@ -106,11 +122,28 @@ describe('Speech Assistant App', () => {
       },
     })
     Object.defineProperty(document, 'cookie', {value: testCookieWithLocationId})
+
+    global.fetch = jest.fn().mockImplementation()
+
     const mockFetch = global.fetch as jest.Mock
-    mockFetch.mockResolvedValue({
-      json: () => mockVisitResponseWithActiveEncounter,
-      ok: true,
-    })
+    mockFetch
+      .mockResolvedValueOnce({
+        json: () => mockSessionResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockVisitResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValue({
+        json: () => mockEncounterResponseWithActiveEncounter,
+        ok: true,
+      })
+
     render(<App />)
     act(() => {
       window.location.href = testUrlWithPatientId
@@ -120,11 +153,14 @@ describe('Speech Assistant App', () => {
     const consultationPadButton = await screen.findByRole('button', {
       name: /Notes/i,
     })
+
+    expect(fetch).toBeCalledTimes(4)
+
     expect(consultationPadButton).toBeInTheDocument()
     await userEvent.click(consultationPadButton)
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
-    expect(screen.getByRole('textbox')).toHaveValue('Saving Notes')
+    expect(screen.getByRole('textbox')).toHaveValue('superman-2')
   })
 
   it('should not show consultation pad button when there is no active visits for the patient in the set location', () => {
@@ -165,7 +201,7 @@ describe('Speech Assistant App', () => {
     const mockVisitUrl = mockFetch.mock.calls[1][0]
     expect(mockSessionUrl).toBe(sessionUrl)
     expect(mockVisitUrl).toBe(
-      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
+      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dc9444c6-ad55-4200-b6e9-407e025eb948&location=baf7bd38-d225-11e4-9c67-080027b662ec&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
     )
   })
 })
