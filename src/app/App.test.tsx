@@ -100,7 +100,7 @@ describe('Speech Assistant App', () => {
     expect(screen.getByRole('textbox')).toHaveValue('Saving Notes')
   })
 
-  it('should not show consultation pad button when there is no active visits for the patient in the set location',() => {
+  it('should not show consultation pad button when there is no active visits for the patient in the set location', () => {
     Object.defineProperty(window, 'location', {
       value: {
         href: testSearchUrl,

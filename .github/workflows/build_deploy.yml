@@ -25,6 +25,9 @@ jobs:
         with:
           node-version: "16.x"
       - run: yarn install
+      - run: yarn lint
+      - run: yarn typescript
+      - run: yarn test
       - if: github.event.inputs.sa_enable == ''
         run: yarn build
       - if: github.event.inputs.sa_enable == 'true'
