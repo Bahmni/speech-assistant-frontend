@@ -4,16 +4,7 @@ import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {streamingURL} from '../../utils/constants'
-import {saveConsultationNotes} from './consultation-pad-contents.resources'
-import {
-  PatientDetails,
-  usePatientDetails,
-  useSavedConsultationNotes,
-} from '../../context/consultation-context'
-import {
-  addSaveButtonListener,
-  setConsultationNotes,
-} from '../bahmni/bahmni-save-button-listener/save-button-listener'
+import {setConsultationNotes} from '../bahmni/bahmni-save-button-listener/save-button-listener'
 
 export function ConsultationPadContents({
   consultationText,
@@ -21,9 +12,6 @@ export function ConsultationPadContents({
 }) {
   const [isRecording, setIsRecording] = useState(false)
   const [recordedText, setRecordedText] = useState('')
-
-  const patientDetails: PatientDetails = usePatientDetails()
-  const {setSavedConsultationNotes} = useSavedConsultationNotes()
 
   const consultationTextRef = useRef(null)
   const recordedTextRef = useRef(null)
