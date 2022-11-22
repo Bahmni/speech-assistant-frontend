@@ -12,6 +12,7 @@ describe('Active Consultation', () => {
       patientUuid: 'abc',
       locationUuid: 'def',
       isActiveVisit: false,
+      providerUuid: '',
     }
 
     const value = {
@@ -38,6 +39,7 @@ describe('Active Consultation', () => {
       patientUuid: 'abc',
       locationUuid: 'def',
       isActiveVisit: true,
+      providerUuid: '',
     }
 
     const value = {

@@ -17,6 +17,7 @@ describe('Consultation Pad', () => {
       patientUuid: 'abc',
       locationUuid: 'def',
       isActiveVisit: true,
+      providerUuid: '',
     }
 
     const value = {
@@ -57,6 +58,7 @@ describe('Consultation Pad', () => {
       patientUuid: 'abc',
       locationUuid: 'def',
       isActiveVisit: true,
+      providerUuid: '',
     }
 
     const value = {
@@ -116,6 +118,7 @@ describe('Consultation Pad', () => {
       patientUuid: 'abc',
       locationUuid: 'def',
       isActiveVisit: true,
+      providerUuid: '',
     }
 
     const value = {

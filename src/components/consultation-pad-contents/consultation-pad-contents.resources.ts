@@ -1,14 +1,17 @@
 import {postApiCall, getApiCall} from '../../utils/api-utils'
 import {
-  saveNotesUrl,
-  conceptUrl,
-  customVisitUrl,
-  updateObsUrl,
-} from '../../utils/constants'
-import {
   getActiveConsultationEncounter,
   getConsultationObs,
 } from '../../utils/encounter-details/encounter-details'
+import {
+  visitUrl,
+  consultationEncounterTypeUrl,
+  encounterUrl,
+  unknownEncounterRoleUrl,
+  consultationNotesConceptUrl,
+  saveNotesUrl,
+  updateObsUrl,
+} from '../../utils/constants'
 
 interface ObsType {
   person: string
@@ -17,6 +20,26 @@ interface ObsType {
   value: string
   location: string
   encounter: string
+}
+
+interface EncounterProvidersType {
+  provider: string
+  encounterRole: string
+}
+
+interface EncounterObsType {
+  concept: string
+  value: string
+}
+
+interface EncounterType {
+  encounterDatetime: string
+  patient: string
+  encounterType: string
+  location: string
+  encounterProviders: EncounterProvidersType[]
+  obs: EncounterObsType[]
+  visit: string
 }
 
 const requestbody = (
@@ -28,41 +51,125 @@ const requestbody = (
   encounter,
 ): ObsType => {
   return {
-    person: person,
-    concept: concept,
-    obsDatetime: obsDatetime,
-    value: value,
-    location: location,
-    encounter: encounter,
+    person,
+    concept,
+    obsDatetime,
+    value,
+    location,
+    encounter,
   }
 }
 
-export const saveObsData = async (
+const encounterRequestBody = (
+  encounterDatetime,
+  visitUuid,
+  encounterTypeUuid,
+  encounterRoleUuid,
+  conceptuuid,
+  value,
+  patientDetails,
+): EncounterType => {
+  return {
+    encounterDatetime,
+    patient: patientDetails.patientUuid,
+    encounterType: encounterTypeUuid,
+    location: patientDetails.locationUuid,
+    encounterProviders: [
+      {
+        provider: patientDetails.providerUuid,
+        encounterRole: encounterRoleUuid,
+      },
+    ],
+    obs: [
+      {
+        concept: conceptuuid,
+        value,
+      },
+    ],
+    visit: visitUuid,
+  }
+}
+
+const getEncounterTypeUuid = async () => {
+  const response = await getApiCall(consultationEncounterTypeUrl)
+  return response?.results[0]?.uuid
+}
+const getEncounterRoleUuid = async () => {
+  const response = await getApiCall(unknownEncounterRoleUrl)
+  return response?.results[0]?.uuid
+}
+
+const getconsultationNotesConceptUuid = async () => {
+  const response = await getApiCall(consultationNotesConceptUrl)
+  return response?.results[0]?.uuid
+}
+
+export const createConsultationObs = async (
+  encounterDatetime,
   consultationText,
   patientUuid,
   location,
   encounterUuid,
 ) => {
-  const conceptResponse = await getApiCall(conceptUrl)
-  const conceptUuid = conceptResponse.results[0].uuid
-
-  const obsDatetime = new Date().toISOString()
-
+  const consultationNotesConceptUuid = await getconsultationNotesConceptUuid()
   const body = requestbody(
     patientUuid,
-    conceptUuid,
-    obsDatetime,
+    consultationNotesConceptUuid,
+    encounterDatetime,
     consultationText,
     location,
     encounterUuid,
   )
 
-  postApiCall(saveNotesUrl, body).then(response => response.json())
+  await postApiCall(saveNotesUrl, body).then(response => response.json())
 }
 
-export const updateObsData = (obsUuid, consultationText) => {
+async function createEncounterWithObs(
+  encounterDatetime,
+  visitUuid,
+  consultationText,
+  patientDetails,
+) {
+  const encounterTypeUuid = await getEncounterTypeUuid()
+  const encounterRoleUuid = await getEncounterRoleUuid()
+  const consultationNotesConceptUuid = await getconsultationNotesConceptUuid()
+
+  const encounterData = encounterRequestBody(
+    encounterDatetime,
+    visitUuid,
+    encounterTypeUuid,
+    encounterRoleUuid,
+    consultationNotesConceptUuid,
+    consultationText,
+    patientDetails,
+  )
+  postApiCall(encounterUrl, encounterData).then(response => response.json())
+}
+
+export const updateConsultationObs = (obsUuid, consultationText) => {
   const body = {value: consultationText}
   postApiCall(updateObsUrl(obsUuid), body).then(response => response.json())
+}
+
+const saveConsultationObs = (
+  consultationActiveEncounter,
+  consultationText,
+  encounterDatetime,
+  patientDetails,
+) => {
+  const consultationObs = getConsultationObs(consultationActiveEncounter)
+  if (consultationObs) {
+    const obsUuid = consultationObs.uuid
+    updateConsultationObs(obsUuid, consultationText)
+  } else {
+    createConsultationObs(
+      encounterDatetime,
+      consultationText,
+      patientDetails.patientUuid,
+      patientDetails.location,
+      consultationActiveEncounter.uuid,
+    )
+  }
 }
 
 export const saveConsultationNotes = async (
@@ -70,25 +177,25 @@ export const saveConsultationNotes = async (
   patientDetails,
 ) => {
   const visitResponse = await getApiCall(
-    customVisitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
+    visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
   )
-
-  const consultationActiveEncounter = await getActiveConsultationEncounter(
-    visitResponse,
-  )
+  const consultationActiveEncounter =
+    getActiveConsultationEncounter(visitResponse)
+  const visitUuid = visitResponse?.results[0]?.uuid
+  const encounterDatetime = new Date().toISOString()
 
   if (consultationActiveEncounter) {
-    const consultationObs = getConsultationObs(consultationActiveEncounter)
-    if (consultationObs) {
-      const obsUuid = consultationObs.uuid
-      updateObsData(obsUuid, consultationText)
-    } else {
-      saveObsData(
-        consultationText,
-        patientDetails.patientUuid,
-        patientDetails.location,
-        consultationActiveEncounter.uuid,
-      )
-    }
-  }
+    saveConsultationObs(
+      consultationActiveEncounter,
+      consultationText,
+      encounterDatetime,
+      patientDetails,
+    )
+  } else
+    createEncounterWithObs(
+      encounterDatetime,
+      visitUuid,
+      consultationText,
+      patientDetails,
+    )
 }
