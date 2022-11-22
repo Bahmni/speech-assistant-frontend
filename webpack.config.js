@@ -17,9 +17,9 @@ const cssLoader = {
           const name = fileName.replace(/\.[^/.]+$/, '')
           return `${name}__${localName}`
         }
-      },
-    },
-  },
+      },,
+    },,
+  },,
 }
 
 const config = env => {

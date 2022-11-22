@@ -1,7 +1,8 @@
 import {postApiCall, getApiCall} from '../../utils/api-utils'
 import {
-  getActiveConsultationEncounter,
+  getProviderSpecificActiveConsultationEncounter,
   getConsultationObs,
+  getProviderFromEncounterUrl as getProviderSpecificActiveConsultationEncounter2,
 } from '../../utils/encounter-details/encounter-details'
 import {
   visitUrl,
@@ -11,6 +12,7 @@ import {
   consultationNotesConceptUrl,
   saveNotesUrl,
   updateObsUrl,
+  encounterurl,
 } from '../../utils/constants'
 
 interface ObsType {
@@ -149,6 +151,15 @@ async function createEncounterWithObs(
 export const updateConsultationObs = (obsUuid, consultationText) => {
   const body = {value: consultationText}
   postApiCall(updateObsUrl(obsUuid), body).then(response => response.json())
+}
+
+const getEncountersFromUrl = async (patientid, date) => {
+  console.log(patientid)
+  // console.log(encountertype);
+  console.log(date)
+
+  const response = await getApiCall(encounterurl(patientid, date))
+  return response
 }
 
 const saveConsultationObs = (

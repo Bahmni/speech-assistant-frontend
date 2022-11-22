@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {getActiveVisitResponse, getProviderUuid} from '../utils/api-utils'
 import {
-  getActiveConsultationEncounter,
+  getProviderSpecificActiveConsultationEncounter,
   getConsultationObs,
 } from '../utils/encounter-details/encounter-details'
 import {
@@ -20,14 +20,18 @@ export interface ConsultationContextProps {
   patientDetails: PatientDetails
   savedConsultationNotes: string
   setSavedConsultationNotes: React.Dispatch<React.SetStateAction<string>>
+  visitUuid: string
 }
-
 export const ConsultationContext =
   React.createContext<ConsultationContextProps>(null)
 
 export function usePatientDetails() {
   const context = React.useContext(ConsultationContext)
   return context.patientDetails
+}
+export function useVisitDetails() {
+  const context = React.useContext(ConsultationContext)
+  return context.visitUuid
 }
 
 export function useSavedConsultationNotes() {
@@ -45,9 +49,9 @@ function ConsultationContextProvider({children}) {
   const [savedConsultationNotes, setSavedConsultationNotes] = useState('')
   const providerUuidRef = useRef('')
 
-  const updateSavedConsultationNotes = activeVisitResponse => {
+  const updateSavedConsultationNotes = (encountersResponse, visitUuId) => {
     const consultationActiveEncounter =
-      getActiveConsultationEncounter(activeVisitResponse)
+      getActiveConsultationEncounter(encountersResponse)
 
     if (consultationActiveEncounter) {
       const consultationObs = getConsultationObs(consultationActiveEncounter)
@@ -66,6 +70,7 @@ function ConsultationContextProvider({children}) {
       locationId,
     )
     const isActiveVisit = activeVisitResponse?.results?.length > 0
+    const visituuid = activeVisitResponse?.results[0]?.uuid
 
     if (isActiveVisit) {
       setPatientDetails({
@@ -74,7 +79,8 @@ function ConsultationContextProvider({children}) {
         isActiveVisit,
         providerUuid: providerUuidRef.current,
       })
-      updateSavedConsultationNotes(activeVisitResponse)
+      setVisitUuid(visituuid)
+      updateSavedConsultationNotes(encountersResponse, visituuid)
     }
   }
 
@@ -89,6 +95,7 @@ function ConsultationContextProvider({children}) {
         providerUuid: providerUuidRef.current,
       })
       setSavedConsultationNotes('')
+      setVisitUuid('')
     }
   }, [patientUuid, locationUuid])
 
@@ -110,6 +117,7 @@ function ConsultationContextProvider({children}) {
     patientDetails,
     savedConsultationNotes,
     setSavedConsultationNotes,
+    visitUuid,
   }
 
   return (
