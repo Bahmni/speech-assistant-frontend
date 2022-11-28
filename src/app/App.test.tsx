@@ -4,7 +4,6 @@ import React from 'react'
 import {sessionUrl} from '../utils/constants'
 import {mockEncounterResponseWithActiveEncounter} from '../__mocks__/encounterResponseWithActiveEncounter.mock'
 import {mockConsultationEncounterTypeResponse} from '../__mocks__/encounterTypeResponse.mock'
-import {mockEncounterTypeUuidTypeResponse} from '../__mocks__/mockEncounterTypeUuid.mock'
 import {mockSessionResponse} from '../__mocks__/sessionResponse.mock'
 import {mockVisitResponse} from '../__mocks__/visitResponse.mock'
 import App from './App'
@@ -86,7 +85,7 @@ describe('Speech Assistant App', () => {
         ok: true,
       })
       .mockResolvedValue({
-        json: () => mockEncounterTypeUuidTypeResponse,
+        json: () => mockConsultationEncounterTypeResponse,
         ok: true,
       })
 

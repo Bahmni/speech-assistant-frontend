@@ -22,7 +22,6 @@ import {updateObsResponse} from '../../__mocks__/updateObsResponse.mock'
 import {mockEncounterResponseWithActiveEncounter} from '../../__mocks__/encounterResponseWithActiveEncounter.mock'
 import {mockEncounterResponseWithInActiveEncounter} from '../../__mocks__/encounterResponseWithInActiveEnconter.mock'
 import {mockEncounterResponseWithOutObsInActiveEncounter} from '../../__mocks__/encounterResponseWithOutObsInActiveEncounter.mock'
-import {mockEncounterTypeUuidTypeResponse} from '../../__mocks__/mockEncounterTypeUuid.mock'
 import {mockEncounterResponseWithTwoActiveEncounetrsOfDiffProviders} from '../../__mocks__/encounterResponseWithTwoActiveEncounetrsOfDiffProviders.mock'
 
 jest.mock('../../utils/socket-connection/socket-connection')
@@ -400,7 +399,7 @@ describe('Consultation Pad Contents', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockEncounterTypeUuidTypeResponse,
+        json: () => mockConsultationEncounterTypeResponse,
         ok: true,
       })
       .mockResolvedValueOnce({
@@ -473,7 +472,7 @@ describe('Consultation Pad Contents', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockEncounterTypeUuidTypeResponse,
+        json: () => mockConsultationEncounterTypeResponse,
         ok: true,
       })
       .mockResolvedValueOnce({
@@ -545,7 +544,6 @@ describe('Consultation Pad Contents', () => {
       () => mockSocketConnection,
     )
     let consultationText = ''
-    const setConsultationText = jest.fn()
     setConsultationText.mockImplementation(value => (consultationText = value))
 
     const patientDetails: PatientDetails = {
@@ -628,7 +626,7 @@ describe('Consultation Pad Contents', () => {
     }
 
     const value = {
-      patientDetails: patientDetails,
+      patientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
       visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
@@ -853,7 +851,7 @@ describe('Consultation Pad Contents', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockEncounterTypeUuidTypeResponse,
+        json: () => mockConsultationEncounterTypeResponse,
         ok: true,
       })
       .mockResolvedValueOnce({

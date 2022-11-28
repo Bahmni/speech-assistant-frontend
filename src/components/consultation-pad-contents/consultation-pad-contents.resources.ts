@@ -42,6 +42,20 @@ interface EncounterType {
   visit: string
 }
 
+export const getEncounterTypeUuid = async () => {
+  const response = await getApiCall(consultationEncounterTypeUrl)
+  return response?.results[0]?.uuid
+}
+const getEncounterRoleUuid = async () => {
+  const response = await getApiCall(unknownEncounterRoleUrl)
+  return response?.results[0]?.uuid
+}
+
+const getconsultationNotesConceptUuid = async () => {
+  const response = await getApiCall(consultationNotesConceptUrl)
+  return response?.results[0]?.uuid
+}
+
 const requestbody = (
   person,
   concept,
@@ -90,20 +104,6 @@ const encounterRequestBody = (
   }
 }
 
-export const getEncounterTypeUuid = async () => {
-  const response = await getApiCall(consultationEncounterTypeUrl)
-  return response?.results[0]?.uuid
-}
-const getEncounterRoleUuid = async () => {
-  const response = await getApiCall(unknownEncounterRoleUrl)
-  return response?.results[0]?.uuid
-}
-
-const getconsultationNotesConceptUuid = async () => {
-  const response = await getApiCall(consultationNotesConceptUrl)
-  return response?.results[0]?.uuid
-}
-
 export const createConsultationObs = async (
   encounterDatetime,
   consultationText,
@@ -124,14 +124,11 @@ export const createConsultationObs = async (
   await postApiCall(saveNotesUrl, body).then(response => response.json())
 }
 export const getActiveEncounterDate = () => {
-  let date = new Date()
+  const date = new Date()
   date.setHours(date.getHours() - 1)
-  // date.setMinutes(date.getMinutes() - 59)
-
   const fromDate = date.toISOString()
   return fromDate
 }
-
 
 async function createEncounterWithObs(
   encounterDatetime,

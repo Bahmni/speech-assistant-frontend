@@ -4,8 +4,7 @@ import {
   getEncounters,
   getEncounterTypeUuid,
 } from '../components/consultation-pad-contents/consultation-pad-contents.resources'
-import {getApiCall} from '../utils/api-utils'
-import {visitUrl, sessionUrl} from '../utils/constants'
+import {getActiveVisitResponse, getProviderUuid} from '../utils/api-utils'
 import {getProviderSpecificActiveConsultationEncounter} from '../utils/encounter-details/encounter-details'
 import {
   getLocationUuid,
@@ -28,11 +27,6 @@ export interface ConsultationContextProps {
 export const ConsultationContext =
   React.createContext<ConsultationContextProps>(null)
 
-async function fetchActiveVisitResponse(patiendId, locationId) {
-  const activeVisitResponse = await getApiCall(visitUrl(patiendId, locationId))
-  return activeVisitResponse
-}
-
 export function usePatientDetails() {
   const context = React.useContext(ConsultationContext)
   return context.patientDetails
@@ -50,11 +44,6 @@ export function useSavedConsultationNotes() {
   }
 }
 
-async function getProviderUuid() {
-  const response = await getApiCall(sessionUrl)
-  return response?.currentProvider?.uuid
-}
-
 function ConsultationContextProvider({children}) {
   const [patientDetails, setPatientDetails] = useState<PatientDetails>()
   const [patientUuid, setPatientUuid] = useState('')
@@ -63,7 +52,10 @@ function ConsultationContextProvider({children}) {
   const providerUuidRef = useRef('')
   const [visitUuid, setVisitUuid] = useState('')
 
-  const updateSavedConsultationNotes = async (encountersResponse, visitUuId) => {
+  const updateSavedConsultationNotes = async (
+    encountersResponse,
+    visitUuId,
+  ) => {
     const consultationActiveEncounter =
       getProviderSpecificActiveConsultationEncounter(
         encountersResponse,
@@ -78,7 +70,7 @@ function ConsultationContextProvider({children}) {
     }
   }
   const updatePatientDetails = async (patientUuId, locationUuId) => {
-    const activeVisitResponse = await fetchActiveVisitResponse(
+    const activeVisitResponse = await getActiveVisitResponse(
       patientUuId,
       locationUuId,
     )

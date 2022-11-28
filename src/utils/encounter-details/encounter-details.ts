@@ -4,7 +4,7 @@ export const getProviderSpecificActiveConsultationEncounter = async (
   locationUuid,
   providerUuId,
 ) => {
-  let encounters = response?.results?.length > 0 ? response.results : null
+  const encounters = response?.results?.length > 0 ? response.results : null
 
   if (await encounters) {
     const consultationActiveEncounter = encounters?.find(
