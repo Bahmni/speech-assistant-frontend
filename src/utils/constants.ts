@@ -13,5 +13,5 @@ export const consultationNotesConceptUrl =
   '/openmrs/ws/rest/v1/concept?q="Consultation Note"'
 export const encounterUrl = '/openmrs/ws/rest/v1/encounter'
 export const sessionUrl = '/openmrs/ws/rest/v1/session?v=full'
-export const encounterurl = (patientid, date, encounterType) =>
-  `/openmrs/ws/rest/v1/encounter?patient=${patientid}&encounterType=${encounterType}&fromdate=${date}&v=custom:(uuid,display,encounterDatetime,location,obs,visit,encounterProviders)`
+export const customEncounterUrl = (patientId, date, encounterType) =>
+  `/openmrs/ws/rest/v1/encounter?patient=${patientId}&encounterType=${encounterType}&fromdate=${date}&v=custom:(uuid,display,encounterDatetime,location,obs,visit,encounterProviders)`

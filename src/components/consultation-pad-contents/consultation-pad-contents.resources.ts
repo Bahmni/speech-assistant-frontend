@@ -10,7 +10,7 @@ import {
   consultationNotesConceptUrl,
   saveNotesUrl,
   updateObsUrl,
-  encounterurl,
+  customEncounterUrl,
 } from '../../utils/constants'
 
 interface ObsType {
@@ -159,7 +159,7 @@ export const updateConsultationObs = (obsUuid, consultationText) => {
 
 export const getEncounters = async (patientid, fromdate, encounterType) => {
   const response = await getApiCall(
-    encounterurl(patientid, fromdate, encounterType),
+    customEncounterUrl(patientid, fromdate, encounterType),
   )
   return response
 }

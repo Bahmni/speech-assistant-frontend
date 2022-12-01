@@ -69,31 +69,31 @@ function ConsultationContextProvider({children}) {
       })
     }
   }
-  const updatePatientDetails = async (patientUuId, locationUuId) => {
+  const updatePatientDetails = async (patientId, locationId) => {
     const activeVisitResponse = await getActiveVisitResponse(
-      patientUuId,
-      locationUuId,
+      patientId,
+      locationId,
     )
     const encounterTypeUuid = await getEncounterTypeUuid()
 
     const fromDate = getActiveEncounterDate()
 
     const encountersResponse = await getEncounters(
-      patientUuId,
+      patientId,
       fromDate,
       encounterTypeUuid,
     )
     const isActiveVisit = activeVisitResponse?.results?.length > 0
-    const visituuid = activeVisitResponse?.results[0]?.uuid
+    const visitId = activeVisitResponse?.results[0]?.uuid
     if (isActiveVisit) {
       setPatientDetails({
-        patientUuid: patientUuId,
-        locationUuid: locationUuId,
+        patientUuid,
+        locationUuid,
         isActiveVisit,
         providerUuid: providerUuidRef.current,
       })
-      setVisitUuid(visituuid)
-      updateSavedConsultationNotes(encountersResponse, visituuid)
+      setVisitUuid(visitId)
+      updateSavedConsultationNotes(encountersResponse, visitId)
     }
   }
 
