@@ -1,0 +1,50 @@
+.successToastNotification{
+    background: #6ab165; // #6ab165         #88AF28
+    width:620px; //38.7rem ->607px
+    height:47px; //2.63rem ->38px
+    position: fixed;
+    top: 54px; //3.2rem
+    right: 32.75%;//35.4rem ->32.90%
+    z-index: 999;
+    border-radius:3px;
+    border-color:#6ab165
+  }
+
+  .errorToastNotification{
+    background: #d95757;
+    width:620px; //38.7rem
+    height:47px; //2.63rem
+    position: fixed;
+    top: 54px; //3.2rem
+    right: 32.75%;//35.4rem
+    z-index: 999;
+    border-radius:3px;
+    border-color: #d95757;
+  }
+
+  .successToastNotification path{
+    fill:white
+  }
+
+  .successToastNotification div{
+    margin-top:0.46rem
+   }
+   
+  .errorToastNotification button{
+    min-height: 2rem;
+    min-width: 2.3rem;
+    height: 2.95rem;
+    width: 0rem;
+    background: #d95757;
+    cursor: pointer;
+  }
+  
+  .errorToastNotification path{
+    fill:white
+  }
+
+ .errorToastNotification div{
+  margin-top:0.46rem
+ }
+  //    margin-top: 0.5rem;
+    

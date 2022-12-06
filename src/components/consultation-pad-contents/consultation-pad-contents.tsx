@@ -1,10 +1,11 @@
-import {Button, TextArea} from '@carbon/react'
+import {TextArea, Button} from '@carbon/react'
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {streamingURL} from '../../utils/constants'
 import {saveConsultationNotes} from './consultation-pad-contents.resources'
+
 import {
   PatientDetails,
   usePatientDetails,
@@ -20,6 +21,8 @@ export function ConsultationPadContents({
   closeConsultationPad,
   consultationText,
   setConsultationText,
+  setOnSaveSuccess,
+  setOnSaveFailure,
 }) {
   const [isRecording, setIsRecording] = useState(false)
   const [recordedText, setRecordedText] = useState('')
@@ -155,6 +158,23 @@ export function ConsultationPadContents({
     saveConsultationNotes(consultationText, patientDetails, visitUuid)
     setSavedConsultationNotes(consultationText)
     closeConsultationPad()
+    // console.log('inside click save')
+    saveConsultationNotes(consultationText, patientDetails).then(val => {
+      // console.log(val)
+      // console.log(consultationText)
+
+      // console.log('inside .then')
+      if (val.obs || val.value == consultationText) {
+        //encounter and obs,create obs,update obs
+        // console.log('insie if')
+        setSavedConsultationNotes(consultationText)
+        closeConsultationPad()
+        setOnSaveSuccess(true)
+      } else {
+        // console.log('inside else')
+        setOnSaveFailure(true)
+      }
+    })
   }, [consultationText])
 
   const onDisable = () => {
