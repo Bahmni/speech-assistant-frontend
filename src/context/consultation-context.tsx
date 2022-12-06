@@ -52,10 +52,7 @@ function ConsultationContextProvider({children}) {
   const providerUuidRef = useRef('')
   const [visitUuid, setVisitUuid] = useState('')
 
-  const updateSavedConsultationNotes = async (
-    encountersResponse,
-    visitUuId,
-  ) => {
+  const getSavedConsultationNotes = (encountersResponse, visitUuId) => {
     const consultationActiveEncounter =
       getProviderSpecificActiveConsultationEncounter(
         encountersResponse,
@@ -63,11 +60,10 @@ function ConsultationContextProvider({children}) {
         locationUuid,
         providerUuidRef.current,
       )
-    if (await consultationActiveEncounter) {
-      consultationActiveEncounter.then(data => {
-        setSavedConsultationNotes(data?.obs[0].value)
-      })
+    if (consultationActiveEncounter) {
+      return consultationActiveEncounter.obs[0].value
     }
+    return ''
   }
   const updatePatientDetails = async (patientId, locationId) => {
     const activeVisitResponse = await getActiveVisitResponse(
@@ -85,16 +81,16 @@ function ConsultationContextProvider({children}) {
     )
     const isActiveVisit = activeVisitResponse?.results?.length > 0
     const visitId = activeVisitResponse?.results[0]?.uuid
-    if (isActiveVisit) {
-      setPatientDetails({
-        patientUuid,
-        locationUuid,
-        isActiveVisit,
-        providerUuid: providerUuidRef.current,
-      })
-      setVisitUuid(visitId)
-      updateSavedConsultationNotes(encountersResponse, visitId)
-    }
+
+    setPatientDetails({
+      patientUuid,
+      locationUuid,
+      isActiveVisit,
+      providerUuid: providerUuidRef.current,
+    })
+    setVisitUuid(visitId)
+    const savedNotes = getSavedConsultationNotes(encountersResponse, visitId)
+    setSavedConsultationNotes(savedNotes)
   }
 
   useEffect(() => {

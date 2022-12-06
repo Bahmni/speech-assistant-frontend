@@ -1,4 +1,4 @@
-export const getProviderSpecificActiveConsultationEncounter = async (
+export const getProviderSpecificActiveConsultationEncounter = (
   response,
   visitUuid,
   locationUuid,
@@ -6,7 +6,7 @@ export const getProviderSpecificActiveConsultationEncounter = async (
 ) => {
   const encounters = response?.results?.length > 0 ? response.results : null
 
-  if (await encounters) {
+  if (encounters) {
     const consultationActiveEncounter = encounters?.find(
       encounter =>
         locationUuid === encounter.location?.uuid &&
