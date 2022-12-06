@@ -5,7 +5,10 @@ import {
   ConsultationContext,
   PatientDetails,
 } from '../../context/consultation-context'
-import {mockVisitResponseWithActiveEncounter} from '../../__mocks__/activeVisitWithActiveEncounters.mock'
+import {mockVisitResponseWithInactiveEncounter} from '../../__mocks__/activeVisitWithInactiveEncounters.mock'
+import {mockConceptResponse} from '../../__mocks__/conceptResponse.mock'
+import {mockConsultationEncounterRoleResopnse} from '../../__mocks__/encounterRoleResponse.mock'
+import {mockConsultationEncounterTypeResponse} from '../../__mocks__/encounterTypeResponse.mock'
 import {mockObsResponse} from '../../__mocks__/obsResponse.mock'
 import ConsultationNotes from './consultation-notes'
 
@@ -71,11 +74,31 @@ describe('Floating Button and Consultation Pad', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockVisitResponseWithActiveEncounter,
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockVisitResponseWithInactiveEncounter,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterRoleResopnse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConceptResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockObsResponse,
         ok: true,
       })
       .mockResolvedValue({
-        json: () => mockObsResponse,
+        json: () => ({}),
         ok: true,
       })
     const mockPatientDetails: PatientDetails = {
@@ -89,6 +112,7 @@ describe('Floating Button and Consultation Pad', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: 'data',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -108,10 +132,9 @@ describe('Floating Button and Consultation Pad', () => {
 
     await userEvent.click(
       screen.getByRole('button', {
-        name: /Save/i,
+        name: /Save Notes/i,
       }),
     )
-
     await waitFor(() =>
       expect(screen.getByText('Saved notes successfully')).toBeInTheDocument(),
     )
@@ -127,12 +150,28 @@ describe('Floating Button and Consultation Pad', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockVisitResponseWithActiveEncounter,
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockVisitResponseWithInactiveEncounter,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterRoleResopnse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConceptResponse,
         ok: true,
       })
       .mockResolvedValue({
-        json: () => mockObsResponse,
-        ok: true,
+        json: () => ({}),
+        ok: false,
       })
     const mockPatientDetails: PatientDetails = {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
@@ -143,8 +182,9 @@ describe('Floating Button and Consultation Pad', () => {
 
     const value = {
       patientDetails: mockPatientDetails,
-      savedConsultationNotes: ' ',
+      savedConsultationNotes: 'Consultation notes',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
 
     render(
@@ -172,7 +212,6 @@ describe('Floating Button and Consultation Pad', () => {
     await waitFor(() =>
       expect(screen.getByText('Notes could not be saved')).toBeInTheDocument(),
     )
-    screen.debug()
     expect(screen.getByTitle('close notification')).toBeInTheDocument()
 
     await userEvent.click(screen.getByTitle('close notification'))

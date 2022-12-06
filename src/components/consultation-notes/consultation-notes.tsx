@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {
   PatientDetails,
   usePatientDetails,
@@ -23,14 +23,25 @@ function ConsultationNotes() {
   useEffect(() => {
     setConsultationText(savedConsultationNotes)
     setShowConsultationPad(false)
+    setOnSaveSuccess(false)
+    setOnSaveFailure(false)
   }, [patientDetails])
+
+  const updateConsultationNoteSavedStatus = useCallback(savedStatus => {
+    savedStatus ? setOnSaveSuccess(true) : setOnSaveFailure(true)
+  }, [])
+
+  const handleClose = useCallback(() => {
+    setOnSaveSuccess(false)
+    setOnSaveFailure(false)
+  }, [])
 
   const renderNotificationMessage = (
     kind: string,
     title: string,
     timeout: number,
     hideCloseButton: boolean,
-    className: any,
+    className: unknown,
   ) => {
     return (
       <ToastNotification
@@ -44,10 +55,6 @@ function ConsultationNotes() {
     )
   }
 
-  const handleClose = () => {
-    onSaveSuccess ? setOnSaveSuccess(false) : setOnSaveFailure(false)
-  }
-
   return (
     <>
       {showConsultationPad ? (
@@ -55,13 +62,13 @@ function ConsultationNotes() {
           consultationText={consultationText}
           setConsultationText={setConsultationText}
           setShowConsultationPad={setShowConsultationPad}
-          setOnSaveSuccess={setOnSaveSuccess}
-          setOnSaveFailure={setOnSaveFailure}
+          updateConsultationNoteSavedStatus={updateConsultationNoteSavedStatus}
         />
       ) : (
         <FloatingConsultationButton
           isUnsavedNotesPresent={
-            consultationText != savedConsultationNotes && consultationText != ''
+            consultationText !== savedConsultationNotes &&
+            consultationText !== ''
           }
           setShowConsultationPad={setShowConsultationPad}
         />

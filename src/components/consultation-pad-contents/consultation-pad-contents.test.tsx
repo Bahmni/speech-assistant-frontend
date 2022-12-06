@@ -51,8 +51,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={''}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -95,8 +94,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={''}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -143,8 +141,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={''}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -197,8 +194,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={''}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -259,8 +255,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={'Consultation'}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         , ,
       </ConsultationContext.Provider>,
@@ -321,8 +316,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={'Consultation'}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         , ,
       </ConsultationContext.Provider>,
@@ -361,8 +355,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={'consultationText'}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -432,8 +425,8 @@ describe('Consultation Pad Contents', () => {
     const patientDetails: PatientDetails = {
       isActiveVisit: true,
       locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
-      isActiveVisit: true,
       providerUuid: 'c1c26908-3f10-11e4-adec-0800271c1b75',
+      patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
     }
 
     const value = {
@@ -450,8 +443,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={jest.fn()}
-          setOnSaveFailure={jest.fn()}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
       </ConsultationContext.Provider>,
     )
@@ -519,8 +511,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={jest.fn()}
-          setOnSaveFailure={jest.fn()}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
       </ConsultationContext.Provider>,
     )
@@ -533,15 +524,15 @@ describe('Consultation Pad Contents', () => {
 
     await userEvent.click(
       screen.getByRole('button', {
-        name: /Save/i,
+        name: /Save Notes/i,
       }),
     )
-
+    const encounterTypeUrl = mockFetch.mock.calls[0][0]
     const updateObsUrl = mockFetch.mock.calls[2][0]
     const obsJsonBody = JSON.parse(mockFetch.mock.calls[2][1].body)
 
     expect(fetch).toBeCalledTimes(3)
-
+    expect(encounterTypeUrl).toBe(consultationEncounterTypeUrl)
     expect(updateObsUrl).toBe(
       '/openmrs/ws/rest/v1/obs/052aa982-35f1-466c-9c0e-1957ff3c9d32',
     )
@@ -578,8 +569,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -653,8 +643,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={jest.fn()}
-          setOnSaveFailure={jest.fn()}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
       </ConsultationContext.Provider>,
     )
@@ -743,8 +732,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={jest.fn()}
-          setOnSaveFailure={jest.fn()}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
       </ConsultationContext.Provider>,
     )
@@ -830,6 +818,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
       </ConsultationContext.Provider>,
     )
@@ -899,6 +888,7 @@ describe('Consultation Pad Contents', () => {
           closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
       </ConsultationContext.Provider>,
     )
@@ -916,6 +906,7 @@ describe('Consultation Pad Contents', () => {
     )
 
     const updateObsUrl = mockFetch.mock.calls[2][0]
+
     const obsJsonBody = JSON.parse(mockFetch.mock.calls[2][1].body)
 
     expect(fetch).toBeCalledTimes(3)
@@ -924,8 +915,5 @@ describe('Consultation Pad Contents', () => {
       '/openmrs/ws/rest/v1/obs/722a4f33-5f18-43e3-9a53-15e756e2fa9d',
     )
     expect(obsJsonBody.value).toBe('Consultation Notes')
-    expect(value.setSavedConsultationNotes).toHaveBeenCalledWith(
-      consultationText,
-    )
   })
 })

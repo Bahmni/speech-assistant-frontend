@@ -121,14 +121,9 @@ export const createConsultationObs = async (
     encounterUuid,
   )
 
-  return await postApiCall(saveNotesUrl, body).then(response => response.json())
+  return await postApiCall(saveNotesUrl, body)
 }
-export const getActiveEncounterDate = () => {
-  const date = new Date()
-  date.setHours(date.getHours() - 1)
-  const fromDate = date.toISOString()
-  return fromDate
-}
+
 export const getActiveEncounterDate = () => {
   const date = new Date()
   date.setHours(date.getHours() - 1)
@@ -155,23 +150,12 @@ async function createEncounterWithObs(
     consultationText,
     patientDetails,
   )
-  return postApiCall(encounterUrl, encounterData).then(response =>
-    response.json(),
-  )
+  return postApiCall(encounterUrl, encounterData)
 }
 
 export const updateConsultationObs = (obsUuid, consultationText) => {
   const body = {value: consultationText}
-  return postApiCall(updateObsUrl(obsUuid), body).then(response =>
-    response.json(),
-  )
-}
-
-export const getEncounters = async (patientid, fromdate, encounterType) => {
-  const response = await getApiCall(
-    customEncounterUrl(patientid, fromdate, encounterType),
-  )
-  return response
+  return postApiCall(updateObsUrl(obsUuid), body)
 }
 
 export const getEncounters = async (patientid, fromdate, encounterType) => {
@@ -191,15 +175,14 @@ const saveConsultationObs = (
   if (consultationObs) {
     const obsUuid = consultationObs.uuid
     return updateConsultationObs(obsUuid, consultationText)
-  } else {
-    return createConsultationObs(
-      encounterDatetime,
-      consultationText,
-      patientDetails.patientUuid,
-      patientDetails.location,
-      consultationActiveEncounter.uuid,
-    )
   }
+  return createConsultationObs(
+    encounterDatetime,
+    consultationText,
+    patientDetails.patientUuid,
+    patientDetails.location,
+    consultationActiveEncounter.uuid,
+  )
 }
 
 export const saveConsultationNotes = async (
@@ -232,11 +215,11 @@ export const saveConsultationNotes = async (
       encounterDatetime,
       patientDetails,
     )
-  } else
-    return createEncounterWithObs(
-      encounterDatetime,
-      visitUuid,
-      consultationText,
-      patientDetails,
-    )
+  }
+  return createEncounterWithObs(
+    encounterDatetime,
+    visitUuid,
+    consultationText,
+    patientDetails,
+  )
 }

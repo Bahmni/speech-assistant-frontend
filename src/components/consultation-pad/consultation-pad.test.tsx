@@ -32,8 +32,7 @@ describe('Consultation Pad', () => {
           setShowConsultationPad={jest.fn()}
           consultationText={''}
           setConsultationText={jest.fn()}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -77,8 +76,7 @@ describe('Consultation Pad', () => {
           setShowConsultationPad={jest.fn()}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -140,8 +138,7 @@ describe('Consultation Pad', () => {
           setShowConsultationPad={jest.fn()}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
-          setOnSaveSuccess={''}
-          setOnSaveFailure={''}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,

@@ -1,24 +1,24 @@
 .successToastNotification{
-    background: #6ab165; // #6ab165         #88AF28
-    width:620px; //38.7rem ->607px
-    height:47px; //2.63rem ->38px
+    background: #6ab165;
+    width: 38.15rem;
+    height: 2.8rem;
     position: fixed;
-    top: 54px; //3.2rem
-    right: 32.75%;//35.4rem ->32.90%
+    top: 3.375rem;
+    right: 32.75%;
     z-index: 999;
-    border-radius:3px;
+    border-radius: 3px;
     border-color:#6ab165
   }
 
   .errorToastNotification{
     background: #d95757;
-    width:620px; //38.7rem
-    height:47px; //2.63rem
+    width: 38.15rem;
+    height: 2.8rem;
     position: fixed;
-    top: 54px; //3.2rem
-    right: 32.75%;//35.4rem
+    top: 3.375rem;
+    right: 32.75%;
     z-index: 999;
-    border-radius:3px;
+    border-radius: 3px;
     border-color: #d95757;
   }
 
@@ -29,16 +29,19 @@
   .successToastNotification div{
     margin-top:0.46rem
    }
-   
+
   .errorToastNotification button{
     min-height: 2rem;
     min-width: 2.3rem;
-    height: 2.95rem;
+    height: 2rem;
     width: 0rem;
     background: #d95757;
     cursor: pointer;
+    vertical-align: middle;
+    position: relative;
+    top: 7px;
   }
-  
+
   .errorToastNotification path{
     fill:white
   }
@@ -46,5 +49,3 @@
  .errorToastNotification div{
   margin-top:0.46rem
  }
-  //    margin-top: 0.5rem;
-    

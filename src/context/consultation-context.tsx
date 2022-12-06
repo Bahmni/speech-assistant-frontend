@@ -53,6 +53,7 @@ function ConsultationContextProvider({children}) {
   const [visitUuid, setVisitUuid] = useState('')
 
   const getSavedConsultationNotes = (encountersResponse, visitUuId) => {
+    let savedNotes = ''
     const consultationActiveEncounter =
       getProviderSpecificActiveConsultationEncounter(
         encountersResponse,
@@ -61,9 +62,12 @@ function ConsultationContextProvider({children}) {
         providerUuidRef.current,
       )
     if (consultationActiveEncounter) {
-      return consultationActiveEncounter.obs[0].value
+      savedNotes =
+        consultationActiveEncounter.obs.length > 0
+          ? consultationActiveEncounter.obs[0].value
+          : ''
     }
-    return ''
+    return savedNotes
   }
   const updatePatientDetails = async (patientId, locationId) => {
     const activeVisitResponse = await getActiveVisitResponse(

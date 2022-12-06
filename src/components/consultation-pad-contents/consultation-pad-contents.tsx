@@ -21,8 +21,7 @@ export function ConsultationPadContents({
   closeConsultationPad,
   consultationText,
   setConsultationText,
-  setOnSaveSuccess,
-  setOnSaveFailure,
+  updateConsultationNoteSavedStatus,
 }) {
   const [isRecording, setIsRecording] = useState(false)
   const [recordedText, setRecordedText] = useState('')
@@ -155,24 +154,18 @@ export function ConsultationPadContents({
   }
 
   const clickSaveButton = useCallback(() => {
-    saveConsultationNotes(consultationText, patientDetails, visitUuid)
-    setSavedConsultationNotes(consultationText)
-    closeConsultationPad()
-    // console.log('inside click save')
-    saveConsultationNotes(consultationText, patientDetails).then(val => {
-      // console.log(val)
-      // console.log(consultationText)
-
-      // console.log('inside .then')
-      if (val.obs || val.value == consultationText) {
-        //encounter and obs,create obs,update obs
-        // console.log('insie if')
+    const saveConsultationNotesResponse = saveConsultationNotes(
+      consultationText,
+      patientDetails,
+      visitUuid,
+    )
+    saveConsultationNotesResponse.then(response => {
+      if (response.ok) {
         setSavedConsultationNotes(consultationText)
         closeConsultationPad()
-        setOnSaveSuccess(true)
+        updateConsultationNoteSavedStatus(true)
       } else {
-        // console.log('inside else')
-        setOnSaveFailure(true)
+        updateConsultationNoteSavedStatus(false)
       }
     })
   }, [consultationText])
