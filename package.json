@@ -76,5 +76,13 @@
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.9.3"
-  }
+  },
+  "version": "1.0.0",
+  "main": "index.tsx",
+  "repository": "https://github.com/Bahmni/speech-assistant-frontend.git",
+  "author": "anjali-arakka <anjali.arakka@thoughtworks.com>",
+  "license": "MIT",
+  "files": [
+    "/dist"
+  ]
 }

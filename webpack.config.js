@@ -25,11 +25,20 @@ const cssLoader = {
 const config = env => {
   return {
     mode: 'development',
-    entry: './src/index.tsx',
+    entry: {
+      speech_assistant: './src/index.tsx',
+      bahmni: '../libs/bahmni-library/src/index.ts',
+    },
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: 'bundle/bundle.js',
+      filename: '[name]/[name].bundle.js',
     },
+
+    // entry: './src/index.tsx',
+    // output: {
+    //   path: path.join(__dirname, 'dist'),
+    //   filename: 'bundle/bundle.js',
+    // },
     target: 'web',
     devServer: {
       port: 3030, // you can change the port
@@ -68,6 +77,10 @@ const config = env => {
       new HtmlWebpackPlugin({
         template: 'public/index.html', // to import index.html file inside index.js
       }),
+      // new HtmlWebpackPlugin({
+      //   // template: 'public/index.html', // to import index.html file inside index.js
+      //   template:'../libs/bahmni-library/index.html',
+      // }),
     ],
     resolve: {
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.css'],

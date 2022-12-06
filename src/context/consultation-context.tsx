@@ -4,10 +4,10 @@ import {
   getActiveConsultationEncounter,
   getConsultationObs,
 } from '../utils/encounter-details/encounter-details'
-import {
-  getLocationUuid,
-  getPatientUuid,
-} from '../utils/patient-details/patient-details'
+// import {
+//   getLocationUuid,
+//   getPatientUuid,
+// } from '../utils/patient-details/patient-details'
 
 export interface PatientDetails {
   patientUuid: string
@@ -91,19 +91,35 @@ function ConsultationContextProvider({children}) {
       setSavedConsultationNotes('')
     }
   }, [patientUuid, locationUuid])
+const detailsScript = document.getElementById('01');
+console.dir("detailsScript === .  " + detailsScript);
 
   const onUrlChangeCallback = () => {
-    setPatientUuid(getPatientUuid)
+    setPatientUuid(detailsScript.getAttribute('patientUuid'))// getPatientDetails detailsScript.getAttribute('patientUuid')
+    console.log('patientUuid from bundle');
+    console.log(detailsScript.getAttribute('patientUuid'));
+    console.log('locationUuid from bundle');
+    console.log(detailsScript.getAttribute('locationUuid'));
+    
   }
+  // const onUrlChangeCallback2 = () => {
+  //   // setPatientUuid(detailsScript.getAttribute('patientUuid'))// getPatientDetails
+  //   console.log('patientUuid from bundle ');
+  //   console.log(detailsScript.getAttribute('patientUuid'));
+  //   console.log('locationUuid from bundle');
+  //   console.log(detailsScript.getAttribute('locationUuid'));
+    
+  // }
 
   useEffect(() => {
-    setPatientUuid(getPatientUuid())
-    setLocationUuid(getLocationUuid())
+    setPatientUuid(detailsScript.getAttribute('patientUuid')) //getPatientUuid() detailsScript.getAttribute('patientUuid')
+    setLocationUuid(detailsScript.getAttribute('locationUuid')) //getLocationUuid() detailsScript.getAttribute('locationUuid')
     const providerUuidResponse = getProviderUuid()
     providerUuidResponse.then(uuid => {
       providerUuidRef.current = uuid
     })
     window.addEventListener('hashchange', onUrlChangeCallback)
+    // window.addEventListener('hashchange', onUrlChangeCallback2)
   }, [])
 
   const value = {

@@ -9,7 +9,6 @@ function ConsultationNotes() {
   const [consultationText, setConsultationText] = useState(
     savedConsultationNotes,
   )
-
   return showConsultationPad ? (
     <ConsultationPad
       consultationText={consultationText}

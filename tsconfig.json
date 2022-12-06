@@ -21,6 +21,6 @@
     "noEmit": true,
     "target": "esnext",
     "allowJs": true,
-    "noUnusedLocals": true
-  }
+    "noUnusedLocals": true,
+  },
 }
