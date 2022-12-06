@@ -1,33 +1,21 @@
-const MILLISECOND_TO_MINUTE_CONVERSION_FACTOR = 60000
-const SIXTY_MINUTES = 60
+export const getProviderSpecificActiveConsultationEncounter = async (
+  response,
+  visitUuid,
+  locationUuid,
+  providerUuId,
+) => {
+  const encounters = response?.results?.length > 0 ? response.results : null
 
-export const isConsultationEncounterActive = consultationEncounter => {
-  const consultationEncounterDateTime = new Date(
-    consultationEncounter.encounterDatetime,
-  )
-  const currentDatetime = new Date()
-
-  const timeDifferenceInMinutes =
-    (currentDatetime.getTime() - consultationEncounterDateTime.getTime()) /
-    MILLISECOND_TO_MINUTE_CONVERSION_FACTOR
-
-  return timeDifferenceInMinutes < SIXTY_MINUTES
-}
-
-export const getEncounters = visitResponse => {
-  return visitResponse.results.length > 0
-    ? visitResponse.results[0].encounters
-    : null
-}
-
-export const getActiveConsultationEncounter = visitResponse => {
-  const encounters = getEncounters(visitResponse)
-  const consultationActiveEncounter = encounters?.find(
-    encounter =>
-      encounter.encounterType.display == 'Consultation' &&
-      isConsultationEncounterActive(encounter),
-  )
-  return consultationActiveEncounter
+  if (await encounters) {
+    const consultationActiveEncounter = encounters?.find(
+      encounter =>
+        locationUuid === encounter.location?.uuid &&
+        encounter.encounterProviders[0].provider.uuid === providerUuId &&
+        visitUuid === encounter.visit.uuid,
+    )
+    return consultationActiveEncounter
+  }
+  return null
 }
 
 export const getConsultationObs = consultationActiveEncounter => {

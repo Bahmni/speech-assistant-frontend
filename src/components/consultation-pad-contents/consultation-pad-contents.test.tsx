@@ -11,19 +11,18 @@ import {mockObsResponse} from '../../__mocks__/obsResponse.mock'
 import {
   consultationEncounterTypeUrl,
   consultationNotesConceptUrl,
-  visitUrl,
   encounterUrl,
   saveNotesUrl,
   unknownEncounterRoleUrl,
 } from '../../utils/constants'
-import {mockVisitResponseWithActiveEncounter} from '../../__mocks__/activeVisitWithActiveEncounters.mock'
-import {mockVisitResponseWithInactiveEncounter} from '../../__mocks__/activeVisitWithInactiveEncounters.mock'
 import {ConsultationPadContents} from './consultation-pad-contents'
-import {mockVisitResponseWithNoEncounter} from '../../__mocks__/activeVisitWithNoEncounter.mock'
 import {mockConsultationEncounterTypeResponse} from '../../__mocks__/encounterTypeResponse.mock'
 import {mockConsultationEncounterRoleResopnse} from '../../__mocks__/encounterRoleResponse.mock'
-import {mockVisitResponseWithActiveEncounterWithoutConsultationObs} from '../../__mocks__/activeVisitWithActiveEncountersAndWithoutConsultationObs.mock'
 import {updateObsResponse} from '../../__mocks__/updateObsResponse.mock'
+import {mockEncounterResponseWithActiveEncounter} from '../../__mocks__/encounterResponseWithActiveEncounter.mock'
+import {mockEncounterResponseWithInActiveEncounter} from '../../__mocks__/encounterResponseWithInActiveEnconter.mock'
+import {mockEncounterResponseWithOutObsInActiveEncounter} from '../../__mocks__/encounterResponseWithOutObsInActiveEncounter.mock'
+import {mockEncounterResponseWithTwoActiveEncounetrsOfDiffProviders} from '../../__mocks__/encounterResponseWithTwoActiveEncounetrsOfDiffProviders.mock'
 
 jest.mock('../../utils/socket-connection/socket-connection')
 
@@ -44,6 +43,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -85,6 +85,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -130,6 +131,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -181,6 +183,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -240,6 +243,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -299,6 +303,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -336,6 +341,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -387,13 +393,17 @@ describe('Consultation Pad Contents', () => {
     ).toBeEnabled()
   })
 
-  it('should save consultation notes and create new obs on click of save button when active consultation encounter is present and consultation obs is not present', async () => {
+  it('should save consultation notes and create new obs on click of save button when active consultation encounter is present and consultation obs is not present with the current provider', async () => {
     global.fetch = jest.fn().mockImplementation()
 
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockVisitResponseWithActiveEncounterWithoutConsultationObs,
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockEncounterResponseWithOutObsInActiveEncounter,
         ok: true,
       })
       .mockResolvedValueOnce({
@@ -409,13 +419,14 @@ describe('Consultation Pad Contents', () => {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
       isActiveVisit: true,
-      providerUuid: '',
+      providerUuid: 'c1c26908-3f10-11e4-adec-0800271c1b75',
     }
 
     const value = {
       patientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     const consultationText = 'Consultation Notes'
 
@@ -440,15 +451,13 @@ describe('Consultation Pad Contents', () => {
         name: /Save/i,
       }),
     )
-    const visiturl = mockFetch.mock.calls[0][0]
-    const conceptUrl = mockFetch.mock.calls[1][0]
-    const obsUrl = mockFetch.mock.calls[2][0]
-    const obsJsonBody = JSON.parse(mockFetch.mock.calls[2][1].body)
+    const mockEncounterTypeUrl = mockFetch.mock.calls[0][0]
+    const conceptUrl = mockFetch.mock.calls[2][0]
+    const obsUrl = mockFetch.mock.calls[3][0]
+    const obsJsonBody = JSON.parse(mockFetch.mock.calls[3][1].body)
+    expect(fetch).toBeCalledTimes(4)
 
-    expect(fetch).toBeCalledTimes(3)
-    expect(visiturl).toBe(
-      visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
-    )
+    expect(mockEncounterTypeUrl).toBe(consultationEncounterTypeUrl)
     expect(conceptUrl).toBe(consultationNotesConceptUrl)
     expect(obsUrl).toBe(saveNotesUrl)
     expect(obsJsonBody.value).toBe('Consultation Notes')
@@ -457,13 +466,17 @@ describe('Consultation Pad Contents', () => {
     )
   })
 
-  it('should save consultation notes and update the obs on click of save button when active consultation encounter and consultation obs is already present', async () => {
+  it('should save consultation notes and update the obs on click of save button when active consultation encounter and consultation obs is already present with the current provider', async () => {
     global.fetch = jest.fn().mockImplementation()
 
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockVisitResponseWithActiveEncounter,
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockEncounterResponseWithActiveEncounter,
         ok: true,
       })
       .mockResolvedValue({
@@ -475,13 +488,14 @@ describe('Consultation Pad Contents', () => {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
       isActiveVisit: true,
-      providerUuid: '',
+      providerUuid: 'c1c26908-3f10-11e4-adec-0800271c1b75',
     }
 
     const value = {
       patientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: 'cbde1954-59fb-424f-a6dc-ad9db366523f',
     }
     const consultationText = 'Consultation Notes'
 
@@ -507,16 +521,13 @@ describe('Consultation Pad Contents', () => {
       }),
     )
 
-    const visiturl = mockFetch.mock.calls[0][0]
-    const updateObsUrl = mockFetch.mock.calls[1][0]
-    const obsJsonBody = JSON.parse(mockFetch.mock.calls[1][1].body)
+    const updateObsUrl = mockFetch.mock.calls[2][0]
+    const obsJsonBody = JSON.parse(mockFetch.mock.calls[2][1].body)
 
-    expect(fetch).toBeCalledTimes(2)
-    expect(visiturl).toBe(
-      visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
-    )
+    expect(fetch).toBeCalledTimes(3)
+
     expect(updateObsUrl).toBe(
-      '/openmrs/ws/rest/v1/obs/8dd4d632-ec99-4056-b6dc-d489f1dc5f30',
+      '/openmrs/ws/rest/v1/obs/052aa982-35f1-466c-9c0e-1957ff3c9d32',
     )
     expect(obsJsonBody.value).toBe('Consultation Notes')
     expect(value.setSavedConsultationNotes).toHaveBeenCalledWith(
@@ -539,13 +550,14 @@ describe('Consultation Pad Contents', () => {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
       isActiveVisit: true,
-      providerUuid: '',
+      providerUuid: 'c1c26908-3f10-11e4-adec-0800271c1b75',
     }
 
     const value = {
       patientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -570,7 +582,7 @@ describe('Consultation Pad Contents', () => {
     expect(consultationText).toBe('Consultation')
   })
 
-  it('should create encounter with observation on click of save button when consultation encounter is not present', async () => {
+  it('should create encounter with observation on click of save button when consultation encounter is not present with the current provider', async () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
       handleStop: jest.fn(),
@@ -582,7 +594,11 @@ describe('Consultation Pad Contents', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockVisitResponseWithNoEncounter,
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockEncounterResponseWithInActiveEncounter,
         ok: true,
       })
       .mockResolvedValueOnce({
@@ -613,6 +629,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
 
     render(
@@ -636,16 +653,16 @@ describe('Consultation Pad Contents', () => {
         name: /Save/i,
       }),
     )
-    expect(fetch).toBeCalledTimes(5)
-    const mockVisitUrl = mockFetch.mock.calls[0][0]
-    const mockEncounterTypeUrl = mockFetch.mock.calls[1][0]
-    const mockEncounterRoleurl = mockFetch.mock.calls[2][0]
-    const mockConceptUrl = mockFetch.mock.calls[3][0]
-    const mockEncounterUrl = mockFetch.mock.calls[4][0]
-    const mockEncounterRequestBody = JSON.parse(mockFetch.mock.calls[4][1].body)
-    expect(mockVisitUrl).toBe(
-      visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
-    )
+
+    expect(fetch).toBeCalledTimes(6)
+
+    const mockInitialEncounterTypeUrl = mockFetch.mock.calls[0][0]
+    const mockEncounterTypeUrl = mockFetch.mock.calls[2][0]
+    const mockEncounterRoleurl = mockFetch.mock.calls[3][0]
+    const mockConceptUrl = mockFetch.mock.calls[4][0]
+    const mockEncounterUrl = mockFetch.mock.calls[5][0]
+    const mockEncounterRequestBody = JSON.parse(mockFetch.mock.calls[5][1].body)
+    expect(mockInitialEncounterTypeUrl).toBe(consultationEncounterTypeUrl)
     expect(mockEncounterTypeUrl).toBe(consultationEncounterTypeUrl)
     expect(mockEncounterRoleurl).toBe(unknownEncounterRoleUrl)
     expect(mockConceptUrl).toBe(consultationNotesConceptUrl)
@@ -653,7 +670,7 @@ describe('Consultation Pad Contents', () => {
     expect(mockEncounterRequestBody.obs[0].value).toBe('Consultation Notes')
   })
 
-  it('should create encounter with observation when clicked on save button and no active consultation encounter is present', async () => {
+  it('should create encounter with observation when clicked on save button and no active consultation encounter is present with the current provider', async () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
       handleStop: jest.fn(),
@@ -665,7 +682,11 @@ describe('Consultation Pad Contents', () => {
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockVisitResponseWithInactiveEncounter,
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockEncounterResponseWithInActiveEncounter,
         ok: true,
       })
       .mockResolvedValueOnce({
@@ -696,6 +717,7 @@ describe('Consultation Pad Contents', () => {
       patientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
     }
 
     render(
@@ -719,20 +741,176 @@ describe('Consultation Pad Contents', () => {
         name: /Save/i,
       }),
     )
-    expect(fetch).toBeCalledTimes(5)
-    const mockVisitUrl = mockFetch.mock.calls[0][0]
-    const mockEncounterTypeUrl = mockFetch.mock.calls[1][0]
-    const mockEncounterRoleurl = mockFetch.mock.calls[2][0]
-    const mockConceptUrl = mockFetch.mock.calls[3][0]
-    const mockEncounterUrl = mockFetch.mock.calls[4][0]
-    const mockEncounterRequestBody = JSON.parse(mockFetch.mock.calls[4][1].body)
-    expect(mockVisitUrl).toBe(
-      visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
-    )
+    expect(fetch).toBeCalledTimes(6)
+
+    const mockEncounterTypeUrl = mockFetch.mock.calls[2][0]
+    const mockEncounterRoleurl = mockFetch.mock.calls[3][0]
+    const mockConceptUrl = mockFetch.mock.calls[4][0]
+    const mockEncounterUrl = mockFetch.mock.calls[5][0]
+    const mockEncounterRequestBody = JSON.parse(mockFetch.mock.calls[5][1].body)
+
     expect(mockEncounterTypeUrl).toBe(consultationEncounterTypeUrl)
     expect(mockEncounterRoleurl).toBe(unknownEncounterRoleUrl)
     expect(mockConceptUrl).toBe(consultationNotesConceptUrl)
     expect(mockEncounterUrl).toBe(encounterUrl)
     expect(mockEncounterRequestBody.obs[0].value).toBe('Consultation Notes')
+  })
+
+  it('should create encounter with observation on click of save button when active consultation encounter is not of current provider', async () => {
+    const mockSocketConnection = {
+      handleStart: jest.fn(),
+      handleStop: jest.fn(),
+    }
+    ;(SocketConnection as jest.Mock).mockImplementation(
+      () => mockSocketConnection,
+    )
+    global.fetch = jest.fn().mockImplementation()
+    const mockFetch = global.fetch as jest.Mock
+    mockFetch
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockEncounterResponseWithActiveEncounter,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterRoleResopnse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockConceptResponse,
+        ok: true,
+      })
+      .mockResolvedValue({
+        json: () => ({}),
+        ok: true,
+      })
+
+    const patientDetails: PatientDetails = {
+      patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
+      locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
+      isActiveVisit: true,
+      providerUuid: 'b7a915a4-b142-41ab-ae13-a060003885a1',
+    }
+
+    const value = {
+      patientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
+    }
+
+    render(
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={'Consultation Notes'}
+          setConsultationText={setConsultationText}
+        />
+      </ConsultationContext.Provider>,
+    )
+
+    expect(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    ).toBeEnabled()
+
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    )
+
+    expect(fetch).toBeCalledTimes(6)
+
+    const mockencounterTypeUrl = mockFetch.mock.calls[0][0]
+    const mockEncounterTypeUrl = mockFetch.mock.calls[2][0]
+    const mockEncounterRoleurl = mockFetch.mock.calls[3][0]
+    const mockConceptUrl = mockFetch.mock.calls[4][0]
+    const mockEncounterUrl = mockFetch.mock.calls[5][0]
+    const mockEncounterRequestBody = JSON.parse(mockFetch.mock.calls[5][1].body)
+
+    expect(mockencounterTypeUrl).toBe(consultationEncounterTypeUrl)
+    expect(mockEncounterTypeUrl).toBe(consultationEncounterTypeUrl)
+    expect(mockEncounterRoleurl).toBe(unknownEncounterRoleUrl)
+    expect(mockConceptUrl).toBe(consultationNotesConceptUrl)
+    expect(mockEncounterUrl).toBe(encounterUrl)
+    expect(mockEncounterRequestBody.obs[0].value).toBe('Consultation Notes')
+  })
+
+  it('should save consultation notes and update the obs on click of save button with current provider when active consultation encounter and consultation obs are present for two diffrent providers', async () => {
+    global.fetch = jest.fn().mockImplementation()
+
+    const mockFetch = global.fetch as jest.Mock
+    mockFetch
+      .mockResolvedValueOnce({
+        json: () => mockConsultationEncounterTypeResponse,
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: () => mockEncounterResponseWithTwoActiveEncounetrsOfDiffProviders,
+        ok: true,
+      })
+      .mockResolvedValue({
+        json: () => updateObsResponse,
+        ok: true,
+      })
+
+    const patientDetails: PatientDetails = {
+      patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
+      locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
+      isActiveVisit: true,
+      providerUuid: 'b7a915a4-b142-41ab-ae13-a060003885a1',
+    }
+
+    const value = {
+      patientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+      visitUuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
+    }
+    const consultationText = 'Consultation Notes'
+
+    render(
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={consultationText}
+          setConsultationText={setConsultationText}
+        />
+      </ConsultationContext.Provider>,
+    )
+
+    expect(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    ).toBeEnabled()
+
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    )
+
+    const updateObsUrl = mockFetch.mock.calls[2][0]
+    const obsJsonBody = JSON.parse(mockFetch.mock.calls[2][1].body)
+
+    expect(fetch).toBeCalledTimes(3)
+
+    expect(updateObsUrl).toBe(
+      '/openmrs/ws/rest/v1/obs/722a4f33-5f18-43e3-9a53-15e756e2fa9d',
+    )
+    expect(obsJsonBody.value).toBe('Consultation Notes')
+    expect(value.setSavedConsultationNotes).toHaveBeenCalledWith(
+      consultationText,
+    )
   })
 })

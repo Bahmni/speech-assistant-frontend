@@ -19,6 +19,7 @@ describe('Active Consultation', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
 
     render(
@@ -46,6 +47,7 @@ describe('Active Consultation', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
     render(
       <ConsultationContext.Provider value={value}>

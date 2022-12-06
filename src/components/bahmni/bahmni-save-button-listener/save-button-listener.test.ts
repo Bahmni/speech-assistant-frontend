@@ -13,6 +13,7 @@ describe('Bahmni save button listener', () => {
     const mockSaveConsultationNotes = jest.mocked(saveConsultationNotes)
     const mockHandleClose = jest.fn()
     const mockSetSaveButton = jest.fn()
+    const mockVisitUuid = ''
     jest.spyOn(global, 'setTimeout')
 
     const patientDetails: PatientDetails = {
@@ -30,7 +31,12 @@ describe('Bahmni save button listener', () => {
 
     document.body.appendChild(save)
 
-    addSaveButtonListener(patientDetails, mockHandleClose, mockSetSaveButton)
+    addSaveButtonListener(
+      patientDetails,
+      mockHandleClose,
+      mockSetSaveButton,
+      mockVisitUuid,
+    )
     window.dispatchEvent(new HashChangeEvent('hashchange'))
     window.dispatchEvent(new HashChangeEvent('hashchange'))
     window.dispatchEvent(new HashChangeEvent('hashchange'))

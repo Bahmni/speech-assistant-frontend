@@ -14,10 +14,11 @@ const onBahmniSaveButtonClick = (
   patientDetails,
   closeConsultationPad,
   setSavedNotes,
+  visitUuid,
 ) => {
   closeConsultationPad()
   setTimeout(() => {
-    saveConsultationNotes(consultationNotes, patientDetails)
+    saveConsultationNotes(consultationNotes, patientDetails, visitUuid)
     setSavedNotes(consultationNotes)
   }, bahmniSaveButtonResponseTime)
 }
@@ -26,6 +27,7 @@ const addBahmniSaveButtonListener = (
   patientDetails,
   closeConsultationPad,
   setSavedNotes,
+  visitUuid,
 ) => {
   const bahmniSaveButton = document
     .getElementsByClassName('confirm save-consultation')
@@ -39,6 +41,7 @@ const addBahmniSaveButtonListener = (
           patientDetails,
           closeConsultationPad,
           setSavedNotes,
+          visitUuid,
         ),
       )
     }
@@ -51,18 +54,21 @@ export const addSaveButtonListener = (
   patientDetails,
   closeConsultationPad,
   setSavedNotes,
+  visitUuid,
 ) => {
   if (isHashChangeEventAdded === false) {
     addBahmniSaveButtonListener(
       patientDetails,
       closeConsultationPad,
       setSavedNotes,
+      visitUuid,
     )
     window.addEventListener('hashchange', () => {
       addBahmniSaveButtonListener(
         patientDetails,
         closeConsultationPad,
         setSavedNotes,
+        visitUuid,
       )
     })
     isHashChangeEventAdded = true

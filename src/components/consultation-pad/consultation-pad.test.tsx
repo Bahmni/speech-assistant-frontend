@@ -24,6 +24,7 @@ describe('Consultation Pad', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
     render(
       <ConsultationContext.Provider value={value}>
@@ -65,6 +66,7 @@ describe('Consultation Pad', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
     const {unmount} = render(
       <ConsultationContext.Provider value={value}>
@@ -125,6 +127,7 @@ describe('Consultation Pad', () => {
       patientDetails: mockPatientDetails,
       savedConsultationNotes: '',
       setSavedConsultationNotes: jest.fn(),
+      visitUuid: '',
     }
     const {unmount} = render(
       <ConsultationContext.Provider value={value}>
