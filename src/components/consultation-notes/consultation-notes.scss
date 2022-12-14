@@ -1,0 +1,51 @@
+.successToastNotification{
+    background: #6ab165;
+    width: 38.15rem;
+    height: 2.8rem;
+    position: fixed;
+    top: 3.375rem;
+    right: 32.75%;
+    z-index: 999;
+    border-radius: 3px;
+    border-color:#6ab165
+  }
+
+  .errorToastNotification{
+    background: #d95757;
+    width: 38.15rem;
+    height: 2.8rem;
+    position: fixed;
+    top: 3.375rem;
+    right: 32.75%;
+    z-index: 999;
+    border-radius: 3px;
+    border-color: #d95757;
+  }
+
+  .successToastNotification path{
+    fill:white
+  }
+
+  .successToastNotification div{
+    margin-top:0.46rem
+   }
+
+  .errorToastNotification button{
+    min-height: 2rem;
+    min-width: 2.3rem;
+    height: 2rem;
+    width: 0rem;
+    background: #d95757;
+    cursor: pointer;
+    vertical-align: middle;
+    position: relative;
+    top: 7px;
+  }
+
+  .errorToastNotification path{
+    fill:white
+  }
+
+ .errorToastNotification div{
+  margin-top:0.46rem
+ }

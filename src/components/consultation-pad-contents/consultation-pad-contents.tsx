@@ -1,10 +1,11 @@
-import {Button, TextArea} from '@carbon/react'
+import {TextArea, Button} from '@carbon/react'
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {streamingURL} from '../../utils/constants'
 import {saveConsultationNotes} from './consultation-pad-contents.resources'
+
 import {
   PatientDetails,
   usePatientDetails,
@@ -20,6 +21,7 @@ export function ConsultationPadContents({
   closeConsultationPad,
   consultationText,
   setConsultationText,
+  updateConsultationNoteSavedStatus,
 }) {
   const [isRecording, setIsRecording] = useState(false)
   const [recordedText, setRecordedText] = useState('')
@@ -152,9 +154,20 @@ export function ConsultationPadContents({
   }
 
   const clickSaveButton = useCallback(() => {
-    saveConsultationNotes(consultationText, patientDetails, visitUuid)
-    setSavedConsultationNotes(consultationText)
-    closeConsultationPad()
+    const saveConsultationNotesResponse = saveConsultationNotes(
+      consultationText,
+      patientDetails,
+      visitUuid,
+    )
+    saveConsultationNotesResponse.then(response => {
+      if (response.ok) {
+        setSavedConsultationNotes(consultationText)
+        closeConsultationPad()
+        updateConsultationNoteSavedStatus(true)
+      } else {
+        updateConsultationNoteSavedStatus(false)
+      }
+    })
   }, [consultationText])
 
   const onDisable = () => {

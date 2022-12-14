@@ -6,6 +6,7 @@ export function ConsultationPad({
   consultationText,
   setConsultationText,
   setShowConsultationPad,
+  updateConsultationNoteSavedStatus,
 }) {
   const clickMinimizeIcon = useCallback(() => setShowConsultationPad(false), [])
 
@@ -18,6 +19,7 @@ export function ConsultationPad({
         closeConsultationPad={clickMinimizeIcon}
         consultationText={consultationText}
         setConsultationText={setConsultationText}
+        updateConsultationNoteSavedStatus={updateConsultationNoteSavedStatus}
       />
     </DraggableBox>
   )

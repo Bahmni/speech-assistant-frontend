@@ -32,6 +32,7 @@ describe('Consultation Pad', () => {
           setShowConsultationPad={jest.fn()}
           consultationText={''}
           setConsultationText={jest.fn()}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -42,6 +43,7 @@ describe('Consultation Pad', () => {
     expect(screen.getByLabelText('minimizeIcon')).toBeInTheDocument()
     expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
   })
+
   it('should update consultation notes with recorded text when clicked on minimize icon without stopping the recording', async () => {
     let consultationText = ''
     const setConsultationText = jest.fn()
@@ -74,6 +76,7 @@ describe('Consultation Pad', () => {
           setShowConsultationPad={jest.fn()}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
@@ -135,6 +138,7 @@ describe('Consultation Pad', () => {
           setShowConsultationPad={jest.fn()}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
+          updateConsultationNoteSavedStatus={jest.fn()}
         />
         ,
       </ConsultationContext.Provider>,
